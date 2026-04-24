@@ -4,7 +4,7 @@ import { spawnObstacle, updateObstacle } from '../src/obstacles.js';
 import { saveResult } from '../src/saveSystem.js';
 
 const GROUND_Y = 456;   // top of ground strip
-const CANVAS_W = 800;
+const CANVAS_W = 888;
 const CANVAS_H = 500;
 const PLAYER_START_X = CANVAS_W / 2;
 const WORLD_GRAVITY = 1200;
@@ -163,8 +163,8 @@ export default class GameScene extends Phaser.Scene {
       // Arena spotlights
       const sg = this.add.graphics().setScrollFactor(0).setDepth(1);
       sg.fillStyle(0xffffcc, 0.15);
-      sg.fillTriangle(200, 0, 140, CANVAS_H, 260, CANVAS_H);
-      sg.fillTriangle(600, 0, 540, CANVAS_H, 660, CANVAS_H);
+      sg.fillTriangle(222, 0, 156, CANVAS_H, 288, CANVAS_H);
+      sg.fillTriangle(666, 0, 600, CANVAS_H, 732, CANVAS_H);
     }
 
     const mtxKey = ['bg_mtn_z1','bg_bld_z2','bg_mtn_z3','bg_tent_z4','bg_crowd_z5'][zone - 1];
