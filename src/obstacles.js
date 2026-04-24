@@ -17,7 +17,7 @@ const DEFAULT_ANIM_FRAMES = [0, 1, 2, 3, 4, 5, 6, 7];
 
 const DEFS = {
   prairie_dog: {
-    w: 48, h: 56, bodyW: 32, bodyH: 44,
+    w: 48, h: 56, bodyW: 32, bodyH: 44, flipX: true,
     // The source spritesheet includes digging/burrowed poses that make
     // the hazard read as missing in Level 1. Keep only clearly visible poses.
     animFrames: [0, 1, 2, 3, 4, 6],
@@ -270,6 +270,7 @@ export function spawnObstacle(scene, type, x, y, config = {}) {
 
   const obj = scene.physics.add.sprite(x, y, key).setOrigin(0.5, 1);
   obj.setDisplaySize(def.w, def.h);
+  if (def.flipX) obj.setFlipX(true);
   obj.obstacleType = type;
   obj.obstacleDef = def;
   obj.resetObstacleBody = () => {

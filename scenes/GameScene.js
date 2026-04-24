@@ -303,7 +303,7 @@ export default class GameScene extends Phaser.Scene {
 
     this._checkpointData.forEach((cp, i) => {
       const sprite = this.add.image(cp.x, GROUND_Y - 20, 'checkpoint')
-        .setOrigin(0.5, 1).setDepth(9).setAlpha(0.9);
+        .setOrigin(0.5, 1).setDepth(9);
       this._checkpointSprites.push(sprite);
     });
 
@@ -386,8 +386,11 @@ export default class GameScene extends Phaser.Scene {
     this._checkpointIndex = i;
     const sprite = this._checkpointSprites[i];
     if (sprite) {
-      this.tweens.add({ targets: sprite, scaleY: 1.4, yoyo: true, duration: 120 });
-      sprite.setTint(0xffd700);
+      sprite.setTexture('checkpoint_lit');
+      this.tweens.add({
+        targets: sprite, scaleX: 1.15, scaleY: 1.15,
+        yoyo: true, repeat: -1, duration: 600, ease: 'Sine.InOut',
+      });
     }
     this.events.emit('checkpointReached', i + 1, this._checkpointData.length);
   }
@@ -603,7 +606,7 @@ export default class GameScene extends Phaser.Scene {
         this._setPlayerState('jump', 8);
         p.setAngle(-10);
       } else {
-        this._setPlayerState('fall', 9);
+        this._setPlayerState('jump', 8);
         p.setAngle(Phaser.Math.Clamp(vy * 0.025, -8, 12));
       }
       return;
