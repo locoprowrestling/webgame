@@ -216,12 +216,25 @@ export default class BootScene extends Phaser.Scene {
     g.generateTexture('flag', 24, 48);
     g.destroy();
 
-    // Checkpoint banner
-    const c = this.add.graphics();
-    c.fillStyle(0xffd700, 0.9); c.fillRect(0, 0, 40, 12);
-    c.lineStyle(2, 0xaa6600, 1); c.strokeRect(0, 0, 40, 12);
-    c.generateTexture('checkpoint', 40, 12);
-    c.destroy();
+    // Checkpoint checkmarks — unlit (transparent) and lit (solid glow)
+    const drawCheck = (g) => {
+      g.beginPath(); g.moveTo(7, 22); g.lineTo(16, 32); g.lineTo(37, 10); g.strokePath();
+    };
+
+    const cu = this.add.graphics();
+    cu.fillStyle(0x111111, 0.55); cu.fillRoundedRect(0, 0, 44, 44, 8);
+    cu.lineStyle(2, 0x00dd44, 0.5); cu.strokeRoundedRect(0, 0, 44, 44, 8);
+    cu.lineStyle(5, 0x00dd44, 0.45); drawCheck(cu);
+    cu.generateTexture('checkpoint', 44, 44);
+    cu.destroy();
+
+    const cl = this.add.graphics();
+    cl.fillStyle(0x003311, 0.85); cl.fillRoundedRect(0, 0, 44, 44, 8);
+    cl.lineStyle(2, 0x44ff88, 1); cl.strokeRoundedRect(0, 0, 44, 44, 8);
+    cl.lineStyle(11, 0x00ff66, 0.35); drawCheck(cl);
+    cl.lineStyle(5, 0x44ff88, 1); drawCheck(cl);
+    cl.generateTexture('checkpoint_lit', 44, 44);
+    cl.destroy();
   }
 
   _buildObstacleFrameTextures() {

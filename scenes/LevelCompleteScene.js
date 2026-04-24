@@ -54,17 +54,17 @@ export default class LevelCompleteScene extends Phaser.Scene {
       fontSize: '16px', fontFamily: 'Impact, sans-serif', color: '#ffffff', letterSpacing: 2,
     }).setOrigin(0.5);
 
-    // Buttons
+    // Buttons — 3 buttons evenly spaced inside 480px panel (centers at -150, 0, +150)
     const btnY = H / 2 + 80;
     if (!isLastLevel) {
-      this._makeBtn(W / 2 - 90, btnY, 'NEXT LEVEL ▶', 0xff6600, () => {
+      this._makeBtn(W / 2 - 150, btnY, 'NEXT LEVEL ▶', 0xff6600, () => {
         this.scene.start('GameScene', { characterId: this._characterId, level: this._level + 1 });
       });
     }
-    this._makeBtn(W / 2 + (isLastLevel ? 0 : 90), btnY, 'SELECT', 0x336633, () => {
+    this._makeBtn(W / 2 + (isLastLevel ? -75 : 0), btnY, 'SELECT', 0x336633, () => {
       this.scene.start('SelectScene', { level: this._level });
     });
-    this._makeBtn(W / 2 + (isLastLevel ? 160 : 240), btnY, 'RETRY', 0x444444, () => {
+    this._makeBtn(W / 2 + (isLastLevel ? 75 : 150), btnY, 'RETRY', 0x444444, () => {
       this.scene.start('GameScene', { characterId: this._characterId, level: this._level });
     });
 
@@ -72,10 +72,10 @@ export default class LevelCompleteScene extends Phaser.Scene {
   }
 
   _makeBtn(x, y, label, color, callback) {
-    const btn = this.add.container(x, y).setSize(160, 38).setInteractive();
-    const bg = this.add.rectangle(0, 0, 160, 38, color).setStrokeStyle(2, 0x000000, 0.5);
+    const btn = this.add.container(x, y).setSize(120, 30).setInteractive();
+    const bg = this.add.rectangle(0, 0, 120, 30, color).setStrokeStyle(2, 0x000000, 0.5);
     const txt = this.add.text(0, 0, label, {
-      fontSize: '13px', fontFamily: 'Impact, sans-serif', color: '#ffffff',
+      fontSize: '11px', fontFamily: 'Impact, sans-serif', color: '#ffffff',
     }).setOrigin(0.5);
     btn.add([bg, txt]);
     btn.on('pointerover', () => bg.setScale(1.05));

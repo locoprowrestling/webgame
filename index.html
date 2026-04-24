@@ -2,17 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <link rel="icon" type="image/png" href="Assets/logos-web/logo-locopro-primary-mark-thumb.png">
   <link rel="apple-touch-icon" href="Assets/logos-web/logo-locopro-primary-mark-thumb.png">
   <title>LoCoPro Championship Run</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #000; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
-    canvas { display: block; }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: #000;
+      touch-action: none;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none; -webkit-user-select: none;
+    }
+
+    body {
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    canvas { display: block; touch-action: none; }
+
+    #rotate-msg {
+      display: none;
+      position: fixed; inset: 0;
+      background: #000;
+      color: #fff;
+      font-family: Impact, sans-serif;
+      font-size: 22px;
+      letter-spacing: 1px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 9999;
+    }
+    #rotate-msg span { font-size: 48px; }
+
+    @media (orientation: portrait) and (max-width: 1024px) {
+      #rotate-msg { display: flex; }
+    }
   </style>
 </head>
 <body>
+  <div id="rotate-msg">
+    <span>&#8635;</span>
+    ROTATE DEVICE TO PLAY
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
   <script type="module" src="game.js"></script>
 </body>
