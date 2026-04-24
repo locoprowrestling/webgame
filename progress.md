@@ -1,0 +1,22 @@
+Original prompt: read CLAUDE.md and then address this
+
+- Investigating black-screen failure when async GameScene.create() throws after await during restart/new-character flow.
+- Read `CLAUDE.md`; confirmed the repo already documents a silent post-`await` failure mode in `GameScene.create()`.
+- Found an existing browser console log in `.playwright-mcp/console-2026-04-24T03-10-31-415Z.log` showing a separate lifecycle bug: `GameScene.update()` can run after `_player.body` is gone during scene transitions.
+- Hardened `GameScene` setup with stage-aware async error handling, explicit texture/body validation, and shutdown-safe input/update cleanup to avoid both the silent black screen and destroyed-body update crash.
+- Smoke-tested with the available browser tools: title screen -> select scene -> selected `anuka` -> launched level 1 successfully; no startup black screen and no new console errors beyond the existing missing `favicon.ico`.
+- Fixed finish detection so clearing the flag in midair still counts as a win: the finish sensor is now a tall finish line, and `_updatePlayer()` also completes the level once the player body crosses the finish X before pit death can fire.
+- Began a broader gameplay pass: centered camera tracking, enabled crisp pixel-art rendering, replaced the fake bob-tween plan with generated character pose textures, added shorts data for Anuka, and wired level pacing to each level's own `scrollSpeed` with dead-air speed-up logic.
+- Browser smoke test after the gameplay pass:
+- Title -> select -> level launch still works.
+- Anuka now renders with dark shorts in-game, the player starts centered, and delayed gameplay screenshots show different leg positions instead of a vertical vibration tween.
+- Console stayed clean aside from the existing missing `favicon.ico`.
+- Remaining verification gap: I did not fully play through later levels with the current browser tooling, so the adaptive pacing change is validated by code path and startup smoke test rather than a full long-session playthrough.
+- Troubleshot Level 1 “missing obstacles”: obstacle JSON was intact; the issue was obstacle presentation. `prairie_dog` animation included near-hidden burrow frames, and every animated obstacle instance started in sync.
+- Fixed obstacle anim config so `prairie_dog` uses only readable frames and animated obstacles randomize their animation phase on spawn.
+- Fixed the Level 1 first-obstacle fall: animated obstacle frames now get cropped into clean gameplay textures at boot, excluding source-sheet labels/header art.
+- Added a reset path for obstacle physics after Phaser group insertion and animation frame refresh; runtime state showed group/animation refresh had re-enabled gravity and wiped obstacle velocity, causing obstacles to fall through the ground.
+- Added `window.__LCP_GAME__` and `window.render_game_to_text()` for browser smoke checks of active scene, player state, hearts, and live obstacle bodies.
+- Verified in Chrome via Playwright package + system Chrome: Level 1 launches, the first prairie dog uses a clean sprite, obstacle bodies stay at `y=456` with `gravity=false`, tumbleweed keeps horizontal velocity, first collision costs one heart, and the player respawns safely instead of falling.
+- Fixed the missing favicon 404 by adding standard favicon and Apple touch icon links in `index.html`, both pointing to the LoCo Pro logo at `Assets/logos-web/logo-locopro-primary-mark-thumb.png`.
+- Verified locally over HTTP: `index.html` returned `200 text/html`, and the favicon PNG returned `200 image/png`.

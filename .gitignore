@@ -1,3 +1,22 @@
-.superpowers/
-node_modules/
 .DS_Store
+
+# Dependencies
+node_modules/
+
+# Local agent/tool state
+.superpowers/
+.playwright-mcp/
+.tmpdebug/
+
+# Local smoke-test screenshots and extracted debug frames
+/after-*.png
+/finish-fix-*.png
+/gamepass-*.png
+/playtest-*.png
+/screenshot-*.png
+/test-*.png
+/*-frame0.png
+
+# Logs and temporary files
+*.log
+*.tmp

@@ -59,10 +59,19 @@ export default class UIScene extends Phaser.Scene {
     }).setOrigin(0.5).setAlpha(0).setDepth(22);
 
     // Hook into GameScene events
-    const game = this.scene.get('GameScene');
-    game.events.on('heartLost', this._onHeartLost, this);
-    game.events.on('checkpointReached', this._onCheckpoint, this);
-    game.events.on('scoreUpdate', this._onScore, this);
+    this._gameScene = this.scene.get('GameScene');
+    this._gameScene.events.on('heartLost', this._onHeartLost, this);
+    this._gameScene.events.on('checkpointReached', this._onCheckpoint, this);
+    this._gameScene.events.on('scoreUpdate', this._onScore, this);
+  }
+
+  shutdown() {
+    if (this._gameScene) {
+      this._gameScene.events.off('heartLost', this._onHeartLost, this);
+      this._gameScene.events.off('checkpointReached', this._onCheckpoint, this);
+      this._gameScene.events.off('scoreUpdate', this._onScore, this);
+      this._gameScene = null;
+    }
   }
 
   _onHeartLost(hearts) {
@@ -82,8 +91,7 @@ export default class UIScene extends Phaser.Scene {
     this.tweens.add({ targets: [this._toastBg, this._toastText], alpha: 0, delay: 1200, duration: 500 });
 
     // Update stars display based on current hearts
-    const game = this.scene.get('GameScene');
-    const hearts = game?._hearts ?? this._hearts;
+    const hearts = this._gameScene?._hearts ?? this._hearts;
     const starStr = '★'.repeat(hearts) + '☆'.repeat(3 - hearts);
     this._starText.setText(starStr).setColor('#ffd700');
   }

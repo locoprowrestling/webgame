@@ -31,8 +31,6 @@ export default class TitleScene extends Phaser.Scene {
   }
 
   _buildRunner(W, H) {
-    // Tiny silhouette runner on ground
-    const g = this.add.graphics().setDepth(5);
     const runner = this.add.container(80, H - 44).setDepth(5);
     const body = this.add.graphics();
     body.fillStyle(0xff6600, 1);
@@ -98,7 +96,7 @@ export default class TitleScene extends Phaser.Scene {
       'LoCoPro Championship Run',
       '',
       'Longmont, CO Professional Wrestling',
-      'locopro.com',
+      'locopro.pw',
       '',
       'Characters & Logos © LoCoPro',
       '',

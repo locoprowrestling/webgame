@@ -1,5 +1,18 @@
 import { CHARACTERS } from '../src/characters.js';
-import { generateCharacterTextures } from '../src/characterSprite.js';
+import {
+  ANIMATED_OBSTACLE_TYPES,
+  getObstacleAnimConfig,
+  getObstacleDef,
+  getObstacleFrameTextureKey,
+} from '../src/obstacles.js';
+
+const SHEET_H = 96;
+const OBSTACLE_SHEET_COLS = 4;
+const OBSTACLE_FRAME_W = 192;
+const OBSTACLE_FRAME_H = 256;
+const OBSTACLE_SCAN_TOP = 84;
+const OBSTACLE_ALPHA_THRESHOLD = 24;
+const STATIC_OBSTACLE_TYPES = ['turnbuckle', 'steel_steps', 'folding_chair'];
 
 export default class BootScene extends Phaser.Scene {
   constructor() { super('BootScene'); }
@@ -10,10 +23,15 @@ export default class BootScene extends Phaser.Scene {
 
     this._createLoadingUI();
 
-    // Load all character portraits
+    // Load all character portraits and spritesheets
     CHARACTERS.forEach(c => {
       this.load.image(`portrait_${c.id}`, c.portrait);
       if (c.logo) this.load.image(`logo_${c.id}`, c.logo);
+      this.load.spritesheet(
+        `sheet_${c.id}`,
+        `Assets/players-web/spritesheets/${c.id}.png`,
+        { frameWidth: c.sheetW, frameHeight: SHEET_H },
+      );
     });
 
     // Load faction + brand logos
@@ -21,13 +39,35 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('logo_pillars', 'Assets/logos-web/logo-the-pillars.png');
     this.load.image('logo_locopro', 'Assets/logos-web/logo-locopro-primary-mark-thumb.png');
 
+    // Source sheets contain labels and empty padding, so gameplay frames are
+    // cropped into clean textures in create() before animations are built.
+    ANIMATED_OBSTACLE_TYPES.forEach(type =>
+      this.load.image(`obs_src_${type}`, `Assets/obstacles-web/${type}.png`),
+    );
+
+    // Static single-frame obstacles
+    ['turnbuckle', 'steel_steps', 'folding_chair'].forEach(type =>
+      this.load.image(`obs_${type}`, `Assets/obstacles-web/${type}.png`),
+    );
+
     this.load.on('progress', v => this._updateBar(v));
   }
 
   create() {
-    generateCharacterTextures(this);
+    CHARACTERS.forEach(c => {
+      this.anims.create({
+        key: `walk_${c.id}`,
+        frames: this.anims.generateFrameNumbers(`sheet_${c.id}`, { start: 0, end: 7 }),
+        frameRate: 10,
+        repeat: -1,
+      });
+    });
+
     this._buildBackgroundTextures();
     this._buildObstacleTextures();
+    this._buildObstacleFrameTextures();
+    this._buildStaticObstacleTextures();
+    this._buildObstacleAnims();
     this.scene.start('TitleScene');
   }
 
@@ -148,6 +188,24 @@ export default class BootScene extends Phaser.Scene {
     g.destroy();
   }
 
+  _buildObstacleAnims() {
+    ANIMATED_OBSTACLE_TYPES.forEach(type => {
+      const config = getObstacleAnimConfig(type);
+      const frames = config.frames
+        .map(frame => ({ key: getObstacleFrameTextureKey(type, frame) }))
+        .filter(frame => this.textures.exists(frame.key));
+
+      if (frames.length === 0) return;
+
+      this.anims.create({
+        key: `obs_anim_${type}`,
+        frames,
+        frameRate: config.frameRate,
+        repeat: -1,
+      });
+    });
+  }
+
   _buildObstacleTextures() {
     // Pre-generate a finish flag texture
     const g = this.add.graphics();
@@ -164,5 +222,148 @@ export default class BootScene extends Phaser.Scene {
     c.lineStyle(2, 0xaa6600, 1); c.strokeRect(0, 0, 40, 12);
     c.generateTexture('checkpoint', 40, 12);
     c.destroy();
+  }
+
+  _buildObstacleFrameTextures() {
+    const scratch = document.createElement('canvas');
+    scratch.width = OBSTACLE_FRAME_W;
+    scratch.height = OBSTACLE_FRAME_H;
+    const scratchContext = scratch.getContext('2d', { willReadFrequently: true });
+
+    ANIMATED_OBSTACLE_TYPES.forEach(type => {
+      const sourceKey = `obs_src_${type}`;
+      if (!this.textures.exists(sourceKey)) return;
+
+      const texture = this.textures.get(sourceKey);
+      const source = texture.getSourceImage();
+      const def = getObstacleDef(type);
+      const frameCount = Math.floor(source.width / OBSTACLE_FRAME_W) * Math.floor(source.height / OBSTACLE_FRAME_H);
+
+      for (let frame = 0; frame < frameCount; frame++) {
+        const frameX = (frame % OBSTACLE_SHEET_COLS) * OBSTACLE_FRAME_W;
+        const frameY = Math.floor(frame / OBSTACLE_SHEET_COLS) * OBSTACLE_FRAME_H;
+        const bounds = this._findObstacleArtBounds(source, frameX, frameY, scratchContext);
+        this._createObstacleFrameTexture(type, frame, source, frameX, frameY, bounds, def);
+      }
+    });
+  }
+
+  _buildStaticObstacleTextures() {
+    STATIC_OBSTACLE_TYPES.forEach(type => {
+      const def = getObstacleDef(type);
+      const key = getObstacleFrameTextureKey(type, 0);
+      const graphics = this.add.graphics();
+      def.draw(graphics);
+      graphics.generateTexture(key, def.w, def.h);
+      graphics.destroy();
+    });
+  }
+
+  _findObstacleArtBounds(source, frameX, frameY, scratchContext) {
+    scratchContext.clearRect(0, 0, OBSTACLE_FRAME_W, OBSTACLE_FRAME_H);
+    scratchContext.drawImage(
+      source,
+      frameX,
+      frameY,
+      OBSTACLE_FRAME_W,
+      OBSTACLE_FRAME_H,
+      0,
+      0,
+      OBSTACLE_FRAME_W,
+      OBSTACLE_FRAME_H,
+    );
+
+    const pixels = scratchContext.getImageData(0, 0, OBSTACLE_FRAME_W, OBSTACLE_FRAME_H).data;
+    const visited = new Uint8Array(OBSTACLE_FRAME_W * OBSTACLE_FRAME_H);
+    let best = null;
+
+    const isArtPixel = (x, y) => {
+      if (x < 0 || x >= OBSTACLE_FRAME_W || y < OBSTACLE_SCAN_TOP || y >= OBSTACLE_FRAME_H) return false;
+      const index = y * OBSTACLE_FRAME_W + x;
+      return !visited[index] && pixels[(index * 4) + 3] > OBSTACLE_ALPHA_THRESHOLD;
+    };
+
+    for (let y = OBSTACLE_SCAN_TOP; y < OBSTACLE_FRAME_H; y++) {
+      for (let x = 0; x < OBSTACLE_FRAME_W; x++) {
+        if (!isArtPixel(x, y)) continue;
+
+        const stack = [y * OBSTACLE_FRAME_W + x];
+        visited[y * OBSTACLE_FRAME_W + x] = 1;
+        let count = 0;
+        let minX = x;
+        let minY = y;
+        let maxX = x;
+        let maxY = y;
+
+        while (stack.length > 0) {
+          const index = stack.pop();
+          const px = index % OBSTACLE_FRAME_W;
+          const py = Math.floor(index / OBSTACLE_FRAME_W);
+          count++;
+          minX = Math.min(minX, px);
+          minY = Math.min(minY, py);
+          maxX = Math.max(maxX, px);
+          maxY = Math.max(maxY, py);
+
+          for (let oy = -1; oy <= 1; oy++) {
+            for (let ox = -1; ox <= 1; ox++) {
+              if (ox === 0 && oy === 0) continue;
+              const nx = px + ox;
+              const ny = py + oy;
+              if (!isArtPixel(nx, ny)) continue;
+              const nextIndex = ny * OBSTACLE_FRAME_W + nx;
+              visited[nextIndex] = 1;
+              stack.push(nextIndex);
+            }
+          }
+        }
+
+        if (!best || count > best.count) {
+          best = { count, minX, minY, maxX, maxY };
+        }
+      }
+    }
+
+    if (!best) {
+      return { x: 0, y: OBSTACLE_SCAN_TOP, w: OBSTACLE_FRAME_W, h: OBSTACLE_FRAME_H - OBSTACLE_SCAN_TOP };
+    }
+
+    const minX = Math.max(0, best.minX - 3);
+    const minY = Math.max(OBSTACLE_SCAN_TOP, best.minY - 3);
+    const maxX = Math.min(OBSTACLE_FRAME_W - 1, best.maxX + 3);
+    const maxY = Math.min(OBSTACLE_FRAME_H - 1, best.maxY + 3);
+
+    return {
+      x: minX,
+      y: minY,
+      w: maxX - minX + 1,
+      h: maxY - minY + 1,
+    };
+  }
+
+  _createObstacleFrameTexture(type, frame, source, frameX, frameY, bounds, def) {
+    const key = getObstacleFrameTextureKey(type, frame);
+    const texture = this.textures.createCanvas(key, def.w, def.h);
+    const context = texture.getContext();
+    const scale = Math.min(def.w / bounds.w, def.h / bounds.h);
+    const drawW = Math.max(1, Math.round(bounds.w * scale));
+    const drawH = Math.max(1, Math.round(bounds.h * scale));
+    const drawX = Math.round((def.w - drawW) / 2);
+    const drawY = Math.round(def.h - drawH);
+
+    context.imageSmoothingEnabled = false;
+    context.clearRect(0, 0, def.w, def.h);
+    context.drawImage(
+      source,
+      frameX + bounds.x,
+      frameY + bounds.y,
+      bounds.w,
+      bounds.h,
+      drawX,
+      drawY,
+      drawW,
+      drawH,
+    );
+    texture.refresh();
   }
 }

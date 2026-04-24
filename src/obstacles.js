@@ -1,9 +1,27 @@
 // Obstacle type registry: defines visual drawing + hitbox + behavior for each obstacle type.
 // spawnObstacle() is called by the level loader to create each obstacle in GameScene.
 
+export const ANIMATED_OBSTACLE_TYPES = [
+  'boulder',
+  'tumbleweed',
+  'deer',
+  'hawk',
+  'cyclist',
+  'hay_bale',
+  'rattlesnake',
+  'road_cone',
+  'prairie_dog',
+];
+
+const DEFAULT_ANIM_FRAMES = [0, 1, 2, 3, 4, 5, 6, 7];
+
 const DEFS = {
   prairie_dog: {
-    w: 22, h: 30,
+    w: 48, h: 56, bodyW: 32, bodyH: 44,
+    // The source spritesheet includes digging/burrowed poses that make
+    // the hazard read as missing in Level 1. Keep only clearly visible poses.
+    animFrames: [0, 1, 2, 3, 4, 6],
+    animFrameRate: 6,
     draw(g) {
       g.fillStyle(0x8b6914, 1); g.fillEllipse(11, 18, 22, 24);
       g.fillStyle(0xc8a050, 1); g.fillCircle(11, 8, 9);
@@ -12,7 +30,7 @@ const DEFS = {
     behavior: 'static',
   },
   tumbleweed: {
-    w: 36, h: 36,
+    w: 64, h: 64, bodyW: 44, bodyH: 44,
     draw(g) {
       g.fillStyle(0x9b7a3a, 0.85); g.fillCircle(18, 18, 17);
       g.lineStyle(2, 0x7a5a20, 0.6);
@@ -23,7 +41,7 @@ const DEFS = {
     behavior: 'rolling',
   },
   hay_bale: {
-    w: 48, h: 36,
+    w: 80, h: 60, bodyW: 58, bodyH: 42,
     draw(g) {
       g.fillStyle(0xe8c840, 1); g.fillRect(0, 0, 48, 36);
       g.lineStyle(3, 0xaa8800, 1);
@@ -34,7 +52,7 @@ const DEFS = {
     behavior: 'static',
   },
   road_cone: {
-    w: 24, h: 40,
+    w: 40, h: 60,
     draw(g) {
       g.fillStyle(0xff6600, 1);
       g.fillTriangle(12, 0, 0, 36, 24, 36);
@@ -45,7 +63,7 @@ const DEFS = {
     behavior: 'static',
   },
   deer: {
-    w: 50, h: 56,
+    w: 80, h: 96,
     draw(g) {
       g.fillStyle(0xaa7722, 1);
       g.fillRect(8, 24, 34, 28);
@@ -59,7 +77,7 @@ const DEFS = {
     behavior: 'pacing',
   },
   cyclist: {
-    w: 60, h: 52,
+    w: 96, h: 80,
     draw(g) {
       g.lineStyle(3, 0x333333, 1);
       g.strokeCircle(14, 38, 13); g.strokeCircle(46, 38, 13);
@@ -72,7 +90,7 @@ const DEFS = {
     behavior: 'moving_left',
   },
   boulder: {
-    w: 44, h: 40,
+    w: 64, h: 60,
     draw(g) {
       g.fillStyle(0x888880, 1); g.fillEllipse(22, 20, 44, 40);
       g.fillStyle(0xaaa898, 0.5); g.fillEllipse(14, 12, 14, 10);
@@ -93,7 +111,7 @@ const DEFS = {
     behavior: 'crumbling',
   },
   hawk: {
-    w: 48, h: 24,
+    w: 80, h: 36,
     draw(g) {
       g.fillStyle(0x442200, 1);
       g.fillTriangle(24, 0, 0, 24, 48, 24);
@@ -103,7 +121,7 @@ const DEFS = {
     behavior: 'airborne_sine',
   },
   steel_steps: {
-    w: 44, h: 36,
+    w: 64, h: 52,
     draw(g) {
       g.fillStyle(0x888888, 1);
       g.fillRect(0, 24, 44, 12);
@@ -115,7 +133,7 @@ const DEFS = {
     behavior: 'projectile',
   },
   rattlesnake: {
-    w: 48, h: 18,
+    w: 80, h: 28,
     draw(g) {
       g.fillStyle(0x6a8a2a, 1);
       g.fillEllipse(8, 9, 16, 18);
@@ -128,7 +146,7 @@ const DEFS = {
     behavior: 'static',
   },
   folding_chair: {
-    w: 32, h: 44,
+    w: 48, h: 68,
     draw(g) {
       g.fillStyle(0xddcc44, 1); g.fillRect(4, 4, 24, 20);
       g.lineStyle(3, 0x888800, 1);
@@ -140,7 +158,7 @@ const DEFS = {
     behavior: 'static',
   },
   turnbuckle: {
-    w: 20, h: 60,
+    w: 28, h: 80,
     draw(g) {
       g.fillStyle(0xcc0000, 1); g.fillRect(0, 0, 20, 60);
       g.fillStyle(0xaaaaaa, 1); g.fillRect(4, 0, 12, 8); g.fillRect(4, 52, 12, 8);
@@ -174,22 +192,34 @@ export function getObstacleDef(type) {
   return DEFS[type] || DEFS.prairie_dog;
 }
 
-export function spawnObstacle(scene, type, x, y, config = {}) {
+export function getObstacleAnimConfig(type) {
   const def = getObstacleDef(type);
-  const key = `obs_${type}`;
+  return {
+    frames: def.animFrames || DEFAULT_ANIM_FRAMES,
+    frameRate: def.animFrameRate || 8,
+  };
+}
 
-  if (!scene.textures.exists(key)) {
-    const g = scene.add.graphics();
-    def.draw(g);
-    g.generateTexture(key, def.w, def.h);
-    g.destroy();
-  }
+export function getObstacleFrameTextureKey(type, frame = 0) {
+  return `obs_${type}_${frame}`;
+}
 
-  const obj = scene.physics.add.sprite(x, y, key).setOrigin(0.5, 1);
-  obj.body.allowGravity = false;
-  obj.obstacleType = type;
-  obj.obstacleDef = def;
+function applyObstacleBody(obj, def) {
+  if (!obj.body) return;
 
+  const bodyW = def.bodyW || Math.max(12, Math.round(def.w * 0.72));
+  const bodyH = def.bodyH || Math.max(12, Math.round(def.h * 0.78));
+  obj.body.setAllowGravity(false);
+  obj.body.setGravityY(0);
+  if (def.behavior !== 'projectile') obj.body.setVelocityY(0);
+  obj.body.setSize(bodyW, bodyH);
+  obj.body.setOffset(
+    Math.round((def.w - bodyW) / 2),
+    Math.round(def.h - bodyH),
+  );
+}
+
+function applyObstacleBehavior(obj, def, config, x, y) {
   switch (def.behavior) {
     case 'rolling':
       obj.body.setVelocityX(config.speed || -60);
@@ -219,9 +249,44 @@ export function spawnObstacle(scene, type, x, y, config = {}) {
       break;
     case 'crumbling':
       obj._crumbling = false;
-      obj.body.allowGravity = false;
+      break;
+    default:
+      obj.body.setVelocityX(0);
       break;
   }
+}
+
+export function spawnObstacle(scene, type, x, y, config = {}) {
+  const def = getObstacleDef(type);
+  const cleanKey = getObstacleFrameTextureKey(type, 0);
+  const key = scene.textures.exists(cleanKey) ? cleanKey : `obs_${type}`;
+
+  if (!scene.textures.exists(key)) {
+    const g = scene.add.graphics();
+    def.draw(g);
+    g.generateTexture(key, def.w, def.h);
+    g.destroy();
+  }
+
+  const obj = scene.physics.add.sprite(x, y, key).setOrigin(0.5, 1);
+  obj.setDisplaySize(def.w, def.h);
+  obj.obstacleType = type;
+  obj.obstacleDef = def;
+  obj.resetObstacleBody = () => {
+    applyObstacleBody(obj, def);
+    applyObstacleBehavior(obj, def, config, x, y);
+  };
+
+  if (scene.anims.exists(`obs_anim_${type}`)) {
+    obj.play(`obs_anim_${type}`);
+    // Avoid every copy of the same obstacle hitting the same animation frame.
+    obj.anims.setProgress(Math.random() * 0.92);
+    obj.on('animationupdate', () => applyObstacleBody(obj, def));
+  }
+
+  // Must be applied after play()/setProgress(), because animation frame changes
+  // refresh the Arcade body and can otherwise restore source-sheet dimensions.
+  obj.resetObstacleBody();
 
   return obj;
 }
@@ -229,6 +294,7 @@ export function spawnObstacle(scene, type, x, y, config = {}) {
 export function updateObstacle(obj, time, delta) {
   const def = obj.obstacleDef;
   if (!def) return;
+  applyObstacleBody(obj, def);
 
   switch (def.behavior) {
     case 'pacing':
