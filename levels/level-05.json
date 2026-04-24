@@ -1,0 +1,40 @@
+{
+  "id": 5, "zone": 1, "name": "End of the Greenway",
+  "scrollSpeed": 220, "background": "greenway", "endX": 13200,
+  "gaps": [
+    { "x": 1400, "width": 140 },
+    { "x": 3500, "width": 150 },
+    { "x": 6000, "width": 140 },
+    { "x": 8800, "width": 150 },
+    { "x": 11200,"width": 130 }
+  ],
+  "platforms": [
+    { "x": 1100, "y": 380, "width": 90  },
+    { "x": 1600, "y": 370, "width": 100 },
+    { "x": 2600, "y": 390, "width": 90  },
+    { "x": 3200, "y": 380, "width": 100 },
+    { "x": 3700, "y": 360, "width": 90  },
+    { "x": 4700, "y": 380, "width": 100 },
+    { "x": 5600, "y": 360, "width": 90  },
+    { "x": 6200, "y": 380, "width": 90  },
+    { "x": 7100, "y": 370, "width": 100 },
+    { "x": 8000, "y": 380, "width": 90  },
+    { "x": 8900, "y": 360, "width": 90  },
+    { "x": 9900, "y": 380, "width": 100 },
+    { "x": 10800,"y": 360, "width": 90  },
+    { "x": 11300,"y": 380, "width": 90  }
+  ],
+  "obstacles": [
+    { "type": "tumbleweed",  "x": 800,  "speed": -65 },
+    { "type": "prairie_dog", "x": 1900 },
+    { "type": "road_cone",   "x": 2400 },
+    { "type": "hay_bale",    "x": 4300 },
+    { "type": "prairie_dog", "x": 5200 },
+    { "type": "tumbleweed",  "x": 7300, "speed": -70 },
+    { "type": "road_cone",   "x": 7700 },
+    { "type": "hay_bale",    "x": 10300},
+    { "type": "prairie_dog", "x": 11000},
+    { "type": "tumbleweed",  "x": 12000,"speed": -75 }
+  ],
+  "checkpoints": [{ "x": 4400 }, { "x": 8800 }]
+}

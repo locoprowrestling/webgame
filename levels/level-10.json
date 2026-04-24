@@ -1,0 +1,47 @@
+{
+  "id": 10, "zone": 2, "name": "Diagonal Highway Dash",
+  "scrollSpeed": 260, "background": "downtown", "endX": 18000,
+  "gaps": [
+    { "x": 1500, "width": 165 },
+    { "x": 4000, "width": 170 },
+    { "x": 7000, "width": 165 },
+    { "x": 10500,"width": 170 },
+    { "x": 14000,"width": 165 }
+  ],
+  "platforms": [
+    { "x": 900,  "y": 370, "width": 90 },
+    { "x": 1600, "y": 350, "width": 90 },
+    { "x": 2600, "y": 370, "width": 90 },
+    { "x": 3600, "y": 350, "width": 90 },
+    { "x": 4100, "y": 370, "width": 90 },
+    { "x": 5100, "y": 350, "width": 90 },
+    { "x": 6100, "y": 370, "width": 90 },
+    { "x": 7100, "y": 350, "width": 90 },
+    { "x": 8100, "y": 370, "width": 90 },
+    { "x": 9200, "y": 350, "width": 90 },
+    { "x": 10600,"y": 370, "width": 90 },
+    { "x": 11700,"y": 350, "width": 90 },
+    { "x": 12800,"y": 370, "width": 90 },
+    { "x": 14100,"y": 350, "width": 90 },
+    { "x": 15200,"y": 370, "width": 90 },
+    { "x": 16300,"y": 350, "width": 90 }
+  ],
+  "obstacles": [
+    { "type": "cyclist",  "x": 800,  "speed": -185 },
+    { "type": "deer",     "x": 2100, "paceMin": 1900, "paceMax": 2400 },
+    { "type": "road_cone","x": 3100 },
+    { "type": "cyclist",  "x": 4600, "speed": -195 },
+    { "type": "deer",     "x": 5600, "paceMin": 5400, "paceMax": 5900 },
+    { "type": "hay_bale", "x": 6500 },
+    { "type": "cyclist",  "x": 7600, "speed": -190 },
+    { "type": "deer",     "x": 8700, "paceMin": 8500, "paceMax": 9000 },
+    { "type": "road_cone","x": 9800 },
+    { "type": "cyclist",  "x": 11200,"speed": -200 },
+    { "type": "deer",     "x": 12300,"paceMin": 12100,"paceMax": 12700},
+    { "type": "hay_bale", "x": 13300},
+    { "type": "cyclist",  "x": 14600,"speed": -195 },
+    { "type": "deer",     "x": 15700,"paceMin": 15500,"paceMax": 16000},
+    { "type": "road_cone","x": 16800}
+  ],
+  "checkpoints": [{ "x": 6000 }, { "x": 12000 }]
+}

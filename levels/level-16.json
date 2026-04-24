@@ -1,0 +1,39 @@
+{
+  "id": 16, "zone": 4, "name": "Boulder County Fairgrounds",
+  "scrollSpeed": 340, "background": "fairgrounds", "endX": 22500,
+  "gaps": [
+    { "x": 1200, "width": 190 }, { "x": 3700, "width": 195 },
+    { "x": 7000, "width": 190 }, { "x": 10500,"width": 195 },
+    { "x": 14500,"width": 190 }, { "x": 18500,"width": 190 }
+  ],
+  "platforms": [
+    { "x": 700,  "y": 352, "width": 72 }, { "x": 1300, "y": 326, "width": 72 },
+    { "x": 2300, "y": 350, "width": 72 }, { "x": 3300, "y": 324, "width": 72 },
+    { "x": 3800, "y": 348, "width": 72 }, { "x": 4900, "y": 324, "width": 72 },
+    { "x": 6000, "y": 348, "width": 72 }, { "x": 7100, "y": 324, "width": 72 },
+    { "x": 8200, "y": 348, "width": 72 }, { "x": 9300, "y": 324, "width": 72 },
+    { "x": 10600,"y": 348, "width": 72 }, { "x": 11700,"y": 324, "width": 72 },
+    { "x": 12800,"y": 348, "width": 72 }, { "x": 14000,"y": 324, "width": 72 },
+    { "x": 14600,"y": 348, "width": 72 }, { "x": 15700,"y": 324, "width": 72 },
+    { "x": 16900,"y": 348, "width": 72 }, { "x": 18000,"y": 324, "width": 72 },
+    { "x": 18600,"y": 348, "width": 72 }, { "x": 19800,"y": 324, "width": 72 },
+    { "x": 21000,"y": 348, "width": 72 }
+  ],
+  "obstacles": [
+    { "type": "hay_bale",    "x": 900  }, { "type": "steel_steps", "x": 1800, "y": 340, "speed": -280 },
+    { "type": "rattlesnake", "x": 2700 }, { "type": "hawk","x": 3500,"y": 280,"speed": -115,"amp": 55 },
+    { "type": "steel_steps", "x": 4400, "y": 340, "speed": -290 },
+    { "type": "hay_bale",    "x": 5400 }, { "type": "rattlesnake","x": 6200 },
+    { "type": "steel_steps", "x": 7200, "y": 340, "speed": -285 },
+    { "type": "hawk",        "x": 8300, "y": 282, "speed": -120, "amp": 58 },
+    { "type": "hay_bale",    "x": 9200 }, { "type": "rattlesnake","x": 10000},
+    { "type": "steel_steps", "x": 10700,"y": 340,"speed": -295 },
+    { "type": "hawk",        "x": 11800,"y": 280,"speed": -118,"amp": 55 },
+    { "type": "hay_bale",    "x": 12800}, { "type": "rattlesnake","x": 13600},
+    { "type": "steel_steps", "x": 14700,"y": 340,"speed": -290 },
+    { "type": "hay_bale",    "x": 15900}, { "type": "hawk","x": 16900,"y": 282,"speed": -115,"amp": 52 },
+    { "type": "rattlesnake", "x": 17800}, { "type": "steel_steps","x": 18700,"y": 340,"speed": -285 },
+    { "type": "hay_bale",    "x": 19900}, { "type": "hawk","x": 20800,"y": 280,"speed": -120,"amp": 56 }
+  ],
+  "checkpoints": [{ "x": 7500 }, { "x": 15000 }]
+}

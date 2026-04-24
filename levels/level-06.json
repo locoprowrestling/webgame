@@ -1,0 +1,39 @@
+{
+  "id": 6, "zone": 2, "name": "Main Street Hustle",
+  "scrollSpeed": 260, "background": "downtown", "endX": 14000,
+  "gaps": [
+    { "x": 2000, "width": 140 },
+    { "x": 5200, "width": 150 },
+    { "x": 9000, "width": 140 }
+  ],
+  "platforms": [
+    { "x": 1200, "y": 390, "width": 100 },
+    { "x": 2100, "y": 370, "width": 90  },
+    { "x": 3100, "y": 380, "width": 100 },
+    { "x": 4200, "y": 360, "width": 90  },
+    { "x": 5300, "y": 380, "width": 100 },
+    { "x": 6300, "y": 370, "width": 90  },
+    { "x": 7200, "y": 360, "width": 100 },
+    { "x": 8200, "y": 380, "width": 90  },
+    { "x": 9100, "y": 370, "width": 100 },
+    { "x": 10100,"y": 360, "width": 90  },
+    { "x": 11200,"y": 380, "width": 100 },
+    { "x": 12200,"y": 370, "width": 90  }
+  ],
+  "obstacles": [
+    { "type": "cyclist",     "x": 900,  "speed": -160 },
+    { "type": "road_cone",   "x": 1600 },
+    { "type": "prairie_dog", "x": 2600 },
+    { "type": "cyclist",     "x": 3500, "speed": -170 },
+    { "type": "hay_bale",    "x": 4700 },
+    { "type": "road_cone",   "x": 5800 },
+    { "type": "cyclist",     "x": 6700, "speed": -180 },
+    { "type": "deer",        "x": 7600, "paceMin": 7400, "paceMax": 7900 },
+    { "type": "road_cone",   "x": 8500 },
+    { "type": "cyclist",     "x": 9600, "speed": -160 },
+    { "type": "hay_bale",    "x": 10600},
+    { "type": "road_cone",   "x": 11500},
+    { "type": "cyclist",     "x": 12800,"speed": -175 }
+  ],
+  "checkpoints": [{ "x": 4700 }, { "x": 9400 }]
+}

@@ -1,0 +1,42 @@
+{
+  "id": 7, "zone": 2, "name": "Union Reservoir Loop",
+  "scrollSpeed": 260, "background": "downtown", "endX": 15000,
+  "gaps": [
+    { "x": 1800, "width": 150 },
+    { "x": 4800, "width": 160 },
+    { "x": 8200, "width": 150 },
+    { "x": 11500,"width": 155 }
+  ],
+  "platforms": [
+    { "x": 1200, "y": 380, "width": 90  },
+    { "x": 1900, "y": 360, "width": 100 },
+    { "x": 2900, "y": 380, "width": 90  },
+    { "x": 3900, "y": 360, "width": 100 },
+    { "x": 4900, "y": 380, "width": 90  },
+    { "x": 5900, "y": 360, "width": 100 },
+    { "x": 6900, "y": 380, "width": 90  },
+    { "x": 7900, "y": 360, "width": 100 },
+    { "x": 8300, "y": 380, "width": 90  },
+    { "x": 9300, "y": 360, "width": 100 },
+    { "x": 10400,"y": 380, "width": 90  },
+    { "x": 11600,"y": 360, "width": 90  },
+    { "x": 12600,"y": 380, "width": 100 },
+    { "x": 13600,"y": 360, "width": 90  }
+  ],
+  "obstacles": [
+    { "type": "deer",    "x": 900,  "paceMin": 700,  "paceMax": 1200 },
+    { "type": "cyclist", "x": 1600, "speed": -170 },
+    { "type": "hay_bale","x": 2500 },
+    { "type": "deer",    "x": 3400, "paceMin": 3200, "paceMax": 3700 },
+    { "type": "cyclist", "x": 4400, "speed": -180 },
+    { "type": "road_cone","x": 5400 },
+    { "type": "deer",    "x": 6400, "paceMin": 6200, "paceMax": 6700 },
+    { "type": "cyclist", "x": 7400, "speed": -175 },
+    { "type": "hay_bale","x": 8700 },
+    { "type": "deer",    "x": 9700, "paceMin": 9500, "paceMax": 10000},
+    { "type": "cyclist", "x": 10900,"speed": -185 },
+    { "type": "road_cone","x": 12100},
+    { "type": "deer",    "x": 13200,"paceMin": 13000,"paceMax": 13600}
+  ],
+  "checkpoints": [{ "x": 5000 }, { "x": 10000 }]
+}

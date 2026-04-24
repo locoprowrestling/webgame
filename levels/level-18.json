@@ -1,0 +1,46 @@
+{
+  "id": 18, "zone": 4, "name": "Harvest Days Chaos",
+  "scrollSpeed": 340, "background": "fairgrounds", "endX": 24500,
+  "gaps": [
+    { "x": 1000, "width": 200 }, { "x": 3300, "width": 205 },
+    { "x": 6300, "width": 200 }, { "x": 9700, "width": 205 },
+    { "x": 13800,"width": 200 }, { "x": 17900,"width": 200 },
+    { "x": 21700,"width": 200 }
+  ],
+  "platforms": [
+    { "x": 550,  "y": 348, "width": 68 }, { "x": 1100, "y": 320, "width": 68 },
+    { "x": 2100, "y": 346, "width": 68 }, { "x": 2900, "y": 318, "width": 68 },
+    { "x": 3400, "y": 344, "width": 68 }, { "x": 4500, "y": 318, "width": 68 },
+    { "x": 5600, "y": 344, "width": 68 }, { "x": 6400, "y": 318, "width": 68 },
+    { "x": 7500, "y": 344, "width": 68 }, { "x": 8600, "y": 318, "width": 68 },
+    { "x": 9800, "y": 344, "width": 68 }, { "x": 11000,"y": 318, "width": 68 },
+    { "x": 12100,"y": 344, "width": 68 }, { "x": 13300,"y": 318, "width": 68 },
+    { "x": 13900,"y": 344, "width": 68 }, { "x": 15100,"y": 318, "width": 68 },
+    { "x": 16300,"y": 344, "width": 68 }, { "x": 17500,"y": 318, "width": 68 },
+    { "x": 17900,"y": 344, "width": 68 }, { "x": 19100,"y": 318, "width": 68 },
+    { "x": 20300,"y": 344, "width": 68 }, { "x": 21500,"y": 318, "width": 68 },
+    { "x": 21800,"y": 344, "width": 68 }, { "x": 23000,"y": 318, "width": 68 }
+  ],
+  "obstacles": [
+    { "type": "hay_bale",   "x": 750  }, { "type": "hawk","x": 1600,"y": 275,"speed": -120,"amp": 58 },
+    { "type": "steel_steps","x": 2500, "y": 332, "speed": -305 },
+    { "type": "hay_bale",   "x": 3400 }, { "type": "crumbling_platform","x": 3400,"y": 420,"width": 68 },
+    { "type": "hawk",       "x": 4300, "y": 275, "speed": -122, "amp": 60 },
+    { "type": "rattlesnake","x": 5200 }, { "type": "steel_steps","x": 6000,"y": 332,"speed": -308 },
+    { "type": "crumbling_platform","x": 6400,"y": 420,"width": 68 },
+    { "type": "hay_bale",   "x": 7100 }, { "type": "hawk","x": 8000,"y": 272,"speed": -125,"amp": 62 },
+    { "type": "rattlesnake","x": 9000 }, { "type": "steel_steps","x": 9800,"y": 332,"speed": -310 },
+    { "type": "crumbling_platform","x": 9800,"y": 420,"width": 68 },
+    { "type": "hawk",       "x": 10800,"y": 275,"speed": -120,"amp": 58 },
+    { "type": "rattlesnake","x": 11700}, { "type": "steel_steps","x": 12600,"y": 332,"speed": -305 },
+    { "type": "hay_bale",   "x": 13500}, { "type": "crumbling_platform","x": 13900,"y": 420,"width": 68 },
+    { "type": "hawk",       "x": 14800,"y": 272,"speed": -122,"amp": 60 },
+    { "type": "rattlesnake","x": 15700}, { "type": "steel_steps","x": 16700,"y": 332,"speed": -308 },
+    { "type": "hay_bale",   "x": 17600}, { "type": "crumbling_platform","x": 17900,"y": 420,"width": 68 },
+    { "type": "hawk",       "x": 18800,"y": 275,"speed": -120,"amp": 58 },
+    { "type": "rattlesnake","x": 19700}, { "type": "steel_steps","x": 20600,"y": 332,"speed": -312 },
+    { "type": "crumbling_platform","x": 21800,"y": 420,"width": 68 },
+    { "type": "hawk",       "x": 22700,"y": 272,"speed": -125,"amp": 62 }
+  ],
+  "checkpoints": [{ "x": 8200 }, { "x": 16400 }]
+}

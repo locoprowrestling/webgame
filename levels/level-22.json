@@ -1,0 +1,53 @@
+{
+  "id": 22, "zone": 5, "name": "LoCoPro Arena - Ring Side",
+  "scrollSpeed": 380, "background": "arena", "endX": 28000,
+  "gaps": [
+    { "x": 800,  "width": 215 }, { "x": 2800, "width": 220 },
+    { "x": 5600, "width": 215 }, { "x": 8800, "width": 220 },
+    { "x": 12800,"width": 215 }, { "x": 17200,"width": 215 },
+    { "x": 21600,"width": 215 }, { "x": 25800,"width": 215 }
+  ],
+  "platforms": [
+    { "x": 400,  "y": 340, "width": 60 }, { "x": 900, "y": 308, "width": 60 },
+    { "x": 1900, "y": 338, "width": 60 }, { "x": 2500, "y": 306, "width": 60 },
+    { "x": 2900, "y": 336, "width": 60 }, { "x": 4000, "y": 306, "width": 60 },
+    { "x": 5100, "y": 336, "width": 60 }, { "x": 5700, "y": 306, "width": 60 },
+    { "x": 6800, "y": 336, "width": 60 }, { "x": 8000, "y": 306, "width": 60 },
+    { "x": 8900, "y": 336, "width": 60 }, { "x": 10100,"y": 306, "width": 60 },
+    { "x": 11300,"y": 336, "width": 60 }, { "x": 12400,"y": 306, "width": 60 },
+    { "x": 12900,"y": 336, "width": 60 }, { "x": 14200,"y": 306, "width": 60 },
+    { "x": 15500,"y": 336, "width": 60 }, { "x": 16800,"y": 306, "width": 60 },
+    { "x": 17300,"y": 336, "width": 60 }, { "x": 18700,"y": 306, "width": 60 },
+    { "x": 20100,"y": 336, "width": 60 }, { "x": 21300,"y": 306, "width": 60 },
+    { "x": 21700,"y": 336, "width": 60 }, { "x": 23100,"y": 306, "width": 60 },
+    { "x": 24500,"y": 336, "width": 60 }, { "x": 25600,"y": 306, "width": 60 },
+    { "x": 26000,"y": 336, "width": 60 }
+  ],
+  "obstacles": [
+    { "type": "crowd_barrier","x": 600  }, { "type": "steel_steps","x": 1400,"y": 324,"speed": -340 },
+    { "type": "hawk",         "x": 2200, "y": 258, "speed": -135, "amp": 68 },
+    { "type": "crowd_barrier","x": 2900 }, { "type": "crumbling_platform","x": 2900,"y": 412,"width": 60 },
+    { "type": "turnbuckle",   "x": 3800, "y": 418 },
+    { "type": "folding_chair","x": 4700 }, { "type": "hawk","x": 5500,"y": 256,"speed": -138,"amp": 70 },
+    { "type": "crowd_barrier","x": 5700 }, { "type": "crumbling_platform","x": 5700,"y": 412,"width": 60 },
+    { "type": "steel_steps",  "x": 6600, "y": 324, "speed": -345 },
+    { "type": "turnbuckle",   "x": 7500, "y": 418 },
+    { "type": "crowd_barrier","x": 8800 }, { "type": "crumbling_platform","x": 8900,"y": 412,"width": 60 },
+    { "type": "hawk",         "x": 9800, "y": 258, "speed": -135, "amp": 68 },
+    { "type": "folding_chair","x": 10700}, { "type": "steel_steps","x": 11600,"y": 324,"speed": -342 },
+    { "type": "crowd_barrier","x": 12500}, { "type": "crumbling_platform","x": 12900,"y": 412,"width": 60 },
+    { "type": "turnbuckle",   "x": 13700,"y": 418 },
+    { "type": "hawk",         "x": 14600,"y": 256,"speed": -140,"amp": 72 },
+    { "type": "folding_chair","x": 15500}, { "type": "steel_steps","x": 16400,"y": 324,"speed": -348 },
+    { "type": "crowd_barrier","x": 17100}, { "type": "crumbling_platform","x": 17300,"y": 412,"width": 60 },
+    { "type": "turnbuckle",   "x": 18100,"y": 418 },
+    { "type": "hawk",         "x": 19100,"y": 258,"speed": -138,"amp": 70 },
+    { "type": "folding_chair","x": 20000}, { "type": "steel_steps","x": 21000,"y": 324,"speed": -345 },
+    { "type": "crowd_barrier","x": 21600}, { "type": "crumbling_platform","x": 21700,"y": 412,"width": 60 },
+    { "type": "turnbuckle",   "x": 22600,"y": 418 },
+    { "type": "hawk",         "x": 23500,"y": 256,"speed": -140,"amp": 72 },
+    { "type": "folding_chair","x": 24500}, { "type": "steel_steps","x": 25300,"y": 324,"speed": -350 },
+    { "type": "crowd_barrier","x": 25800}, { "type": "crumbling_platform","x": 26000,"y": 412,"width": 60 }
+  ],
+  "checkpoints": [{ "x": 9400 }, { "x": 18800 }]
+}

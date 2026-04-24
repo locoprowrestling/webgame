@@ -1,0 +1,52 @@
+{
+  "id": 12, "zone": 3, "name": "Rocky Mountain Ascent",
+  "scrollSpeed": 300, "background": "foothills", "endX": 19500,
+  "gaps": [
+    { "x": 1400, "width": 175 },
+    { "x": 4000, "width": 180 },
+    { "x": 7600, "width": 175 },
+    { "x": 11800,"width": 180 },
+    { "x": 15600,"width": 175 }
+  ],
+  "platforms": [
+    { "x": 800,  "y": 365, "width": 80 },
+    { "x": 1500, "y": 340, "width": 80 },
+    { "x": 2500, "y": 365, "width": 80 },
+    { "x": 3500, "y": 340, "width": 80 },
+    { "x": 4100, "y": 360, "width": 80 },
+    { "x": 5100, "y": 340, "width": 80 },
+    { "x": 6200, "y": 360, "width": 80 },
+    { "x": 7200, "y": 340, "width": 80 },
+    { "x": 7700, "y": 360, "width": 80 },
+    { "x": 8800, "y": 340, "width": 80 },
+    { "x": 9900, "y": 360, "width": 80 },
+    { "x": 11000,"y": 340, "width": 80 },
+    { "x": 11900,"y": 360, "width": 80 },
+    { "x": 13000,"y": 340, "width": 80 },
+    { "x": 14100,"y": 360, "width": 80 },
+    { "x": 15200,"y": 340, "width": 80 },
+    { "x": 15700,"y": 360, "width": 80 },
+    { "x": 16800,"y": 340, "width": 80 },
+    { "x": 17900,"y": 360, "width": 80 }
+  ],
+  "obstacles": [
+    { "type": "boulder",  "x": 1000, "speed": -75 },
+    { "type": "hawk",     "x": 2100, "y": 295, "speed": -95,  "amp": 40 },
+    { "type": "boulder",  "x": 3100, "speed": -80 },
+    { "type": "crumbling_platform","x": 4100,"y": 436,"width": 80 },
+    { "type": "deer",     "x": 5600, "paceMin": 5400, "paceMax": 5900 },
+    { "type": "hawk",     "x": 6700, "y": 300, "speed": -100, "amp": 45 },
+    { "type": "boulder",  "x": 7600, "speed": -85 },
+    { "type": "crumbling_platform","x": 7700,"y": 436,"width": 80 },
+    { "type": "deer",     "x": 9300, "paceMin": 9100, "paceMax": 9600 },
+    { "type": "hawk",     "x": 10400,"y": 295, "speed": -105, "amp": 50 },
+    { "type": "boulder",  "x": 11300,"speed": -85 },
+    { "type": "crumbling_platform","x": 11900,"y": 436,"width": 80 },
+    { "type": "deer",     "x": 13500,"paceMin": 13300,"paceMax": 13800},
+    { "type": "hawk",     "x": 14600,"y": 300, "speed": -100, "amp": 45 },
+    { "type": "boulder",  "x": 15600,"speed": -80 },
+    { "type": "deer",     "x": 17300,"paceMin": 17100,"paceMax": 17700},
+    { "type": "hawk",     "x": 18400,"y": 295, "speed": -95,  "amp": 40 }
+  ],
+  "checkpoints": [{ "x": 6500 }, { "x": 13000 }]
+}

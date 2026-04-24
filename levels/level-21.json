@@ -1,0 +1,53 @@
+{
+  "id": 21, "zone": 5, "name": "LoCoPro Arena - Gates Open",
+  "scrollSpeed": 380, "background": "arena", "endX": 26500,
+  "gaps": [
+    { "x": 900,  "width": 210 }, { "x": 3000, "width": 215 },
+    { "x": 5900, "width": 210 }, { "x": 9200, "width": 215 },
+    { "x": 13300,"width": 210 }, { "x": 17600,"width": 210 },
+    { "x": 21800,"width": 210 }, { "x": 25200,"width": 200 }
+  ],
+  "platforms": [
+    { "x": 450,  "y": 342, "width": 62 }, { "x": 1000, "y": 312, "width": 62 },
+    { "x": 2000, "y": 340, "width": 62 }, { "x": 2700, "y": 310, "width": 62 },
+    { "x": 3100, "y": 338, "width": 62 }, { "x": 4200, "y": 310, "width": 62 },
+    { "x": 5300, "y": 338, "width": 62 }, { "x": 6000, "y": 310, "width": 62 },
+    { "x": 7100, "y": 338, "width": 62 }, { "x": 8300, "y": 310, "width": 62 },
+    { "x": 9300, "y": 338, "width": 62 }, { "x": 10500,"y": 310, "width": 62 },
+    { "x": 11700,"y": 338, "width": 62 }, { "x": 12800,"y": 310, "width": 62 },
+    { "x": 13400,"y": 338, "width": 62 }, { "x": 14700,"y": 310, "width": 62 },
+    { "x": 16000,"y": 338, "width": 62 }, { "x": 17200,"y": 310, "width": 62 },
+    { "x": 17700,"y": 338, "width": 62 }, { "x": 19000,"y": 310, "width": 62 },
+    { "x": 20300,"y": 338, "width": 62 }, { "x": 21500,"y": 310, "width": 62 },
+    { "x": 21900,"y": 338, "width": 62 }, { "x": 23200,"y": 310, "width": 62 },
+    { "x": 24500,"y": 338, "width": 62 }
+  ],
+  "obstacles": [
+    { "type": "folding_chair","x": 700  }, { "type": "hawk","x": 1500,"y": 262,"speed": -130,"amp": 65 },
+    { "type": "steel_steps", "x": 2300, "y": 326, "speed": -330 },
+    { "type": "turnbuckle",  "x": 3100, "y": 420 },
+    { "type": "crumbling_platform","x": 3100,"y": 414,"width": 62 },
+    { "type": "folding_chair","x": 4000 }, { "type": "hawk","x": 4900,"y": 262,"speed": -132,"amp": 68 },
+    { "type": "turnbuckle",  "x": 5800, "y": 420 },
+    { "type": "crumbling_platform","x": 6000,"y": 414,"width": 62 },
+    { "type": "steel_steps", "x": 6900, "y": 326, "speed": -335 },
+    { "type": "folding_chair","x": 7800 }, { "type": "hawk","x": 8700,"y": 260,"speed": -135,"amp": 70 },
+    { "type": "turnbuckle",  "x": 9200, "y": 420 },
+    { "type": "crumbling_platform","x": 9300,"y": 414,"width": 62 },
+    { "type": "steel_steps", "x": 10200,"y": 326,"speed": -330 },
+    { "type": "folding_chair","x": 11200}, { "type": "hawk","x": 12100,"y": 262,"speed": -130,"amp": 65 },
+    { "type": "turnbuckle",  "x": 13000,"y": 420 },
+    { "type": "crumbling_platform","x": 13400,"y": 414,"width": 62 },
+    { "type": "steel_steps", "x": 14400,"y": 326,"speed": -335 },
+    { "type": "folding_chair","x": 15400}, { "type": "hawk","x": 16300,"y": 260,"speed": -132,"amp": 68 },
+    { "type": "turnbuckle",  "x": 17100,"y": 420 },
+    { "type": "crumbling_platform","x": 17700,"y": 414,"width": 62 },
+    { "type": "steel_steps", "x": 18700,"y": 326,"speed": -340 },
+    { "type": "folding_chair","x": 19600}, { "type": "hawk","x": 20600,"y": 262,"speed": -135,"amp": 70 },
+    { "type": "turnbuckle",  "x": 21400,"y": 420 },
+    { "type": "crumbling_platform","x": 21900,"y": 414,"width": 62 },
+    { "type": "steel_steps", "x": 22900,"y": 326,"speed": -338 },
+    { "type": "folding_chair","x": 23900}, { "type": "hawk","x": 24800,"y": 260,"speed": -130,"amp": 65 }
+  ],
+  "checkpoints": [{ "x": 8900 }, { "x": 17800 }]
+}

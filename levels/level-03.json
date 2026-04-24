@@ -1,0 +1,38 @@
+{
+  "id": 3, "zone": 1, "name": "Prairie Dog Colony",
+  "scrollSpeed": 220, "background": "greenway", "endX": 11200,
+  "gaps": [
+    { "x": 1800, "width": 110 },
+    { "x": 4500, "width": 120 },
+    { "x": 7200, "width": 110 }
+  ],
+  "platforms": [
+    { "x": 1000, "y": 390, "width": 90  },
+    { "x": 1900, "y": 380, "width": 100 },
+    { "x": 2700, "y": 400, "width": 110 },
+    { "x": 3600, "y": 370, "width": 90  },
+    { "x": 4600, "y": 390, "width": 100 },
+    { "x": 5400, "y": 370, "width": 110 },
+    { "x": 6300, "y": 400, "width": 90  },
+    { "x": 7300, "y": 380, "width": 100 },
+    { "x": 8200, "y": 370, "width": 110 },
+    { "x": 9100, "y": 390, "width": 90  }
+  ],
+  "obstacles": [
+    { "type": "prairie_dog", "x": 700  },
+    { "type": "prairie_dog", "x": 1100 },
+    { "type": "tumbleweed",  "x": 1500, "speed": -60 },
+    { "type": "prairie_dog", "x": 2400 },
+    { "type": "prairie_dog", "x": 2800 },
+    { "type": "hay_bale",    "x": 3300 },
+    { "type": "prairie_dog", "x": 4000 },
+    { "type": "tumbleweed",  "x": 5000, "speed": -65 },
+    { "type": "prairie_dog", "x": 5600 },
+    { "type": "prairie_dog", "x": 6000 },
+    { "type": "hay_bale",    "x": 6600 },
+    { "type": "prairie_dog", "x": 7700 },
+    { "type": "tumbleweed",  "x": 8500, "speed": -70 },
+    { "type": "prairie_dog", "x": 9400 }
+  ],
+  "checkpoints": [{ "x": 3700 }, { "x": 7400 }]
+}

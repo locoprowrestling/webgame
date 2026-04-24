@@ -1,0 +1,46 @@
+{
+  "id": 9, "zone": 2, "name": "Left Hand Brewing District",
+  "scrollSpeed": 260, "background": "downtown", "endX": 17000,
+  "gaps": [
+    { "x": 1600, "width": 160 },
+    { "x": 4200, "width": 165 },
+    { "x": 7800, "width": 160 },
+    { "x": 11600,"width": 165 },
+    { "x": 14800,"width": 155 }
+  ],
+  "platforms": [
+    { "x": 1000, "y": 370, "width": 90  },
+    { "x": 1700, "y": 355, "width": 90  },
+    { "x": 2700, "y": 375, "width": 100 },
+    { "x": 3800, "y": 355, "width": 90  },
+    { "x": 4300, "y": 375, "width": 90  },
+    { "x": 5300, "y": 355, "width": 100 },
+    { "x": 6400, "y": 375, "width": 90  },
+    { "x": 7400, "y": 355, "width": 90  },
+    { "x": 7900, "y": 375, "width": 90  },
+    { "x": 8900, "y": 355, "width": 100 },
+    { "x": 10000,"y": 375, "width": 90  },
+    { "x": 11100,"y": 355, "width": 90  },
+    { "x": 11700,"y": 375, "width": 90  },
+    { "x": 12800,"y": 355, "width": 100 },
+    { "x": 13900,"y": 375, "width": 90  },
+    { "x": 14900,"y": 355, "width": 90  }
+  ],
+  "obstacles": [
+    { "type": "road_cone",   "x": 800  },
+    { "type": "cyclist",     "x": 1300, "speed": -185 },
+    { "type": "deer",        "x": 2300, "paceMin": 2100, "paceMax": 2600 },
+    { "type": "road_cone",   "x": 3400 },
+    { "type": "cyclist",     "x": 4700, "speed": -190 },
+    { "type": "hay_bale",    "x": 5900 },
+    { "type": "deer",        "x": 6800, "paceMin": 6600, "paceMax": 7100 },
+    { "type": "cyclist",     "x": 8400, "speed": -180 },
+    { "type": "road_cone",   "x": 9500 },
+    { "type": "deer",        "x": 10400,"paceMin": 10200,"paceMax": 10700},
+    { "type": "cyclist",     "x": 11200,"speed": -195 },
+    { "type": "hay_bale",    "x": 12400},
+    { "type": "deer",        "x": 13500,"paceMin": 13300,"paceMax": 13800},
+    { "type": "road_cone",   "x": 15300}
+  ],
+  "checkpoints": [{ "x": 5700 }, { "x": 11400 }]
+}

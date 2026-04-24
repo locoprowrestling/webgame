@@ -1,0 +1,37 @@
+{
+  "id": 4, "zone": 1, "name": "Irrigation District",
+  "scrollSpeed": 220, "background": "greenway", "endX": 12000,
+  "gaps": [
+    { "x": 1200, "width": 130 },
+    { "x": 3600, "width": 140 },
+    { "x": 6400, "width": 130 },
+    { "x": 9200, "width": 140 }
+  ],
+  "platforms": [
+    { "x": 900,  "y": 380, "width": 100 },
+    { "x": 1400, "y": 390, "width": 90  },
+    { "x": 2300, "y": 370, "width": 110 },
+    { "x": 3200, "y": 400, "width": 100 },
+    { "x": 3800, "y": 380, "width": 90  },
+    { "x": 4700, "y": 370, "width": 110 },
+    { "x": 5600, "y": 390, "width": 100 },
+    { "x": 6500, "y": 380, "width": 90  },
+    { "x": 7400, "y": 370, "width": 110 },
+    { "x": 8300, "y": 400, "width": 90  },
+    { "x": 9300, "y": 380, "width": 100 },
+    { "x": 10200,"y": 370, "width": 110 }
+  ],
+  "obstacles": [
+    { "type": "prairie_dog", "x": 700  },
+    { "type": "hay_bale",    "x": 2000 },
+    { "type": "tumbleweed",  "x": 2800, "speed": -65 },
+    { "type": "prairie_dog", "x": 4400 },
+    { "type": "road_cone",   "x": 5200 },
+    { "type": "prairie_dog", "x": 5900 },
+    { "type": "tumbleweed",  "x": 7100, "speed": -70 },
+    { "type": "hay_bale",    "x": 7900 },
+    { "type": "prairie_dog", "x": 8700 },
+    { "type": "road_cone",   "x": 10700}
+  ],
+  "checkpoints": [{ "x": 4000 }, { "x": 8000 }]
+}

@@ -1,0 +1,49 @@
+{
+  "id": 15, "zone": 3, "name": "Foothills Final Descent",
+  "scrollSpeed": 300, "background": "foothills", "endX": 22500,
+  "gaps": [
+    { "x": 1100, "width": 190 },
+    { "x": 3400, "width": 195 },
+    { "x": 6500, "width": 190 },
+    { "x": 9800, "width": 195 },
+    { "x": 13400,"width": 190 },
+    { "x": 17000,"width": 190 },
+    { "x": 20200,"width": 185 }
+  ],
+  "platforms": [
+    { "x": 700,  "y": 355, "width": 74 }, { "x": 1200, "y": 330, "width": 74 },
+    { "x": 2200, "y": 352, "width": 74 }, { "x": 3100, "y": 328, "width": 74 },
+    { "x": 3500, "y": 350, "width": 74 }, { "x": 4500, "y": 328, "width": 74 },
+    { "x": 5500, "y": 350, "width": 74 }, { "x": 6600, "y": 328, "width": 74 },
+    { "x": 7700, "y": 350, "width": 74 }, { "x": 8700, "y": 328, "width": 74 },
+    { "x": 9900, "y": 350, "width": 74 }, { "x": 11000,"y": 328, "width": 74 },
+    { "x": 12000,"y": 350, "width": 74 }, { "x": 13100,"y": 328, "width": 74 },
+    { "x": 13500,"y": 350, "width": 74 }, { "x": 14600,"y": 328, "width": 74 },
+    { "x": 15700,"y": 350, "width": 74 }, { "x": 16800,"y": 328, "width": 74 },
+    { "x": 17100,"y": 350, "width": 74 }, { "x": 18200,"y": 328, "width": 74 },
+    { "x": 19300,"y": 350, "width": 74 }, { "x": 20300,"y": 328, "width": 74 },
+    { "x": 21400,"y": 350, "width": 74 }
+  ],
+  "obstacles": [
+    { "type": "rattlesnake","x": 800  }, { "type": "boulder","x": 1700, "speed": -90 },
+    { "type": "hawk",       "x": 2700, "y": 285, "speed": -110, "amp": 52 },
+    { "type": "crumbling_platform","x": 3500,"y": 426,"width": 74 },
+    { "type": "rattlesnake","x": 4100 }, { "type": "boulder","x": 5100, "speed": -92 },
+    { "type": "hawk",       "x": 6100, "y": 288, "speed": -112, "amp": 55 },
+    { "type": "crumbling_platform","x": 6600,"y": 426,"width": 74 },
+    { "type": "rattlesnake","x": 7300 }, { "type": "hawk","x": 8300, "y": 285, "speed": -115, "amp": 52 },
+    { "type": "boulder",    "x": 9000, "speed": -95 },
+    { "type": "crumbling_platform","x": 9900,"y": 426,"width": 74 },
+    { "type": "rattlesnake","x": 10600}, { "type": "hawk","x": 11600,"y": 285,"speed": -110,"amp": 55 },
+    { "type": "boulder",    "x": 12600,"speed": -90 },
+    { "type": "crumbling_platform","x": 13500,"y": 426,"width": 74 },
+    { "type": "rattlesnake","x": 14200}, { "type": "deer","x": 15200,"paceMin": 15000,"paceMax": 15600},
+    { "type": "hawk",       "x": 16200,"y": 288,"speed": -112,"amp": 50 },
+    { "type": "crumbling_platform","x": 17100,"y": 426,"width": 74 },
+    { "type": "rattlesnake","x": 17800}, { "type": "boulder","x": 18900,"speed": -88 },
+    { "type": "hawk",       "x": 19900,"y": 285,"speed": -105,"amp": 48 },
+    { "type": "crumbling_platform","x": 20300,"y": 426,"width": 74 },
+    { "type": "rattlesnake","x": 21100}
+  ],
+  "checkpoints": [{ "x": 7500 }, { "x": 15000 }]
+}

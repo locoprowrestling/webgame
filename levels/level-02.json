@@ -1,0 +1,32 @@
+{
+  "id": 2, "zone": 1, "name": "Greenway at Sunset",
+  "scrollSpeed": 220, "background": "greenway", "endX": 10400,
+  "gaps": [
+    { "x": 2200, "width": 100 },
+    { "x": 5400, "width": 110 }
+  ],
+  "platforms": [
+    { "x": 1000, "y": 390, "width": 100 },
+    { "x": 1900, "y": 380, "width": 120 },
+    { "x": 2400, "y": 400, "width": 90  },
+    { "x": 3300, "y": 370, "width": 110 },
+    { "x": 4200, "y": 390, "width": 100 },
+    { "x": 5000, "y": 370, "width": 100 },
+    { "x": 5600, "y": 400, "width": 90  },
+    { "x": 6500, "y": 380, "width": 110 },
+    { "x": 7400, "y": 370, "width": 100 },
+    { "x": 8300, "y": 390, "width": 120 }
+  ],
+  "obstacles": [
+    { "type": "tumbleweed",  "x": 800,  "speed": -55 },
+    { "type": "prairie_dog", "x": 1500 },
+    { "type": "prairie_dog", "x": 3000 },
+    { "type": "hay_bale",    "x": 3800 },
+    { "type": "tumbleweed",  "x": 4600, "speed": -60 },
+    { "type": "prairie_dog", "x": 6100 },
+    { "type": "hay_bale",    "x": 7000 },
+    { "type": "prairie_dog", "x": 7900 },
+    { "type": "tumbleweed",  "x": 8800, "speed": -65 }
+  ],
+  "checkpoints": [{ "x": 3500 }, { "x": 7000 }]
+}

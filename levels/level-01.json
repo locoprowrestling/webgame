@@ -1,0 +1,30 @@
+{
+  "id": 1, "zone": 1, "name": "St. Vrain Morning Run",
+  "scrollSpeed": 220, "background": "greenway", "endX": 9600,
+  "gaps": [],
+  "platforms": [
+    { "x": 900,  "y": 400, "width": 100 },
+    { "x": 1600, "y": 380, "width": 120 },
+    { "x": 2400, "y": 410, "width": 90  },
+    { "x": 3200, "y": 390, "width": 110 },
+    { "x": 4100, "y": 370, "width": 100 },
+    { "x": 5000, "y": 400, "width": 120 },
+    { "x": 5900, "y": 380, "width": 90  },
+    { "x": 6800, "y": 400, "width": 110 },
+    { "x": 7700, "y": 370, "width": 100 }
+  ],
+  "obstacles": [
+    { "type": "prairie_dog", "x": 700  },
+    { "type": "tumbleweed",  "x": 1300, "speed": -50 },
+    { "type": "prairie_dog", "x": 2000 },
+    { "type": "hay_bale",    "x": 2700 },
+    { "type": "prairie_dog", "x": 3500 },
+    { "type": "tumbleweed",  "x": 4300, "speed": -55 },
+    { "type": "prairie_dog", "x": 5100 },
+    { "type": "hay_bale",    "x": 5800 },
+    { "type": "prairie_dog", "x": 6600 },
+    { "type": "tumbleweed",  "x": 7400, "speed": -60 },
+    { "type": "prairie_dog", "x": 8200 }
+  ],
+  "checkpoints": [{ "x": 3200 }, { "x": 6400 }]
+}

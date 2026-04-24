@@ -1,0 +1,43 @@
+{
+  "id": 8, "zone": 2, "name": "Harvest Festival Route",
+  "scrollSpeed": 260, "background": "downtown", "endX": 16000,
+  "gaps": [
+    { "x": 2200, "width": 155 },
+    { "x": 5600, "width": 160 },
+    { "x": 9500, "width": 155 },
+    { "x": 13000,"width": 160 }
+  ],
+  "platforms": [
+    { "x": 1300, "y": 380, "width": 90  },
+    { "x": 2300, "y": 360, "width": 100 },
+    { "x": 3400, "y": 380, "width": 90  },
+    { "x": 4500, "y": 360, "width": 90  },
+    { "x": 5700, "y": 380, "width": 100 },
+    { "x": 6700, "y": 360, "width": 90  },
+    { "x": 7700, "y": 380, "width": 100 },
+    { "x": 8700, "y": 360, "width": 90  },
+    { "x": 9600, "y": 380, "width": 90  },
+    { "x": 10700,"y": 360, "width": 100 },
+    { "x": 11800,"y": 380, "width": 90  },
+    { "x": 13100,"y": 360, "width": 100 },
+    { "x": 14100,"y": 380, "width": 90  }
+  ],
+  "obstacles": [
+    { "type": "hay_bale",    "x": 900  },
+    { "type": "hay_bale",    "x": 1300 },
+    { "type": "cyclist",     "x": 1800, "speed": -175 },
+    { "type": "hay_bale",    "x": 3000 },
+    { "type": "deer",        "x": 4000, "paceMin": 3800, "paceMax": 4300 },
+    { "type": "hay_bale",    "x": 5100 },
+    { "type": "cyclist",     "x": 6200, "speed": -185 },
+    { "type": "deer",        "x": 7200, "paceMin": 7000, "paceMax": 7500 },
+    { "type": "hay_bale",    "x": 8200 },
+    { "type": "hay_bale",    "x": 8600 },
+    { "type": "cyclist",     "x": 10200,"speed": -180 },
+    { "type": "deer",        "x": 11300,"paceMin": 11100,"paceMax": 11700},
+    { "type": "hay_bale",    "x": 12300},
+    { "type": "cyclist",     "x": 13600,"speed": -190 },
+    { "type": "hay_bale",    "x": 14600}
+  ],
+  "checkpoints": [{ "x": 5400 }, { "x": 10800 }]
+}
