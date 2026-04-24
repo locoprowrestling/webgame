@@ -20,3 +20,9 @@ Original prompt: read CLAUDE.md and then address this
 - Verified in Chrome via Playwright package + system Chrome: Level 1 launches, the first prairie dog uses a clean sprite, obstacle bodies stay at `y=456` with `gravity=false`, tumbleweed keeps horizontal velocity, first collision costs one heart, and the player respawns safely instead of falling.
 - Fixed the missing favicon 404 by adding standard favicon and Apple touch icon links in `index.html`, both pointing to the LoCo Pro logo at `Assets/logos-web/logo-locopro-primary-mark-thumb.png`.
 - Verified locally over HTTP: `index.html` returned `200 text/html`, and the favicon PNG returned `200 image/png`.
+- Replaced the title screen's hard-coded orange runner graphic with Carter Cash using the preloaded `sheet_carter` spritesheet and `walk_carter` animation.
+- Verification: local HTTP checks confirmed `index.html` and `Assets/players-web/spritesheets/carter.png` resolve successfully. The bundled web-game Playwright client could not run because the `playwright` npm package is not installed locally, and repo instructions say to avoid network installs unless explicitly requested.
+- Reduced Carter Cash's title-screen sprite scale by 40%, from `1.4` to `0.84`.
+- Added Anuka Gutierrez and Codah to the title screen alongside Carter Cash, using the existing character spritesheets and staggered bob timing so the lineup feels less static.
+- Verification: `node --check scenes/TitleScene.js` passed, and local HTTP checks returned `200 image/png` for the Anuka, Carter, and Codah spritesheets.
+- Flipped Anuka's title-screen orientation back horizontally by disabling `flipX` for her lineup sprite.
