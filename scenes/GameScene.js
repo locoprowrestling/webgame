@@ -182,9 +182,28 @@ export default class GameScene extends Phaser.Scene {
         .setOrigin(0, 0).setScrollFactor(0).setDepth(3);
     }
 
-    // Ground visual
-    this.add.rectangle(CANVAS_W / 2, CANVAS_H - 22, CANVAS_W, 44, 0x4a8c2a)
-      .setScrollFactor(0).setDepth(4);
+    // Water background layer (outdoor zones)
+    if ([1, 3].includes(zone) && this.textures.exists('bg_tile_water_flow')) {
+      this._bgWater = this.add.tileSprite(0, CANVAS_H - 88, CANVAS_W, 40, 'bg_tile_water_flow')
+        .setOrigin(0, 0).setScrollFactor(0).setDepth(3.5);
+    }
+
+    // Ground visual — tiled texture per zone with solid-color fallback
+    const groundTileKeys = {
+      1: 'bg_tile_grass_tile',
+      2: 'bg_tile_asphalt_road',
+      3: 'bg_tile_dry_grass_tile',
+      4: 'bg_tile_dry_grass_tile',
+      5: 'bg_tile_floor_boards',
+    };
+    const groundKey = groundTileKeys[zone] || 'bg_tile_grass_tile';
+    if (this.textures.exists(groundKey)) {
+      this._bgGround = this.add.tileSprite(0, CANVAS_H - 44, CANVAS_W, 44, groundKey)
+        .setOrigin(0, 0).setScrollFactor(0).setDepth(4);
+    } else {
+      this.add.rectangle(CANVAS_W / 2, CANVAS_H - 22, CANVAS_W, 44, 0x4a8c2a)
+        .setScrollFactor(0).setDepth(4);
+    }
     this.add.rectangle(CANVAS_W / 2, CANVAS_H - 44, CANVAS_W, 4, 0x2d5a1b)
       .setScrollFactor(0).setDepth(4);
 
@@ -554,6 +573,8 @@ export default class GameScene extends Phaser.Scene {
     const scrollX = this.cameras.main.scrollX;
     if (this._bgMtn) this._bgMtn.tilePositionX = scrollX * 0.12;
     if (this._bgHill) this._bgHill.tilePositionX = scrollX * 0.3;
+    if (this._bgWater) this._bgWater.tilePositionX = scrollX * 0.5;
+    if (this._bgGround) this._bgGround.tilePositionX = scrollX;
   }
 
   _getNextInteractionDistance(playerX) {
