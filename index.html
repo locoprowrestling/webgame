@@ -13,6 +13,7 @@
 
     html, body {
       width: 100%; height: 100%;
+      height: 100svh; /* excludes mobile browser chrome (address/nav bar) */
       overflow: hidden;
       background: #87ceeb;
       touch-action: none;
@@ -22,6 +23,7 @@
 
     body {
       display: flex; align-items: center; justify-content: center;
+      padding-bottom: env(safe-area-inset-bottom, 0px); /* home indicator on iOS */
     }
 
     canvas { display: block; touch-action: none; }

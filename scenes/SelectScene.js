@@ -110,7 +110,10 @@ export default class SelectScene extends Phaser.Scene {
     card.on('pointerout', () => {
       if (this._selectedId !== char.id) border.setStrokeStyle(1, 0x3a6a3a);
     });
-    card.on('pointerdown', () => this._selectChar(char, card));
+    card.on('pointerdown', () => {
+      if (this._selectedId === char.id) { this._launch(); return; }
+      this._selectChar(char, card);
+    });
 
     this._cards.push(card);
   }
