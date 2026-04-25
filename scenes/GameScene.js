@@ -447,10 +447,15 @@ export default class GameScene extends Phaser.Scene {
       spawnX = this._checkpointData[this._checkpointIndex].x;
     }
     this._player.setPosition(spawnX, GROUND_Y - 4);
+    this._player.setAngle(0);
     this._player.body.allowGravity = true;
     this._player.body.setVelocity(0, 0);
     this._player.body.setAcceleration(0, 0);
+    this._player.body.setGravityY(0);
+    this._holding = false;
     this._isJumping = false;
+    this._jumpBufferTimer = -1000;
+    this._coyoteTimer = 0;
     this._setPlayerState('walk');
 
     // Flash for invincibility feedback
