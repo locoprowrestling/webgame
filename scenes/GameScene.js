@@ -465,11 +465,16 @@ export default class GameScene extends Phaser.Scene {
     if (this._checkpointIndex >= 0 && this._checkpointData[this._checkpointIndex]) {
       spawnX = this._checkpointData[this._checkpointIndex].x;
     }
-    this._player.setPosition(spawnX, GROUND_Y - 4);
+    // Kill tweens (e.g. landing squash) before reset so scaleY=1 when body
+    // position is computed — a squashed sprite shifts body.bottom into the ground.
+    this.tweens.killTweensOf(this._player);
+    this._player.setScale(1);
+    this._player.setAlpha(1);
     this._player.setAngle(0);
+    // body.reset() updates body.position AND body.prev immediately, so Phaser's
+    // postUpdate won't overwrite the sprite back to the pre-teleport (pit) position.
+    this._player.body.reset(spawnX, GROUND_Y - 4);
     this._player.body.allowGravity = true;
-    this._player.body.setVelocity(0, 0);
-    this._player.body.setAcceleration(0, 0);
     this._player.body.setGravityY(0);
     this._holding = false;
     this._isJumping = false;
