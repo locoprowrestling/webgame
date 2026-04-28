@@ -17,7 +17,7 @@ const DEFAULT_ANIM_FRAMES = [0, 1, 2, 3, 4, 5, 6, 7];
 
 const DEFS = {
   prairie_dog: {
-    w: 48, h: 56, bodyW: 32, bodyH: 44,
+    w: 48, h: 56, bodyW: 32, bodyH: 44, flipX: true,
     // The source spritesheet includes digging/burrowed poses that make
     // the hazard read as missing in Level 1. Keep only clearly visible poses.
     animFrames: [0, 1, 2, 3, 4, 6],
@@ -30,7 +30,7 @@ const DEFS = {
     behavior: 'static',
   },
   tumbleweed: {
-    w: 64, h: 64, bodyW: 44, bodyH: 44,
+    w: 64, h: 64, bodyW: 44, bodyH: 44, flipX: true,
     draw(g) {
       g.fillStyle(0x9b7a3a, 0.85); g.fillCircle(18, 18, 17);
       g.lineStyle(2, 0x7a5a20, 0.6);
@@ -41,7 +41,7 @@ const DEFS = {
     behavior: 'rolling',
   },
   hay_bale: {
-    w: 80, h: 60, bodyW: 58, bodyH: 42,
+    w: 80, h: 60, bodyW: 58, bodyH: 42, flipX: true,
     draw(g) {
       g.fillStyle(0xe8c840, 1); g.fillRect(0, 0, 48, 36);
       g.lineStyle(3, 0xaa8800, 1);
@@ -52,7 +52,7 @@ const DEFS = {
     behavior: 'static',
   },
   road_cone: {
-    w: 40, h: 60,
+    w: 40, h: 60, flipX: true,
     draw(g) {
       g.fillStyle(0xff6600, 1);
       g.fillTriangle(12, 0, 0, 36, 24, 36);
@@ -63,7 +63,7 @@ const DEFS = {
     behavior: 'static',
   },
   deer: {
-    w: 80, h: 96,
+    w: 80, h: 96, flipX: true,
     draw(g) {
       g.fillStyle(0xaa7722, 1);
       g.fillRect(8, 24, 34, 28);
@@ -77,7 +77,7 @@ const DEFS = {
     behavior: 'pacing',
   },
   cyclist: {
-    w: 96, h: 80,
+    w: 96, h: 80, flipX: true,
     draw(g) {
       g.lineStyle(3, 0x333333, 1);
       g.strokeCircle(14, 38, 13); g.strokeCircle(46, 38, 13);
@@ -90,7 +90,7 @@ const DEFS = {
     behavior: 'moving_left',
   },
   boulder: {
-    w: 64, h: 60,
+    w: 64, h: 60, flipX: true,
     draw(g) {
       g.fillStyle(0x888880, 1); g.fillEllipse(22, 20, 44, 40);
       g.fillStyle(0xaaa898, 0.5); g.fillEllipse(14, 12, 14, 10);
@@ -99,7 +99,7 @@ const DEFS = {
     behavior: 'rolling',
   },
   crumbling_platform: {
-    w: 96, h: 16,
+    w: 96, h: 16, flipX: true,
     draw(g) {
       g.fillStyle(0x8b6914, 1); g.fillRect(0, 0, 96, 16);
       g.fillStyle(0xaa8820, 0.6);
@@ -111,7 +111,7 @@ const DEFS = {
     behavior: 'crumbling',
   },
   hawk: {
-    w: 80, h: 36,
+    w: 80, h: 36, flipX: true,
     draw(g) {
       g.fillStyle(0x442200, 1);
       g.fillTriangle(24, 0, 0, 24, 48, 24);
@@ -121,7 +121,7 @@ const DEFS = {
     behavior: 'airborne_sine',
   },
   steel_steps: {
-    w: 64, h: 52,
+    w: 64, h: 52, flipX: true,
     draw(g) {
       g.fillStyle(0x888888, 1);
       g.fillRect(0, 24, 44, 12);
@@ -133,7 +133,7 @@ const DEFS = {
     behavior: 'projectile',
   },
   rattlesnake: {
-    w: 80, h: 28,
+    w: 80, h: 28, flipX: true,
     draw(g) {
       g.fillStyle(0x6a8a2a, 1);
       g.fillEllipse(8, 9, 16, 18);
@@ -146,7 +146,7 @@ const DEFS = {
     behavior: 'static',
   },
   folding_chair: {
-    w: 48, h: 68,
+    w: 48, h: 68, flipX: true,
     draw(g) {
       g.fillStyle(0xddcc44, 1); g.fillRect(4, 4, 24, 20);
       g.lineStyle(3, 0x888800, 1);
@@ -158,7 +158,7 @@ const DEFS = {
     behavior: 'static',
   },
   turnbuckle: {
-    w: 28, h: 80,
+    w: 28, h: 80, flipX: true,
     draw(g) {
       g.fillStyle(0xcc0000, 1); g.fillRect(0, 0, 20, 60);
       g.fillStyle(0xaaaaaa, 1); g.fillRect(4, 0, 12, 8); g.fillRect(4, 52, 12, 8);
@@ -167,7 +167,7 @@ const DEFS = {
     behavior: 'static',
   },
   crowd_barrier: {
-    w: 72, h: 32,
+    w: 72, h: 32, flipX: true,
     draw(g) {
       g.fillStyle(0x446688, 1); g.fillRect(0, 8, 72, 24);
       g.lineStyle(3, 0x99bbdd, 1);
@@ -179,7 +179,7 @@ const DEFS = {
     behavior: 'static',
   },
   spotlight: {
-    w: 30, h: 16,
+    w: 30, h: 16, flipX: true,
     draw(g) {
       g.fillStyle(0x222222, 1); g.fillRect(8, 0, 14, 10);
       g.fillStyle(0xffffaa, 0.9); g.fillCircle(15, 10, 7);
@@ -270,6 +270,7 @@ export function spawnObstacle(scene, type, x, y, config = {}) {
 
   const obj = scene.physics.add.sprite(x, y, key).setOrigin(0.5, 1);
   obj.setDisplaySize(def.w, def.h);
+  if (def.flipX) obj.setFlipX(true);
   obj.obstacleType = type;
   obj.obstacleDef = def;
   obj.resetObstacleBody = () => {

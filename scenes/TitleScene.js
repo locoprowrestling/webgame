@@ -31,18 +31,36 @@ export default class TitleScene extends Phaser.Scene {
   }
 
   _buildRunner(W, H) {
-    const runner = this.add.container(80, H - 44).setDepth(5);
-    const body = this.add.graphics();
-    body.fillStyle(0xff6600, 1);
-    body.fillCircle(0, -30, 7);
-    body.fillRect(-5, -22, 10, 18);
-    runner.add(body);
+    this._addTitleRunner(34, H - 44, 'anuka', 0.88, 130, false);
+    this._addTitleRunner(90, H - 44, 'carter', 0.84, 180, false);
+    this._addTitleRunner(146, H - 44, 'codah', 0.95, 150, false);
+    this._addTitleRunner(246, H - 44, 'hussy', 0.90, 150, false);
+    this._addTitleRunner(600, H - 44, 'glory', 0.86, 150, false);
+    this._addTitleRunner(650, H - 44, 'crash', 0.91, 150, false);
+    this._addTitleRunner(700, H - 44, 'erza', 0.86, 150, false);
+    this._addTitleRunner(750, H - 44, 'zeak', 0.86, 150, false);
+  }
 
-    // Leg animation via tweens
-    this._legAngle = 0;
+  _addTitleRunner(x, y, characterId, scale, bobDuration, flipX) {
+    const runner = this.add.container(x, y).setDepth(5);
+    const sheetKey = `sheet_${characterId}`;
+    const walkKey = `walk_${characterId}`;
+    const sprite = this.add.sprite(0, 0, sheetKey, 0)
+      .setOrigin(0.5, 1)
+      .setScale(scale);
+
+    sprite.flipX = flipX;
+
+    if (this.anims.exists(walkKey)) {
+      sprite.play(walkKey);
+    }
+
+    runner.add(sprite);
+
+    // Keep the title runner lively without affecting the sprite animation.
     this.tweens.add({
-      targets: runner, y: H - 47, yoyo: true, repeat: -1,
-      duration: 180, ease: 'Sine.easeInOut',
+      targets: runner, y: y - 3, yoyo: true, repeat: -1,
+      duration: bobDuration, ease: 'Sine.easeInOut',
     });
   }
 

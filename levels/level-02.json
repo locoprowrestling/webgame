@@ -28,5 +28,5 @@
     { "type": "prairie_dog", "x": 7900 },
     { "type": "tumbleweed",  "x": 8800, "speed": -65 }
   ],
-  "checkpoints": [{ "x": 3500 }, { "x": 7000 }]
+  "checkpoints": [{ "x": 3500 }, { "x": 7300 }]
 }

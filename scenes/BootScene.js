@@ -50,6 +50,14 @@ export default class BootScene extends Phaser.Scene {
       this.load.image(`obs_${type}`, `Assets/obstacles-web/${type}.png`),
     );
 
+    // Ground / floor tiles and water background tiles
+    ['asphalt_road', 'dry_grass_tile', 'floor_boards', 'grass_tile'].forEach(name => {
+      this.load.image(`tile_${name}_01`, `Assets/bg_tiles/${name}_01.png`);
+      this.load.image(`tile_${name}_02`, `Assets/bg_tiles/${name}_02.png`);
+    });
+    this.load.image('tile_water_flow_01', 'Assets/bg_tiles/water_flow_01.png');
+    this.load.image('tile_water_flow_02', 'Assets/bg_tiles/water_flow_02.png');
+
     this.load.on('progress', v => this._updateBar(v));
   }
 
@@ -64,6 +72,7 @@ export default class BootScene extends Phaser.Scene {
     });
 
     this._buildBackgroundTextures();
+    this._buildTileTextures();
     this._buildObstacleTextures();
     this._buildObstacleFrameTextures();
     this._buildStaticObstacleTextures();
@@ -188,6 +197,27 @@ export default class BootScene extends Phaser.Scene {
     g.destroy();
   }
 
+  _buildTileTextures() {
+    const sets = [
+      ['asphalt_road', 'tile_asphalt_road_01', 'tile_asphalt_road_02'],
+      ['dry_grass_tile', 'tile_dry_grass_tile_01', 'tile_dry_grass_tile_02'],
+      ['floor_boards', 'tile_floor_boards_01', 'tile_floor_boards_02'],
+      ['grass_tile', 'tile_grass_tile_01', 'tile_grass_tile_02'],
+      ['water_flow', 'tile_water_flow_01', 'tile_water_flow_02'],
+    ];
+    sets.forEach(([name, key1, key2]) => {
+      if (!this.textures.exists(key1)) return;
+      const src = this.textures.get(key1).getSourceImage();
+      const tw = src.naturalWidth || src.width;
+      const th = src.naturalHeight || src.height;
+      const rt = this.add.renderTexture(0, 0, tw * 2, th);
+      rt.stamp(key1, undefined, tw * 0.5, th * 0.5);
+      rt.stamp(key2, undefined, tw * 1.5, th * 0.5);
+      rt.saveTexture(`bg_tile_${name}`);
+      rt.destroy();
+    });
+  }
+
   _buildObstacleAnims() {
     ANIMATED_OBSTACLE_TYPES.forEach(type => {
       const config = getObstacleAnimConfig(type);
@@ -216,12 +246,25 @@ export default class BootScene extends Phaser.Scene {
     g.generateTexture('flag', 24, 48);
     g.destroy();
 
-    // Checkpoint banner
-    const c = this.add.graphics();
-    c.fillStyle(0xffd700, 0.9); c.fillRect(0, 0, 40, 12);
-    c.lineStyle(2, 0xaa6600, 1); c.strokeRect(0, 0, 40, 12);
-    c.generateTexture('checkpoint', 40, 12);
-    c.destroy();
+    // Checkpoint checkmarks — unlit (transparent) and lit (solid glow)
+    const drawCheck = (g) => {
+      g.beginPath(); g.moveTo(7, 22); g.lineTo(16, 32); g.lineTo(37, 10); g.strokePath();
+    };
+
+    const cu = this.add.graphics();
+    cu.fillStyle(0x111111, 0.55); cu.fillRoundedRect(0, 0, 44, 44, 8);
+    cu.lineStyle(2, 0x00dd44, 0.5); cu.strokeRoundedRect(0, 0, 44, 44, 8);
+    cu.lineStyle(5, 0x00dd44, 0.45); drawCheck(cu);
+    cu.generateTexture('checkpoint', 44, 44);
+    cu.destroy();
+
+    const cl = this.add.graphics();
+    cl.fillStyle(0x003311, 0.85); cl.fillRoundedRect(0, 0, 44, 44, 8);
+    cl.lineStyle(2, 0x44ff88, 1); cl.strokeRoundedRect(0, 0, 44, 44, 8);
+    cl.lineStyle(11, 0x00ff66, 0.35); drawCheck(cl);
+    cl.lineStyle(5, 0x44ff88, 1); drawCheck(cl);
+    cl.generateTexture('checkpoint_lit', 44, 44);
+    cl.destroy();
   }
 
   _buildObstacleFrameTextures() {

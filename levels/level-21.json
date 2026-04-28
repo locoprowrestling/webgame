@@ -49,5 +49,5 @@
     { "type": "steel_steps", "x": 22900,"y": 326,"speed": -338 },
     { "type": "folding_chair","x": 23900}, { "type": "hawk","x": 24800,"y": 260,"speed": -130,"amp": 65 }
   ],
-  "checkpoints": [{ "x": 8900 }, { "x": 17800 }]
+  "checkpoints": [{ "x": 8900 }, { "x": 18000 }]
 }

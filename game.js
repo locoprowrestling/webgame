@@ -9,7 +9,7 @@ import GameOverScene from './scenes/GameOverScene.js';
 const config = {
   type: Phaser.AUTO,
   pixelArt: true,
-  width: 800,
+  width: 888,
   height: 500,
   backgroundColor: '#87ceeb',
   render: {
@@ -20,6 +20,8 @@ const config = {
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
+    parent: document.body,
+    expandParent: false,
   },
   physics: {
     default: 'arcade',

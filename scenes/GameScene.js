@@ -4,7 +4,7 @@ import { spawnObstacle, updateObstacle } from '../src/obstacles.js';
 import { saveResult } from '../src/saveSystem.js';
 
 const GROUND_Y = 456;   // top of ground strip
-const CANVAS_W = 800;
+const CANVAS_W = 888;
 const CANVAS_H = 500;
 const PLAYER_START_X = CANVAS_W / 2;
 const WORLD_GRAVITY = 1200;
@@ -163,8 +163,8 @@ export default class GameScene extends Phaser.Scene {
       // Arena spotlights
       const sg = this.add.graphics().setScrollFactor(0).setDepth(1);
       sg.fillStyle(0xffffcc, 0.15);
-      sg.fillTriangle(200, 0, 140, CANVAS_H, 260, CANVAS_H);
-      sg.fillTriangle(600, 0, 540, CANVAS_H, 660, CANVAS_H);
+      sg.fillTriangle(222, 0, 156, CANVAS_H, 288, CANVAS_H);
+      sg.fillTriangle(666, 0, 600, CANVAS_H, 732, CANVAS_H);
     }
 
     const mtxKey = ['bg_mtn_z1','bg_bld_z2','bg_mtn_z3','bg_tent_z4','bg_crowd_z5'][zone - 1];
@@ -182,9 +182,28 @@ export default class GameScene extends Phaser.Scene {
         .setOrigin(0, 0).setScrollFactor(0).setDepth(3);
     }
 
-    // Ground visual
-    this.add.rectangle(CANVAS_W / 2, CANVAS_H - 22, CANVAS_W, 44, 0x4a8c2a)
-      .setScrollFactor(0).setDepth(4);
+    // Water background layer (outdoor zones)
+    if ([1, 3].includes(zone) && this.textures.exists('bg_tile_water_flow')) {
+      this._bgWater = this.add.tileSprite(0, CANVAS_H - 88, CANVAS_W, 40, 'bg_tile_water_flow')
+        .setOrigin(0, 0).setScrollFactor(0).setDepth(3.5);
+    }
+
+    // Ground visual — tiled texture per zone with solid-color fallback
+    const groundTileKeys = {
+      1: 'bg_tile_grass_tile',
+      2: 'bg_tile_asphalt_road',
+      3: 'bg_tile_dry_grass_tile',
+      4: 'bg_tile_dry_grass_tile',
+      5: 'bg_tile_floor_boards',
+    };
+    const groundKey = groundTileKeys[zone] || 'bg_tile_grass_tile';
+    if (this.textures.exists(groundKey)) {
+      this._bgGround = this.add.tileSprite(0, CANVAS_H - 44, CANVAS_W, 44, groundKey)
+        .setOrigin(0, 0).setScrollFactor(0).setDepth(4);
+    } else {
+      this.add.rectangle(CANVAS_W / 2, CANVAS_H - 22, CANVAS_W, 44, 0x4a8c2a)
+        .setScrollFactor(0).setDepth(4);
+    }
     this.add.rectangle(CANVAS_W / 2, CANVAS_H - 44, CANVAS_W, 4, 0x2d5a1b)
       .setScrollFactor(0).setDepth(4);
 
@@ -303,7 +322,7 @@ export default class GameScene extends Phaser.Scene {
 
     this._checkpointData.forEach((cp, i) => {
       const sprite = this.add.image(cp.x, GROUND_Y - 20, 'checkpoint')
-        .setOrigin(0.5, 1).setDepth(9).setAlpha(0.9);
+        .setOrigin(0.5, 1).setDepth(9);
       this._checkpointSprites.push(sprite);
     });
 
@@ -386,8 +405,11 @@ export default class GameScene extends Phaser.Scene {
     this._checkpointIndex = i;
     const sprite = this._checkpointSprites[i];
     if (sprite) {
-      this.tweens.add({ targets: sprite, scaleY: 1.4, yoyo: true, duration: 120 });
-      sprite.setTint(0xffd700);
+      sprite.setTexture('checkpoint_lit');
+      this.tweens.add({
+        targets: sprite, scaleX: 1.15, scaleY: 1.15,
+        yoyo: true, repeat: -1, duration: 600, ease: 'Sine.InOut',
+      });
     }
     this.events.emit('checkpointReached', i + 1, this._checkpointData.length);
   }
@@ -443,11 +465,21 @@ export default class GameScene extends Phaser.Scene {
     if (this._checkpointIndex >= 0 && this._checkpointData[this._checkpointIndex]) {
       spawnX = this._checkpointData[this._checkpointIndex].x;
     }
-    this._player.setPosition(spawnX, GROUND_Y - 4);
+    // Kill tweens (e.g. landing squash) before reset so scaleY=1 when body
+    // position is computed — a squashed sprite shifts body.bottom into the ground.
+    this.tweens.killTweensOf(this._player);
+    this._player.setScale(1);
+    this._player.setAlpha(1);
+    this._player.setAngle(0);
+    // body.reset() updates body.position AND body.prev immediately, so Phaser's
+    // postUpdate won't overwrite the sprite back to the pre-teleport (pit) position.
+    this._player.body.reset(spawnX, GROUND_Y - 4);
     this._player.body.allowGravity = true;
-    this._player.body.setVelocity(0, 0);
-    this._player.body.setAcceleration(0, 0);
+    this._player.body.setGravityY(0);
+    this._holding = false;
     this._isJumping = false;
+    this._jumpBufferTimer = -1000;
+    this._coyoteTimer = 0;
     this._setPlayerState('walk');
 
     // Flash for invincibility feedback
@@ -546,6 +578,8 @@ export default class GameScene extends Phaser.Scene {
     const scrollX = this.cameras.main.scrollX;
     if (this._bgMtn) this._bgMtn.tilePositionX = scrollX * 0.12;
     if (this._bgHill) this._bgHill.tilePositionX = scrollX * 0.3;
+    if (this._bgWater) this._bgWater.tilePositionX = scrollX * 0.5;
+    if (this._bgGround) this._bgGround.tilePositionX = scrollX;
   }
 
   _getNextInteractionDistance(playerX) {
@@ -603,7 +637,7 @@ export default class GameScene extends Phaser.Scene {
         this._setPlayerState('jump', 8);
         p.setAngle(-10);
       } else {
-        this._setPlayerState('fall', 9);
+        this._setPlayerState('jump', 8);
         p.setAngle(Phaser.Math.Clamp(vy * 0.025, -8, 12));
       }
       return;
