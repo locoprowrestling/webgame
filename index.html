@@ -11,14 +11,12 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    html {
-      overflow: hidden;
-    }
+    html { overflow: hidden; }
 
     body {
       position: fixed; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      background: #87ceeb;
+      background: #0a0a0a;
       overflow: hidden;
       touch-action: none;
       -webkit-tap-highlight-color: transparent;
@@ -27,6 +25,164 @@
 
     canvas { display: block; touch-action: none; }
 
+    /* ── Sizing variables (set by JS before Phaser init) ───────── */
+    :root {
+      --screen-w: 888px;
+      --screen-h: 500px;
+      --bezel-pad: 14px;
+      --controls-h: 54px;
+    }
+
+    /* ── TV outer shell ─────────────────────────────────────────── */
+    #tv-body {
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(160deg, #444 0%, #282828 60%, #1a1a1a 100%);
+      border-radius: 18px;
+      padding: var(--bezel-pad);
+      box-shadow:
+        0 0 0 2px #555 inset,
+        0 0 0 4px #1a1a1a inset,
+        6px 8px 0 #111,
+        12px 16px 0 #0a0a0a,
+        0 30px 60px rgba(0,0,0,0.8);
+    }
+
+    /* ── Screen bezel ring ──────────────────────────────────────── */
+    #screen-bezel {
+      background: #0d0d0d;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow:
+        0 0 0 1px #333 inset,
+        0 4px 12px rgba(0,0,0,0.9) inset;
+    }
+
+    /* ── Game canvas container ──────────────────────────────────── */
+    #screen-container {
+      position: relative;
+      width: var(--screen-w);
+      height: var(--screen-h);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 2px #000 inset,
+        0 0 24px rgba(80, 220, 140, 0.08) inset;
+      background: #000;
+    }
+
+    /* ── CRT overlay: scanlines + vignette ──────────────────────── */
+    #crt-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+      border-radius: 10px;
+      background:
+        /* scanlines */
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 2px,
+          rgba(0, 0, 0, 0.13) 2px,
+          rgba(0, 0, 0, 0.13) 4px
+        ),
+        /* corner vignette */
+        radial-gradient(
+          ellipse at 50% 50%,
+          transparent 52%,
+          rgba(0, 0, 0, 0.72) 100%
+        );
+      animation: crt-flicker 7s ease-in-out infinite;
+    }
+
+    @keyframes crt-flicker {
+      0%, 100% { opacity: 1; }
+      48%       { opacity: 1; }
+      49%       { opacity: 0.96; }
+      50%       { opacity: 1; }
+      92%       { opacity: 1; }
+      92.5%     { opacity: 0.97; }
+      93%       { opacity: 1; }
+    }
+
+    /* ── Controls bar ───────────────────────────────────────────── */
+    #tv-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 6px 2px;
+      height: var(--controls-h);
+      gap: 10px;
+    }
+
+    #tv-brand {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.7rem;
+      font-weight: bold;
+      letter-spacing: 0.25em;
+      color: #ffd700;
+      text-shadow: 0 0 6px rgba(255, 215, 0, 0.5);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* ── Knobs ──────────────────────────────────────────────────── */
+    #tv-knobs {
+      display: flex;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .knob {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #777, #1a1a1a);
+      box-shadow:
+        0 2px 4px rgba(0,0,0,0.8),
+        0 0 0 2px #111,
+        0 0 0 3px #444;
+      position: relative;
+    }
+
+    /* tick mark on each knob */
+    .knob::before {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 7px;
+      background: rgba(255,255,255,0.55);
+      border-radius: 1px;
+    }
+
+    .knob:last-child::before {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    /* ── Speaker grille ─────────────────────────────────────────── */
+    #tv-speaker {
+      flex-shrink: 0;
+      width: 52px;
+      height: 34px;
+      border-radius: 4px;
+      background-color: #111;
+      background-image: radial-gradient(
+        circle,
+        #444 1px,
+        transparent 1px
+      );
+      background-size: 6px 6px;
+      background-position: 2px 2px;
+      box-shadow: 0 0 0 1px #2a2a2a inset;
+    }
+
+    /* ── Rotate message ─────────────────────────────────────────── */
     #rotate-msg {
       display: none;
       position: fixed; inset: 0;
@@ -46,6 +202,18 @@
     @media (orientation: portrait) and (max-width: 1024px) {
       #rotate-msg { display: flex; }
     }
+
+    /* ── Compact layout for small landscape screens ─────────────── */
+    @media (max-height: 520px) {
+      :root {
+        --screen-w: min(78vw, 888px);
+        --controls-h: 40px;
+        --bezel-pad: 8px;
+      }
+      #tv-brand { font-size: 0.6rem; }
+      .knob { width: 20px; height: 20px; }
+      #tv-speaker { width: 40px; height: 26px; }
+    }
   </style>
 </head>
 <body>
@@ -53,6 +221,36 @@
     <span>&#8635;</span>
     ROTATE DEVICE TO PLAY
   </div>
+
+  <div id="tv-body">
+    <div id="screen-bezel">
+      <div id="screen-container">
+        <div id="crt-overlay"></div>
+      </div>
+    </div>
+    <div id="tv-controls">
+      <div id="tv-brand">LOCOPRO</div>
+      <div id="tv-knobs">
+        <div class="knob"></div>
+        <div class="knob"></div>
+      </div>
+      <div id="tv-speaker"></div>
+    </div>
+  </div>
+
+  <script>
+    // Compute screen dimensions before Phaser initialises so offsetWidth is correct.
+    (function () {
+      var w = Math.min(Math.floor(window.innerWidth * 0.72), 888);
+      var h = Math.round(w * 500 / 888);
+      var root = document.documentElement;
+      root.style.setProperty('--screen-w', w + 'px');
+      root.style.setProperty('--screen-h', h + 'px');
+      var sc = document.getElementById('screen-container');
+      sc.style.width  = w + 'px';
+      sc.style.height = h + 'px';
+    })();
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
   <script type="module" src="game.js"></script>
 </body>

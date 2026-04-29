@@ -86,9 +86,11 @@ export default class SelectScene extends Phaser.Scene {
     }
 
     // Name label
-    const nameText = this.add.text(0, ch / 2 - 11, char.name.split(' ')[0].toUpperCase(), {
-      fontSize: '8px', fontFamily: 'Impact, sans-serif', color: '#ffd700',
-      wordWrap: { width: cw - 6 },
+    const nameText = this.add.text(0, ch / 2 - 11, char.name.toUpperCase(), {
+      fontSize: '10px', fontFamily: 'Impact, sans-serif', color: '#ffd700',
+      stroke: '#000', strokeThickness: 3,
+      wordWrap: { width: cw - 4 },
+      align: 'center',
     }).setOrigin(0.5, 0.5);
     card.add(nameText);
 
