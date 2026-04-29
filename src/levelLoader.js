@@ -40,17 +40,55 @@ export function buildGround(scene, levelData) {
   return group;
 }
 
+const PLAT_H = 16;   // physics collision height
+const SPRITE_H = 32; // visual height
+const CAP_W = 28;    // width of each endcap sprite
+
 export function buildPlatforms(scene, levelData) {
   const group = scene.physics.add.staticGroup();
-  const PLAT_H = 16;
 
   (levelData.platforms || []).forEach(p => {
     const cx = p.x + p.width / 2;
-    const cy = p.y + PLAT_H / 2;
-    const plat = scene.add.rectangle(cx, cy, p.width, PLAT_H, 0x8b6914);
-    scene.physics.add.existing(plat, true);
-    plat.isCrumbling = p.crumbling || false;
-    group.add(plat);
+    const spriteY = p.y + SPRITE_H / 2;
+    const centerW = p.width - CAP_W * 2;
+    const visuals = [];
+
+    if (centerW > 0) {
+      // Left cap
+      visuals.push(
+        scene.add.image(p.x + CAP_W / 2, spriteY, 'platform_cap')
+          .setDepth(6),
+      );
+      // Tiled center
+      visuals.push(
+        scene.add.tileSprite(p.x + CAP_W + centerW / 2, spriteY, centerW, SPRITE_H, 'platform_mid')
+          .setDepth(6),
+      );
+      // Right cap (mirrored)
+      visuals.push(
+        scene.add.image(p.x + p.width - CAP_W / 2, spriteY, 'platform_cap')
+          .setFlipX(true).setDepth(6),
+      );
+    } else {
+      // Platform too narrow for caps — use the full-design sprite stretched to fit
+      visuals.push(
+        scene.add.image(cx, spriteY, 'platform_full')
+          .setDisplaySize(p.width, SPRITE_H).setDepth(6),
+      );
+    }
+
+    visuals.push(
+      scene.add.rectangle(cx, p.y + 3, p.width - 8, 3, 0xf0d24f, 0.72)
+        .setDepth(6.1),
+    );
+
+    // Invisible physics body — top edge aligns with top of sprite
+    const body = scene.add.rectangle(cx, p.y + PLAT_H / 2, p.width, PLAT_H)
+      .setVisible(false);
+    scene.physics.add.existing(body, true);
+    body.isCrumbling = p.crumbling || false;
+    body._visuals = visuals;
+    group.add(body);
   });
 
   return group;

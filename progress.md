@@ -26,3 +26,11 @@ Original prompt: read CLAUDE.md and then address this
 - Added Anuka Gutierrez and Codah to the title screen alongside Carter Cash, using the existing character spritesheets and staggered bob timing so the lineup feels less static.
 - Verification: `node --check scenes/TitleScene.js` passed, and local HTTP checks returned `200 image/png` for the Anuka, Carter, and Codah spritesheets.
 - Flipped Anuka's title-screen orientation back horizontally by disabling `flipX` for her lineup sprite.
+- Troubleshot platform visibility: normal platform physics bodies were present but intentionally invisible, while visible sprites were separate display objects and easy to miss against the water/ground.
+- Updated platform construction so each invisible collider owns its visible sprite pieces, added a subtle shadow/top highlight for readability, and exposed platform state through `window.render_game_to_text()`.
+- Updated crumbling-platform cleanup so attached visible pieces fade/destroy with the hidden collider.
+- Troubleshot missing jump poses: some character spritesheets have only 8 frames, but `GameScene` hard-coded jump/glide frame 8. Added per-spritesheet jump frame resolution with a fallback to the last available walk frame, and included player frame/state details in `render_game_to_text()`.
+- Regenerated the affected 8-frame web spritesheets (`anuka`, `avalon`, `erza`, `crash`, `glory`) from `tools/build-spritesheets.py` so frames 8 and 9 are restored as jump/land poses.
+- Added `tools/verify-player-spritesheets.mjs` to enforce the runtime contract that every player web spritesheet is exactly 10 frames wide (`sheetW * 10`) by 96px tall; current verification passes for all 16 characters.
+- Removed the extra dark platform drop-shadow rectangle; platform visuals now use only the tile art and thin top highlight.
+- Regenerated all 16 player web spritesheets so jump/land frames are rebuilt from source. Fixed `tools/build-spritesheets.py` to ignore transparent pixels while detecting content, then updated changed `sheetW` metadata for Carter, ERZA, Franky, Morgana, and Nicky. `node tools/verify-player-spritesheets.mjs` passes.

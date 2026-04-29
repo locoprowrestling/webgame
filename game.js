@@ -62,6 +62,10 @@ window.render_game_to_text = () => {
         w: Math.round(player.body.width),
         h: Math.round(player.body.height),
       } : null,
+      texture: player.texture?.key,
+      frame: player.frame?.name,
+      state: scene._currentPlayerState,
+      jumpFrame: scene._jumpFrame,
     } : null,
     obstacles: (scene._obstacles || [])
       .filter(obstacle => obstacle.active)
@@ -82,5 +86,15 @@ window.render_game_to_text = () => {
           gravity: obstacle.body.allowGravity,
         } : null,
       })),
+    platforms: scene._platformGroup?.getChildren?.()
+      .filter(platform => platform.active)
+      .map(platform => ({
+        x: Math.round(platform.x),
+        y: Math.round(platform.y),
+        w: Math.round(platform.width),
+        h: Math.round(platform.height),
+        bodyVisible: platform.visible,
+        visualCount: platform._visuals?.filter(visual => visual.visible && visual.alpha > 0).length || 0,
+      })) || [],
   });
 };

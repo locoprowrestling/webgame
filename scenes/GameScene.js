@@ -167,36 +167,43 @@ export default class GameScene extends Phaser.Scene {
       sg.fillTriangle(666, 0, 600, CANVAS_H, 732, CANVAS_H);
     }
 
-    const mtxKey = ['bg_mtn_z1','bg_bld_z2','bg_mtn_z3','bg_tent_z4','bg_crowd_z5'][zone - 1];
-    const hillKey = zone === 1 ? 'bg_hill_z1' : (zone === 3 ? 'bg_pine_z3' : null);
-
-    const bgYOffsets = { 1:160, 2:140, 3:150, 4:170, 5:200 };
-    const bgY = bgYOffsets[zone] || 160;
-
-    if (this.textures.exists(mtxKey)) {
-      this._bgMtn = this.add.tileSprite(0, bgY, CANVAS_W, 140, mtxKey)
+    if (zone === 1 && this.textures.exists('bg_lp_1')) {
+      // Far layer — scrolls slowest
+      this._bgMtn = this.add.tileSprite(0, 0, CANVAS_W, CANVAS_H, 'bg_lp_1')
+        .setOrigin(0, 0).setScrollFactor(0).setDepth(1);
+      // Near layer — scrolls a bit faster
+      this._bgHill = this.add.tileSprite(0, 0, CANVAS_W, CANVAS_H, 'bg_lp_2')
         .setOrigin(0, 0).setScrollFactor(0).setDepth(2);
-    }
-    if (hillKey && this.textures.exists(hillKey)) {
-      this._bgHill = this.add.tileSprite(0, CANVAS_H - 100, CANVAS_W, 60, hillKey)
-        .setOrigin(0, 0).setScrollFactor(0).setDepth(3);
+    } else {
+      const mtxKey = ['bg_mtn_z1','bg_bld_z2','bg_mtn_z3','bg_tent_z4','bg_crowd_z5'][zone - 1];
+      const hillKey = zone === 1 ? 'bg_hill_z1' : (zone === 3 ? 'bg_pine_z3' : null);
+      const bgYOffsets = { 1:160, 2:140, 3:150, 4:170, 5:200 };
+      const bgY = bgYOffsets[zone] || 160;
+      if (this.textures.exists(mtxKey)) {
+        this._bgMtn = this.add.tileSprite(0, bgY, CANVAS_W, 140, mtxKey)
+          .setOrigin(0, 0).setScrollFactor(0).setDepth(2);
+      }
+      if (hillKey && this.textures.exists(hillKey)) {
+        this._bgHill = this.add.tileSprite(0, CANVAS_H - 100, CANVAS_W, 60, hillKey)
+          .setOrigin(0, 0).setScrollFactor(0).setDepth(3);
+      }
     }
 
     // Water background layer (outdoor zones)
-    if ([1, 3].includes(zone) && this.textures.exists('bg_tile_water_flow')) {
-      this._bgWater = this.add.tileSprite(0, CANVAS_H - 88, CANVAS_W, 40, 'bg_tile_water_flow')
+    if ([1, 3].includes(zone) && this.textures.exists('tile_water_flow_01')) {
+      this._bgWater = this.add.tileSprite(0, CANVAS_H - 88, CANVAS_W, 40, 'tile_water_flow_01')
         .setOrigin(0, 0).setScrollFactor(0).setDepth(3.5);
     }
 
     // Ground visual — tiled texture per zone with solid-color fallback
     const groundTileKeys = {
-      1: 'bg_tile_grass_tile',
-      2: 'bg_tile_asphalt_road',
-      3: 'bg_tile_dry_grass_tile',
-      4: 'bg_tile_dry_grass_tile',
-      5: 'bg_tile_floor_boards',
+      1: 'tile_grass_tile_01',
+      2: 'tile_asphalt_road_01',
+      3: 'tile_dry_grass_tile_01',
+      4: 'tile_dry_grass_tile_01',
+      5: 'tile_floor_boards_01',
     };
-    const groundKey = groundTileKeys[zone] || 'bg_tile_grass_tile';
+    const groundKey = groundTileKeys[zone] || 'tile_grass_tile_01';
     if (this.textures.exists(groundKey)) {
       this._bgGround = this.add.tileSprite(0, CANVAS_H - 44, CANVAS_W, 44, groundKey)
         .setOrigin(0, 0).setScrollFactor(0).setDepth(4);
@@ -234,6 +241,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     this._walkAnimKey = `walk_${this._characterId}`;
+    this._jumpFrame = this._resolvePlayerFrame(sheetKey, 8);
     this._currentPlayerState = null;
     this._player.play(this._walkAnimKey);
 
@@ -391,7 +399,10 @@ export default class GameScene extends Phaser.Scene {
     platform._crumbling = true;
     this.time.delayedCall(900, () => {
       if (platform.active) {
-        this.tweens.add({ targets: platform, alpha: 0, duration: 200, onComplete: () => {
+        const targets = platform._visuals?.length ? platform._visuals : [platform];
+        this.tweens.add({ targets, alpha: 0, duration: 200, onComplete: () => {
+          platform._visuals?.forEach(visual => visual.destroy());
+          platform._visuals = [];
           this._platformGroup.remove(platform, true, true);
           if (platform.active) platform.destroy();
         }});
@@ -621,8 +632,19 @@ export default class GameScene extends Phaser.Scene {
       this._player.play(this._walkAnimKey, true);
     } else {
       this._player.stop();
-      if (frame !== null) this._player.setFrame(frame);
+      if (frame !== null) this._player.setFrame(this._resolvePlayerFrame(this._player.texture.key, frame));
     }
+  }
+
+  _resolvePlayerFrame(sheetKey, preferredFrame) {
+    const texture = this.textures.get(sheetKey);
+    if (!texture) return 0;
+    if (texture.has(preferredFrame)) return preferredFrame;
+
+    const source = texture.getSourceImage?.();
+    const frameWidth = this._char?.sheetW || this.textures.getFrame(sheetKey, 0)?.realWidth || 1;
+    const frameCount = Math.max(1, Math.floor((source?.width || frameWidth) / frameWidth));
+    return Math.min(frameCount - 1, 7);
   }
 
   _updatePlayerPresentation(time, onGround) {
@@ -631,13 +653,13 @@ export default class GameScene extends Phaser.Scene {
 
     if (!onGround) {
       if (this._holding && vy > 90 && this._physics.glideGravityMult < 0.5) {
-        this._setPlayerState('glide', 8);
+        this._setPlayerState('glide', this._jumpFrame);
         p.setAngle(6);
       } else if (vy < -60) {
-        this._setPlayerState('jump', 8);
+        this._setPlayerState('jump', this._jumpFrame);
         p.setAngle(-10);
       } else {
-        this._setPlayerState('jump', 8);
+        this._setPlayerState('jump', this._jumpFrame);
         p.setAngle(Phaser.Math.Clamp(vy * 0.025, -8, 12));
       }
       return;

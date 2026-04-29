@@ -20,14 +20,14 @@ export const CHARACTERS = [
     portrait: 'Assets/players-web/tas-carter-cash.png',
     logo: 'Assets/logos-web/logo-carter-cash.png',
     trait: 'balanced', color: 0x2a4a8a, skinColor: 0xe0c090,
-    sheetW: 78,
+    sheetW: 82,
   },
   {
     id: 'erza', name: 'ERZA', faction: 'rising',
     portrait: 'Assets/players-web/tas-erza.png',
     logo: 'Assets/logos-web/logo-emt.png',
     trait: 'quick', color: 0xcc2200, skinColor: 0xf0b090,
-    sheetW: 68,
+    sheetW: 70,
   },
   {
     id: 'crash', name: 'Johnny Crash', faction: 'rising',
@@ -84,7 +84,7 @@ export const CHARACTERS = [
     portrait: 'Assets/players-web/tas-franky-gonzales.png',
     logo: 'Assets/logos-web/logo-franky.png',
     trait: 'balanced', color: 0xc8940a, skinColor: 0xd4906a,
-    sheetW: 66,
+    sheetW: 70,
   },
   {
     id: 'hussy', name: 'Hussy Steele', faction: 'pillars',
@@ -105,14 +105,14 @@ export const CHARACTERS = [
     portrait: 'Assets/players-web/tas-morgana-lavey.png',
     logo: 'Assets/logos-web/logo-morgana-lavey.png',
     trait: 'floaty', color: 0x2a0a40, skinColor: 0xd0a080,
-    sheetW: 72,
+    sheetW: 74,
   },
   {
     id: 'nicky', name: 'Nicky Hyde', faction: 'pillars',
     portrait: 'Assets/players-web/tas-nicky-hyde.png',
     logo: 'Assets/logos-web/logo-nicky-hyde.png',
     trait: 'balanced', color: 0x0a6020, skinColor: 0xd8c090,
-    sheetW: 76,
+    sheetW: 78,
   },
 ];
 

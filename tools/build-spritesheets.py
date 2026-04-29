@@ -24,6 +24,7 @@ OUT_DIR = "Assets/players-web/spritesheets"
 TARGET_H = 96  # output frame height in pixels
 WHITE_THRESH = 230  # channels >= this are considered "white background"
 CONTENT_THRESH = 220  # row/col has content if any pixel channel < this
+ALPHA_THRESH = 24  # transparent pixels are ignored when locating art
 
 CHAR_MAP = {
     "anuka":     "Anuka-Gutierrez.png",
@@ -47,11 +48,12 @@ CHAR_MAP = {
 
 def find_content_bands_rows(arr, axis_rows=True):
     """Return list of (start, end) row ranges that contain non-white pixels."""
+    content_mask = (arr[:, :, 3] > ALPHA_THRESH) & np.any(arr[:, :, :3] < CONTENT_THRESH, axis=2)
     if axis_rows:
         # Check each row for non-white pixels
-        has_content = np.any(arr[:, :, :3] < CONTENT_THRESH, axis=(1, 2))
+        has_content = np.any(content_mask, axis=1)
     else:
-        has_content = np.any(arr[:, :, :3] < CONTENT_THRESH, axis=(0, 2))
+        has_content = np.any(content_mask, axis=0)
 
     bands = []
     in_band = False
@@ -71,7 +73,8 @@ def find_content_bands_rows(arr, axis_rows=True):
 def find_column_bands(section_arr, gap_min=8):
     """Return list of (x_start, x_end) column bands in a section that contain content."""
     # For each column, check if any pixel is non-white
-    has_content = np.any(section_arr[:, :, :3] < CONTENT_THRESH, axis=(0, 2))
+    content_mask = (section_arr[:, :, 3] > ALPHA_THRESH) & np.any(section_arr[:, :, :3] < CONTENT_THRESH, axis=2)
+    has_content = np.any(content_mask, axis=0)
     bands = []
     in_band = False
     start = 0
@@ -97,7 +100,7 @@ def find_column_bands(section_arr, gap_min=8):
 
 def tight_bbox(frame_arr):
     """Return (x0, y0, x1, y1) tight bounding box of non-white content."""
-    mask = np.any(frame_arr[:, :, :3] < CONTENT_THRESH, axis=2)
+    mask = (frame_arr[:, :, 3] > ALPHA_THRESH) & np.any(frame_arr[:, :, :3] < CONTENT_THRESH, axis=2)
     rows = np.any(mask, axis=1)
     cols = np.any(mask, axis=0)
     if not rows.any():
@@ -111,7 +114,7 @@ def remove_white_bg(img_rgba_arr):
     """BFS flood fill from all 4 edges to mark background pixels, set alpha=0."""
     arr = img_rgba_arr.copy()
     h, w = arr.shape[:2]
-    white_mask = np.all(arr[:, :, :3] >= WHITE_THRESH, axis=2)
+    white_mask = (arr[:, :, 3] <= ALPHA_THRESH) | np.all(arr[:, :, :3] >= WHITE_THRESH, axis=2)
     visited = np.zeros((h, w), dtype=bool)
 
     q = deque()
