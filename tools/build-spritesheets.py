@@ -22,6 +22,7 @@ from PIL import Image
 SRC_DIR = "Assets/players/spritesheets"
 OUT_DIR = "Assets/players-web/spritesheets"
 TARGET_H = 96  # output frame height in pixels
+TOP_PAD = 8   # reserved pixels at top so raised arms/fingers aren't flush to edge
 WHITE_THRESH = 230  # channels >= this are considered "white background"
 CONTENT_THRESH = 220  # row/col has content if any pixel channel < this
 ALPHA_THRESH = 24  # transparent pixels are ignored when locating art
@@ -219,16 +220,16 @@ def process_character(char_id, src_path, out_dir):
     max_content_w = max(b[2] - b[0] + 1 for b, _ in valid)
     max_content_h = max(b[3] - b[1] + 1 for b, _ in valid)
 
-    # Scale to TARGET_H, maintain aspect ratio
-    scale = TARGET_H / max_content_h
+    # Uniform scale: tallest frame fits in (TARGET_H - TOP_PAD), feet anchored to bottom
+    scale = (TARGET_H - TOP_PAD) / max_content_h
     frame_w = int(round(max_content_w * scale))
     if frame_w % 2 != 0:
         frame_w += 1
     frame_h = TARGET_H
 
-    print(f"  {char_id}: content {max_content_w}x{max_content_h} → frame {frame_w}x{frame_h}")
+    print(f"  {char_id}: content {max_content_w}x{max_content_h} → frame {frame_w}x{frame_h} (scale {scale:.3f})")
 
-    # Remove white bg from each frame, crop to content, scale, composite onto canvas
+    # Remove white bg from each frame, crop to content, scale uniformly, anchor to bottom
     out_frames = []
     for i, (bbox, frame_img) in enumerate(zip(bboxes, frames)):
         arr = np.array(frame_img)
@@ -241,20 +242,19 @@ def process_character(char_id, src_path, out_dir):
             cropped = bg_removed
 
         crop_img = Image.fromarray(cropped)
-        # Scale to fit frame_h
         cw, ch = crop_img.size
         if ch == 0:
             canvas = Image.new("RGBA", (frame_w, frame_h), (0, 0, 0, 0))
             out_frames.append(canvas)
             continue
-        s = frame_h / ch
-        new_w = max(1, int(round(cw * s)))
-        new_h = frame_h
+        # Use the same uniform scale for every frame so characters stay the same size
+        new_w = max(1, int(round(cw * scale)))
+        new_h = max(1, int(round(ch * scale)))
         scaled = crop_img.resize((new_w, new_h), Image.LANCZOS)
 
         canvas = Image.new("RGBA", (frame_w, frame_h), (0, 0, 0, 0))
         paste_x = (frame_w - new_w) // 2
-        paste_y = 0
+        paste_y = frame_h - new_h  # anchor feet to bottom; top pad gives fingers room
         canvas.paste(scaled, (paste_x, paste_y), scaled)
         out_frames.append(canvas)
 
