@@ -199,7 +199,7 @@ export default class GameScene extends Phaser.Scene {
       this._bgWater = this.add.tileSprite(0, CANVAS_H - 88, CANVAS_W, 40, 'tile_water_flow_01')
         .setOrigin(0, 0).setScrollFactor(0).setDepth(3.5);
     } else if (zone === 2 && this.textures.exists('bg_dt_2')) {
-      this._bgWater = this.add.tileSprite(0, CANVAS_H - 88, CANVAS_W, 40, 'bg_dt_2')
+      this._bgWater = this.add.tileSprite(0, CANVAS_H - 88, CANVAS_W, 44, 'bg_dt_2')
         .setOrigin(0, 0).setScrollFactor(0).setDepth(3.5);
     }
 
