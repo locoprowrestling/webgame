@@ -62,7 +62,7 @@ export default class LevelCompleteScene extends Phaser.Scene {
       });
     }
     this._makeBtn(W / 2 + (isLastLevel ? -75 : 0), btnY, 'SELECT', 0x336633, () => {
-      this.scene.start('SelectScene', { level: this._level });
+      this.scene.start('LevelSelectScene', { characterId: this._characterId, level: this._level });
     });
     this._makeBtn(W / 2 + (isLastLevel ? 75 : 150), btnY, 'RETRY', 0x444444, () => {
       this.scene.start('GameScene', { characterId: this._characterId, level: this._level });

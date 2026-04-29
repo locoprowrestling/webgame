@@ -11,6 +11,7 @@ export default class SelectScene extends Phaser.Scene {
 
   init(data) {
     this._startLevel = data.level || 1;
+    this._launching = false;
   }
 
   create() {
@@ -183,16 +184,22 @@ export default class SelectScene extends Phaser.Scene {
   _addInput() {
     this.input.keyboard.on('keydown-SPACE', () => { if (this._selectedId) this._launch(); });
     this.input.keyboard.on('keydown-ENTER', () => { if (this._selectedId) this._launch(); });
-    this.input.keyboard.on('keydown-ESC', () => {
-      this.cameras.main.fadeOut(300, 0, 0, 0);
-      this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('TitleScene'));
-    });
+    this.input.keyboard.on('keydown-ESC', () => this._goBack());
+  }
+
+  _goBack() {
+    if (this._launching) return;
+    this._launching = true;
+    this.cameras.main.fadeOut(300, 0, 0, 0);
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('TitleScene'));
   }
 
   _launch() {
+    if (this._launching) return;
+    this._launching = true;
     this.cameras.main.fadeOut(300, 0, 0, 0);
     this.cameras.main.once('camerafadeoutcomplete', () => {
-      this.scene.start('GameScene', { characterId: this._selectedId, level: this._startLevel });
+      this.scene.start('LevelSelectScene', { characterId: this._selectedId, level: this._startLevel });
     });
   }
 }

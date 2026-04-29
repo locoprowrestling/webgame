@@ -209,14 +209,15 @@ function applyObstacleBody(obj, def) {
 
   const bodyW = def.bodyW || Math.max(12, Math.round(def.w * 0.72));
   const bodyH = def.bodyH || Math.max(12, Math.round(def.h * 0.78));
-  obj.body.setAllowGravity(false);
-  obj.body.setGravityY(0);
-  if (def.behavior !== 'projectile') obj.body.setVelocityY(0);
   obj.body.setSize(bodyW, bodyH);
   obj.body.setOffset(
     Math.round((def.w - bodyW) / 2),
     Math.round(def.h - bodyH),
   );
+  if (obj._falling) return;
+  obj.body.setAllowGravity(false);
+  obj.body.setGravityY(0);
+  if (def.behavior !== 'projectile') obj.body.setVelocityY(0);
 }
 
 function applyObstacleBehavior(obj, def, config, x, y) {
@@ -292,10 +293,17 @@ export function spawnObstacle(scene, type, x, y, config = {}) {
   return obj;
 }
 
+const GROUND_BEHAVIORS = new Set(['rolling', 'pacing', 'moving_left', 'projectile']);
+
+export function isGroundBehavior(behavior) {
+  return GROUND_BEHAVIORS.has(behavior);
+}
+
 export function updateObstacle(obj, time, delta) {
   const def = obj.obstacleDef;
   if (!def) return;
   applyObstacleBody(obj, def);
+  if (obj._falling) return;
 
   switch (def.behavior) {
     case 'pacing':

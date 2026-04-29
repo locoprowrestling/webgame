@@ -1,6 +1,6 @@
 import { getCharacter, getTraitPhysics } from '../src/characters.js';
 import { loadLevel, buildGround, buildPlatforms, getCheckpoints } from '../src/levelLoader.js';
-import { spawnObstacle, updateObstacle } from '../src/obstacles.js';
+import { spawnObstacle, updateObstacle, isGroundBehavior } from '../src/obstacles.js';
 import { saveResult } from '../src/saveSystem.js';
 
 const GROUND_Y = 456;   // top of ground strip
@@ -19,12 +19,14 @@ export default class GameScene extends Phaser.Scene {
     this._isShuttingDown = false;
     this._hudLaunched = false;
     this._createStage = 'init';
+    this._createGen = (this._createGen || 0) + 1;
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this._onShutdown, this);
     this.events.once(Phaser.Scenes.Events.DESTROY, this._onDestroy, this);
   }
 
   async create() {
+    const myGen = this._createGen;
     this._char = getCharacter(this._characterId);
     this._physics = getTraitPhysics(this._char.trait);
     this._hearts = 3;
@@ -42,7 +44,7 @@ export default class GameScene extends Phaser.Scene {
     try {
       this._createStage = 'loadLevel';
       this._levelData = await loadLevel(this, this._levelNum);
-      if (!this._canContinueSceneSetup()) return;
+      if (!this._canContinueSceneSetup(myGen)) return;
 
       const zone = this._levelData.zone || 1;
       const baseSpeed = this._levelData.scrollSpeed || BASE_SCROLL[zone] || 220;
@@ -95,8 +97,8 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  _canContinueSceneSetup() {
-    return !this._isShuttingDown && this.scene.isActive(this.sys.settings.key);
+  _canContinueSceneSetup(gen) {
+    return gen === this._createGen && !this._isShuttingDown && this.scene.isActive(this.sys.settings.key);
   }
 
   _handleCreateError(error) {
@@ -174,6 +176,9 @@ export default class GameScene extends Phaser.Scene {
       // Near layer — scrolls a bit faster
       this._bgHill = this.add.tileSprite(0, 0, CANVAS_W, CANVAS_H, 'bg_lp_2')
         .setOrigin(0, 0).setScrollFactor(0).setDepth(2);
+    } else if (zone === 2 && this.textures.exists('bg_dt_1')) {
+      this._bgMtn = this.add.tileSprite(0, 0, CANVAS_W, CANVAS_H, 'bg_dt_1')
+        .setOrigin(0, 0).setScrollFactor(0).setDepth(1);
     } else {
       const mtxKey = ['bg_mtn_z1','bg_bld_z2','bg_mtn_z3','bg_tent_z4','bg_crowd_z5'][zone - 1];
       const hillKey = zone === 1 ? 'bg_hill_z1' : (zone === 3 ? 'bg_pine_z3' : null);
@@ -189,9 +194,12 @@ export default class GameScene extends Phaser.Scene {
       }
     }
 
-    // Water background layer (outdoor zones)
+    // Water/strip background layer (outdoor zones)
     if ([1, 3].includes(zone) && this.textures.exists('tile_water_flow_01')) {
       this._bgWater = this.add.tileSprite(0, CANVAS_H - 88, CANVAS_W, 40, 'tile_water_flow_01')
+        .setOrigin(0, 0).setScrollFactor(0).setDepth(3.5);
+    } else if (zone === 2 && this.textures.exists('bg_dt_2')) {
+      this._bgWater = this.add.tileSprite(0, CANVAS_H - 88, CANVAS_W, 40, 'bg_dt_2')
         .setOrigin(0, 0).setScrollFactor(0).setDepth(3.5);
     }
 
@@ -279,6 +287,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   _buildObstacles() {
+    this._gapRanges = (this._levelData.gaps || []).map(g => ({ x: g.x, end: g.x + g.width }));
     this._obstacleGroup = this.physics.add.group();
     const crumblingObstacles = [];
 
@@ -582,7 +591,21 @@ export default class GameScene extends Phaser.Scene {
     this._obstacles.forEach(obs => {
       if (!obs.active) return;
       updateObstacle(obs, time, delta);
+      if (!obs._falling && isGroundBehavior(obs.obstacleDef?.behavior)) {
+        this._checkObstaclePit(obs);
+      }
     });
+  }
+
+  _checkObstaclePit(obs) {
+    const x = obs.x;
+    for (const gap of this._gapRanges) {
+      if (x >= gap.x && x <= gap.end) {
+        obs._falling = true;
+        obs.body.setAllowGravity(true);
+        return;
+      }
+    }
   }
 
   _updateParallax() {
@@ -692,7 +715,7 @@ export default class GameScene extends Phaser.Scene {
   _cleanupOffscreen() {
     const leftEdge = this.cameras.main.scrollX - 400;
     this._obstacles = this._obstacles.filter(obs => {
-      if (obs.active && obs.x < leftEdge) {
+      if (obs.active && (obs.x < leftEdge || obs.y > CANVAS_H + 100)) {
         obs.destroy();
         return false;
       }
