@@ -17,6 +17,9 @@ node_modules/
 /test-*.png
 /*-frame0.png
 
+# Large source assets not needed in repo
+Assets/bg_tiles/WOOD.png
+
 # Logs and temporary files
 *.log
 *.tmp
