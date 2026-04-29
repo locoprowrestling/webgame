@@ -51,7 +51,7 @@ export const CHARACTERS = [
     sheetW: 70,
   },
   {
-    id: 'vigilante', name: 'Vigilante OAI', faction: 'rising',
+    id: 'vigilante', name: 'Vigilante', faction: 'rising',
     portrait: 'Assets/players-web/tas-vigilante-oai.png',
     logo: 'Assets/logos-web/logo-vigilante.png',
     trait: 'floaty', color: 0x5a4a20, skinColor: 0xe0c090,
