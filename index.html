@@ -16,7 +16,10 @@
     body {
       position: fixed; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      background: #0a0a0a;
+      background-color: #6b3a1f;
+      background-image: url('Assets/bg_tiles/wood-web.jpg');
+      background-size: cover;
+      background-position: center top;
       overflow: hidden;
       touch-action: none;
       -webkit-tap-highlight-color: transparent;
@@ -182,31 +185,10 @@
       box-shadow: 0 0 0 1px #2a2a2a inset;
     }
 
-    /* ── Rotate message ─────────────────────────────────────────── */
-    #rotate-msg {
-      display: none;
-      position: fixed; inset: 0;
-      background: #000;
-      color: #fff;
-      font-family: Impact, sans-serif;
-      font-size: 22px;
-      letter-spacing: 1px;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      z-index: 9999;
-    }
-    #rotate-msg span { font-size: 48px; }
-
-    @media (orientation: portrait) and (max-width: 1024px) {
-      #rotate-msg { display: flex; }
-    }
-
-    /* ── Compact layout for small landscape screens ─────────────── */
-    @media (max-height: 520px) {
+    /* ── Compact controls for small landscape or portrait ──────── */
+    @media (max-height: 520px) and (orientation: landscape),
+           (orientation: portrait) {
       :root {
-        --screen-w: min(78vw, 888px);
         --controls-h: 40px;
         --bezel-pad: 8px;
       }
@@ -217,11 +199,6 @@
   </style>
 </head>
 <body>
-  <div id="rotate-msg">
-    <span>&#8635;</span>
-    ROTATE DEVICE TO PLAY
-  </div>
-
   <div id="tv-body">
     <div id="screen-bezel">
       <div id="screen-container">
@@ -239,9 +216,11 @@
   </div>
 
   <script>
-    // Compute screen dimensions before Phaser initialises so offsetWidth is correct.
-    (function () {
-      var w = Math.min(Math.floor(window.innerWidth * 0.72), 888);
+    function resizeGame() {
+      var portrait = window.innerHeight > window.innerWidth;
+      var w = portrait
+        ? Math.min(Math.floor(window.innerWidth * 0.90), 888)
+        : Math.min(Math.floor(window.innerWidth * 0.72), 888);
       var h = Math.round(w * 500 / 888);
       var root = document.documentElement;
       root.style.setProperty('--screen-w', w + 'px');
@@ -249,7 +228,10 @@
       var sc = document.getElementById('screen-container');
       sc.style.width  = w + 'px';
       sc.style.height = h + 'px';
-    })();
+      if (window.__LCP_GAME__) window.__LCP_GAME__.scale.refresh();
+    }
+    resizeGame();
+    window.addEventListener('resize', resizeGame);
   </script>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
   <script type="module" src="game.js"></script>
