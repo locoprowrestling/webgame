@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LoCoPro — Walk Cycle Editor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #12121e;
+      color: #ddd;
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 20px 24px 40px;
+    }
+
+    h1 {
+      font-size: 1.2rem;
+      color: #a0c0ff;
+      letter-spacing: 0.05em;
+      margin-bottom: 16px;
+    }
+
+    /* ── Character picker ── */
+    #charPicker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+    .char-btn {
+      padding: 5px 11px;
+      border: 2px solid #3a3a5a;
+      background: #1e1e34;
+      color: #aaa;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      transition: border-color 0.1s;
+    }
+    .char-btn:hover  { border-color: #6070a0; color: #ccc; }
+    .char-btn.active { border-color: #5090ff; color: #fff; background: #1a3060; }
+
+    /* ── Section headings ── */
+    .section-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #556;
+      margin-bottom: 10px;
+    }
+
+    /* ── Source frames row ── */
+    #sourcePanelWrap {
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 20px;
+    }
+    #sourceFrames {
+      display: flex;
+      gap: 8px;
+      width: max-content;
+    }
+
+    /* ── Walk cycle slots row ── */
+    #slotsPanelWrap {
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 24px;
+    }
+    #walkSlots {
+      display: flex;
+      gap: 8px;
+      width: max-content;
+    }
+
+    /* ── Shared frame/slot box styles ── */
+    .frame-box, .slot-box {
+      position: relative;
+      border: 2px solid #3a3a5a;
+      border-radius: 5px;
+      cursor: pointer;
+      background: #1c1c2e;
+      flex-shrink: 0;
+      image-rendering: pixelated;
+      transition: border-color 0.1s;
+    }
+    .frame-box:hover { border-color: #6070a0; }
+    .frame-box.selected { border-color: #5090ff; box-shadow: 0 0 0 2px #1a3060; }
+
+    .slot-box { background: #161628; }
+    .slot-box:hover { border-color: #6070a0; }
+    .slot-box.drop-target { border-color: #5090ff; background: #1a2040; }
+
+    /* inner sprite display */
+    .frame-inner {
+      display: block;
+      image-rendering: pixelated;
+      background-color: #282840;
+    }
+
+    /* labels */
+    .badge {
+      position: absolute;
+      font-size: 9px;
+      color: rgba(255,255,255,0.55);
+      background: rgba(0,0,0,0.55);
+      padding: 1px 4px;
+      border-radius: 2px;
+      pointer-events: none;
+      line-height: 1.4;
+    }
+    .badge.top-left  { top: 3px; left: 3px; }
+    .badge.bot-right { bottom: 3px; right: 3px; }
+
+    .slot-src-badge {
+      position: absolute;
+      bottom: 3px;
+      left: 0; right: 0;
+      text-align: center;
+      font-size: 9px;
+      color: rgba(255,255,255,0.5);
+      pointer-events: none;
+    }
+
+    /* ── Preview + controls row ── */
+    #bottomRow {
+      display: flex;
+      align-items: flex-start;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    #previewWrap {
+      flex-shrink: 0;
+    }
+    #preview {
+      display: block;
+      border: 2px solid #3a3a5a;
+      border-radius: 4px;
+      background: #0a0a14;
+      image-rendering: pixelated;
+    }
+    #fpsLabel {
+      font-size: 0.75rem;
+      color: #556;
+      margin-top: 5px;
+      text-align: center;
+    }
+
+    /* ── Controls ── */
+    #controls {
+      padding-top: 4px;
+    }
+    #hint {
+      font-size: 0.8rem;
+      color: #667;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      max-width: 360px;
+    }
+    #hint strong { color: #99b; }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    button {
+      padding: 7px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      border: 2px solid;
+      transition: background 0.1s;
+    }
+    .btn-reset  { background: #2a1c1c; border-color: #5a3030; color: #ccc; }
+    .btn-reset:hover  { background: #3a2424; }
+    .btn-export { background: #1a3a28; border-color: #3a7050; color: #cce; }
+    .btn-export:hover { background: #264838; }
+
+    #cycleReadout {
+      font-size: 0.78rem;
+      color: #667;
+      font-family: monospace;
+      background: #0e0e1a;
+      border: 1px solid #2a2a40;
+      border-radius: 4px;
+      padding: 8px 10px;
+      max-width: 400px;
+    }
+    #cycleReadout span { color: #a0c0ff; }
+  </style>
+</head>
+<body>
+
+<h1>LoCoPro — Walk Cycle Editor</h1>
+
+<div id="charPicker"></div>
+
+<div class="section-label">Source frames — click to select</div>
+<div id="sourcePanelWrap"><div id="sourceFrames"></div></div>
+
+<div class="section-label">Walk cycle slots (0 → 7) — click to assign selected frame</div>
+<div id="slotsPanelWrap"><div id="walkSlots"></div></div>
+
+<div id="bottomRow">
+  <div id="previewWrap">
+    <div class="section-label">Preview</div>
+    <canvas id="preview" width="180" height="180"></canvas>
+    <div id="fpsLabel">10 fps</div>
+  </div>
+
+  <div id="controls">
+    <div id="hint">
+      <strong>1</strong> Click a source frame to select it.<br>
+      <strong>2</strong> Click a walk cycle slot to assign it.<br>
+      <strong>3</strong> Export when done — save the .md next to the spritesheet.
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-reset"  onclick="resetCycle()">Reset 0–7</button>
+      <button class="btn-export" onclick="exportMD()">Export walk-cycle-[char].md</button>
+    </div>
+
+    <div id="cycleReadout">order: <span id="cycleSpan">[0,1,2,3,4,5,6,7]</span></div>
+  </div>
+</div>
+
+<script>
+// ── Character data ───────────────────────────────────────────────────────────
+const CHARACTERS = [
+  { id:'anuka',     name:'Anuka Gutierrez',  sheetW:64  },
+  { id:'avalon',    name:'Avalon',            sheetW:62  },
+  { id:'carter',    name:'Carter Cash',       sheetW:78  },
+  { id:'erza',      name:'ERZA',              sheetW:68  },
+  { id:'crash',     name:'Johnny Crash',      sheetW:68  },
+  { id:'glory',     name:'Major Glory',       sheetW:68  },
+  { id:'zeak',      name:'Zeak Gallent',      sheetW:70  },
+  { id:'vigilante', name:'Vigilante OAI',     sheetW:68  },
+  { id:'codah',     name:'Codah',             sheetW:70  },
+  { id:'cody',      name:'Cody Devine',       sheetW:68  },
+  { id:'dean',      name:'Dean Mercer',       sheetW:68  },
+  { id:'franky',    name:'Franky Gonzales',   sheetW:66  },
+  { id:'hussy',     name:'Hussy Steele',      sheetW:68  },
+  { id:'jt',        name:'JT Staten',         sheetW:72  },
+  { id:'morgana',   name:'Morgana Lavey',     sheetW:72  },
+  { id:'nicky',     name:'Nicky Hyde',        sheetW:76  },
+];
+
+const FRAME_H = 96;
+const SCALE   = 2;     // display scale for thumbnails
+
+// ── State ────────────────────────────────────────────────────────────────────
+let currentChar   = CHARACTERS[0];
+let spriteImg     = null;
+let totalFrames   = 10;  // will be computed per character
+let selectedSrc   = null; // index of highlighted source frame
+let walkCycle     = [0,1,2,3,4,5,6,7];
+
+// ── Preview ──────────────────────────────────────────────────────────────────
+const previewCanvas = document.getElementById('preview');
+const pCtx          = previewCanvas.getContext('2d');
+let   previewSlot   = 0;
+let   lastTick      = 0;
+const FPS           = 10;
+
+function animLoop(ts) {
+  requestAnimationFrame(animLoop);
+  if (ts - lastTick < 1000 / FPS) return;
+  lastTick = ts;
+  previewSlot = (previewSlot + 1) % 8;
+  drawPreview();
+}
+requestAnimationFrame(animLoop);
+
+function drawPreview() {
+  pCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+  pCtx.fillStyle = '#0a0a14';
+  pCtx.fillRect(0, 0, previewCanvas.width, previewCanvas.height);
+  if (!spriteImg) return;
+
+  const src  = walkCycle[previewSlot];
+  const sw   = currentChar.sheetW;
+  const scale = Math.min(previewCanvas.width / sw, previewCanvas.height / FRAME_H);
+  const dw   = sw * scale;
+  const dh   = FRAME_H * scale;
+  const dx   = (previewCanvas.width  - dw) / 2;
+  const dy   = (previewCanvas.height - dh) / 2;
+
+  pCtx.imageSmoothingEnabled = false;
+  pCtx.drawImage(spriteImg, src * sw, 0, sw, FRAME_H, dx, dy, dw, dh);
+}
+
+// ── Character picker ─────────────────────────────────────────────────────────
+const picker = document.getElementById('charPicker');
+CHARACTERS.forEach((c, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'char-btn' + (i === 0 ? ' active' : '');
+  btn.textContent = c.name;
+  btn.onclick = () => selectChar(c);
+  picker.appendChild(btn);
+});
+
+function selectChar(c) {
+  currentChar = c;
+  selectedSrc = null;
+  walkCycle   = [0,1,2,3,4,5,6,7];
+  document.querySelectorAll('.char-btn').forEach((b, i) => {
+    b.classList.toggle('active', CHARACTERS[i] === c);
+  });
+  loadSheet();
+}
+
+// ── Spritesheet loading ───────────────────────────────────────────────────────
+function loadSheet() {
+  spriteImg = null;
+  const img = new Image();
+  img.src = `Assets/players-web/spritesheets/${currentChar.id}.png`;
+  img.onload = () => {
+    spriteImg   = img;
+    totalFrames = Math.floor(img.naturalWidth / currentChar.sheetW);
+    render();
+  };
+}
+
+// ── Rendering ────────────────────────────────────────────────────────────────
+function frameCSS(frameIdx) {
+  const c   = currentChar;
+  const dw  = c.sheetW * SCALE;
+  const dh  = FRAME_H  * SCALE;
+  const bsW = c.sheetW * totalFrames * SCALE;
+  return `
+    width:${dw}px; height:${dh}px;
+    background-image:url('Assets/players-web/spritesheets/${c.id}.png');
+    background-size:${bsW}px ${dh}px;
+    background-position:-${frameIdx * dw}px 0;
+    background-repeat:no-repeat;
+    image-rendering:pixelated;
+  `;
+}
+
+function render() {
+  renderSource();
+  renderSlots();
+  updateReadout();
+}
+
+function renderSource() {
+  const container = document.getElementById('sourceFrames');
+  container.innerHTML = '';
+
+  for (let i = 0; i < totalFrames; i++) {
+    const box = document.createElement('div');
+    box.className = 'frame-box' + (selectedSrc === i ? ' selected' : '');
+
+    // inner sprite display
+    const inner = document.createElement('div');
+    inner.className = 'frame-inner';
+    inner.style.cssText = frameCSS(i);
+    box.appendChild(inner);
+
+    // frame index badge
+    const badge = document.createElement('span');
+    badge.className = 'badge top-left';
+    badge.textContent = i;
+    box.appendChild(badge);
+
+    // extra tag for frames beyond walk cycle
+    if (i >= 8) {
+      const extra = document.createElement('span');
+      extra.className = 'badge bot-right';
+      extra.textContent = 'extra';
+      box.appendChild(extra);
+    }
+
+    box.onclick = () => {
+      selectedSrc = i;
+      render();
+    };
+
+    container.appendChild(box);
+  }
+}
+
+function renderSlots() {
+  const container = document.getElementById('walkSlots');
+  container.innerHTML = '';
+  const dh = FRAME_H * SCALE;
+
+  for (let slot = 0; slot < 8; slot++) {
+    const src = walkCycle[slot];
+    const box = document.createElement('div');
+    box.className = 'slot-box';
+
+    // slot number badge
+    const slotBadge = document.createElement('span');
+    slotBadge.className = 'badge top-left';
+    slotBadge.textContent = `${slot}`;
+    box.appendChild(slotBadge);
+
+    // sprite display — offset by top-label height
+    const inner = document.createElement('div');
+    inner.className = 'frame-inner';
+    inner.style.cssText = frameCSS(src) + `margin-top:16px;`;
+    box.appendChild(inner);
+
+    // "frame N" label at bottom
+    const srcLabel = document.createElement('span');
+    srcLabel.className = 'slot-src-badge';
+    srcLabel.style.bottom = '4px';
+    srcLabel.textContent = `frame ${src}`;
+    box.appendChild(srcLabel);
+
+    // set box height to frame height + top label + bottom label
+    box.style.height = (dh + 16 + 16) + 'px';
+    box.style.width  = (currentChar.sheetW * SCALE) + 'px';
+
+    box.onmouseenter = () => { if (selectedSrc !== null) box.classList.add('drop-target'); };
+    box.onmouseleave = () => box.classList.remove('drop-target');
+    box.onclick = () => {
+      if (selectedSrc !== null) {
+        walkCycle[slot] = selectedSrc;
+        render();
+      }
+    };
+
+    container.appendChild(box);
+  }
+}
+
+function updateReadout() {
+  document.getElementById('cycleSpan').textContent = JSON.stringify(walkCycle);
+}
+
+// ── Reset ────────────────────────────────────────────────────────────────────
+function resetCycle() {
+  walkCycle   = [0,1,2,3,4,5,6,7];
+  selectedSrc = null;
+  render();
+}
+
+// ── Export ───────────────────────────────────────────────────────────────────
+function exportMD() {
+  const c  = currentChar;
+  const sw = c.sheetW;
+
+  const tableRows = walkCycle.map((src, slot) =>
+    `| ${slot} | ${src} | ${src * sw} – ${src * sw + sw - 1} |`
+  ).join('\n');
+
+  const order = JSON.stringify(walkCycle);
+
+  const md = `# Walk Cycle Arrangement: ${c.name}
+
+**Spritesheet:** \`Assets/players-web/spritesheets/${c.id}.png\`
+**Total size:** ${sw * totalFrames} × 96 px
+**Frame size:** ${sw} × 96 px (${totalFrames} frames total, frames 0–7 are the active walk cycle)
+
+## Desired slot order
+
+| Slot | Source frame | Source X range (px) |
+|------|:------------:|---------------------|
+${tableRows}
+
+## Rearrangement script
+
+Run this from the repo root. It reads the **original** file, then writes the rearranged version.
+
+\`\`\`python
+from PIL import Image
+
+path      = "Assets/players-web/spritesheets/${c.id}.png"
+frame_w   = ${sw}
+frame_h   = 96
+order     = ${order}  # order[slot] = source frame index
+
+img    = Image.open(path).convert("RGBA")
+frames = [img.crop((i * frame_w, 0, i * frame_w + frame_w, frame_h))
+          for i in range(img.width // frame_w)]
+
+out = Image.new("RGBA", (frame_w * len(order), frame_h))
+for slot, src in enumerate(order):
+    out.paste(frames[src], (slot * frame_w, 0))
+
+out.save(path)
+print(f"Saved {path}  ({len(order)} frames × {frame_w}px)")
+\`\`\`
+
+> **Note:** After running, only frames 0–7 are used by the game engine (BootScene \`walk_${c.id}\` animation).
+> Any extra frames in the source sheet beyond index 7 are preserved but not played.
+`;
+
+  const blob = new Blob([md], { type: 'text/markdown' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `walk-cycle-${c.id}.md`;
+  a.click();
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+loadSheet();
+</script>
+</body>
+</html>
