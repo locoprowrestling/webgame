@@ -38,6 +38,7 @@
 
     /* ── TV outer shell ─────────────────────────────────────────── */
     #tv-body {
+      position: relative;
       display: flex;
       flex-direction: column;
       background: linear-gradient(160deg, #444 0%, #282828 60%, #1a1a1a 100%);
@@ -185,6 +186,53 @@
       box-shadow: 0 0 0 1px #2a2a2a inset;
     }
 
+    /* ── Sticky note ────────────────────────────────────────────── */
+    #sticky-note {
+      position: fixed;
+      left: -999px; /* JS positions on load */
+      top: 0;
+      width: 116px;
+      background: #fde96c;
+      background-image: linear-gradient(
+        180deg,
+        rgba(255,255,255,0.18) 0%,
+        transparent 18%
+      );
+      padding: 8px 7px 12px;
+      transform: rotate(2deg);
+      box-shadow:
+        2px 3px 8px rgba(0,0,0,0.38),
+        0 1px 0 rgba(255,255,255,0.6) inset;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.59rem;
+      color: #1a1a1a;
+      line-height: 1.7;
+      z-index: 20;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    #sticky-note:active { cursor: grabbing; }
+
+    #sticky-note-title {
+      display: block;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.57rem;
+      padding-bottom: 4px;
+      margin-bottom: 5px;
+      border-bottom: 1px solid rgba(0,0,0,0.18);
+    }
+
+    #sticky-note .key {
+      background: rgba(0,0,0,0.1);
+      border-radius: 2px;
+      padding: 0 2px;
+    }
+
     /* ── Compact controls for small landscape or portrait ──────── */
     @media (max-height: 520px) and (orientation: landscape),
            (orientation: portrait) {
@@ -200,6 +248,13 @@
 </head>
 <body>
   <div id="tv-body">
+    <div id="sticky-note">
+      <span id="sticky-note-title">controls</span>
+      tap / click<br>
+      <span class="key">space</span> → jump<br>
+      <br>
+      hold → glide
+    </div>
     <div id="screen-bezel">
       <div id="screen-container">
         <div id="crt-overlay"></div>
@@ -235,5 +290,84 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
   <script type="module" src="game.js"></script>
+  <script>
+    (function () {
+      var note = document.getElementById('sticky-note');
+      if (!note) return;
+
+      function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+      function place(x, y) {
+        note.style.left = x + 'px';
+        note.style.top  = y + 'px';
+      }
+
+      function defaultPos() {
+        var tv  = document.getElementById('tv-body');
+        var r   = tv ? tv.getBoundingClientRect() : { left:0, right:window.innerWidth, top:0, bottom:window.innerHeight };
+        var nw  = note.offsetWidth  || 116;
+        var nh  = note.offsetHeight || 110;
+        var mobile   = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        var landscape = window.innerWidth > window.innerHeight;
+        if (mobile && landscape) {
+          // Right side of TV
+          return { x: Math.min(r.right + 12, window.innerWidth - nw - 4),
+                   y: clamp(r.top + r.height * 0.35, 4, window.innerHeight - nh - 4) };
+        }
+        // Below TV, aligned to right edge
+        return { x: clamp(r.right - nw - 16, 4, window.innerWidth - nw - 4),
+                 y: Math.min(r.bottom + 10, window.innerHeight - nh - 4) };
+      }
+
+      // Restore saved or compute default
+      var saved = null;
+      try { saved = JSON.parse(localStorage.getItem('lcp_sticky_pos')); } catch (e) {}
+      if (saved && typeof saved.x === 'number') {
+        place(saved.x, saved.y);
+      } else {
+        requestAnimationFrame(function () {
+          var p = defaultPos();
+          place(p.x, p.y);
+        });
+      }
+
+      // Drag
+      var drag = null;
+
+      note.addEventListener('mousedown',  startDrag);
+      note.addEventListener('touchstart', startDrag, { passive: false });
+
+      function startDrag(e) {
+        e.preventDefault();
+        var pt = e.touches ? e.touches[0] : e;
+        var r  = note.getBoundingClientRect();
+        drag = { cx: pt.clientX, cy: pt.clientY, ox: r.left, oy: r.top };
+        document.addEventListener('mousemove',  onMove);
+        document.addEventListener('touchmove',  onMove,  { passive: false });
+        document.addEventListener('mouseup',    endDrag);
+        document.addEventListener('touchend',   endDrag);
+      }
+
+      function onMove(e) {
+        if (!drag) return;
+        e.preventDefault();
+        var pt = e.touches ? e.touches[0] : e;
+        var x  = clamp(drag.ox + pt.clientX - drag.cx, 0, window.innerWidth  - note.offsetWidth);
+        var y  = clamp(drag.oy + pt.clientY - drag.cy, 0, window.innerHeight - note.offsetHeight);
+        place(x, y);
+      }
+
+      function endDrag() {
+        if (!drag) return;
+        drag = null;
+        document.removeEventListener('mousemove',  onMove);
+        document.removeEventListener('touchmove',  onMove);
+        document.removeEventListener('mouseup',    endDrag);
+        document.removeEventListener('touchend',   endDrag);
+        var r = note.getBoundingClientRect();
+        try { localStorage.setItem('lcp_sticky_pos', JSON.stringify({ x: r.left, y: r.top })); } catch (e) {}
+      }
+    })();
+  </script>
 </body>
 </html>

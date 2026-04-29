@@ -169,7 +169,7 @@ export default class GameScene extends Phaser.Scene {
       sg.fillTriangle(666, 0, 600, CANVAS_H, 732, CANVAS_H);
     }
 
-    if (zone === 1 && this.textures.exists('bg_lp_1')) {
+    if ([1, 3].includes(zone) && this.textures.exists('bg_lp_1')) {
       // Far layer — scrolls slowest
       this._bgMtn = this.add.tileSprite(0, 0, CANVAS_W, CANVAS_H, 'bg_lp_1')
         .setOrigin(0, 0).setScrollFactor(0).setDepth(1);
