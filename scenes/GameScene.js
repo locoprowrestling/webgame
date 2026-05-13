@@ -8,6 +8,7 @@ const CANVAS_W = 888;
 const CANVAS_H = 500;
 const PLAYER_START_X = CANVAS_W / 2;
 const WORLD_GRAVITY = 1200;
+const FINISH_FLAG_Y_OFFSET = 6;
 const BASE_SCROLL = { 1:220, 2:260, 3:300, 4:340, 5:380 };
 
 export default class GameScene extends Phaser.Scene {
@@ -378,7 +379,7 @@ export default class GameScene extends Phaser.Scene {
 
     const fx = this._levelData.endX - 100;
     this._finishX = fx;
-    const flag = this.add.sprite(fx, GROUND_Y, 'flag').setOrigin(0.5, 1).setDepth(9);
+    const flag = this.add.sprite(fx, GROUND_Y + FINISH_FLAG_Y_OFFSET, 'flag').setOrigin(0.5, 1).setDepth(9);
     if (this.anims.exists('flag_wave')) flag.play('flag_wave');
 
     // Treat the flag as a finish line, not a tiny target at ground height.
