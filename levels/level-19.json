@@ -1,54 +1,316 @@
 {
-  "id": 19, "zone": 4, "name": "County Fair Gauntlet",
-  "scrollSpeed": 340, "background": "fairgrounds", "endX": 25500,
+  "id": 19,
+  "zone": 4,
+  "name": "County Fair Gauntlet",
+  "scrollSpeed": 340,
+  "background": "fairgrounds",
+  "endX": 25500,
   "gaps": [
-    { "x": 900,  "width": 205 }, { "x": 3100, "width": 210 },
-    { "x": 6000, "width": 205 }, { "x": 9400, "width": 210 },
-    { "x": 13500,"width": 205 }, { "x": 17700,"width": 205 },
-    { "x": 21600,"width": 205 }, { "x": 24400,"width": 200 }
+    {
+      "x": 900,
+      "width": 205
+    },
+    {
+      "x": 3100,
+      "width": 210
+    },
+    {
+      "x": 6000,
+      "width": 205
+    },
+    {
+      "x": 9400,
+      "width": 210
+    },
+    {
+      "x": 13500,
+      "width": 205
+    },
+    {
+      "x": 17700,
+      "width": 205
+    },
+    {
+      "x": 21600,
+      "width": 205
+    },
+    {
+      "x": 24190,
+      "width": 410
+    }
   ],
   "platforms": [
-    { "x": 500, "y": 346, "width": 66 },
-    { "x": 1000, "y": 317, "width": 66 },
-    { "x": 2000, "y": 344, "width": 66 },
-    { "x": 2800, "y": 315, "width": 66 },
-    { "x": 4300, "y": 315, "width": 66 },
-    { "x": 5400, "y": 342, "width": 66 },
-    { "x": 7200, "y": 342, "width": 66 },
-    { "x": 8400, "y": 315, "width": 66 },
-    { "x": 10700, "y": 315, "width": 66 },
-    { "x": 11900, "y": 342, "width": 66 },
-    { "x": 13100, "y": 315, "width": 66 },
-    { "x": 14800, "y": 315, "width": 66 },
-    { "x": 16000, "y": 342, "width": 66 },
-    { "x": 17200, "y": 315, "width": 66 },
-    { "x": 19000, "y": 315, "width": 66 },
-    { "x": 20200, "y": 342, "width": 66 },
-    { "x": 21300, "y": 315, "width": 66 },
-    { "x": 22900, "y": 315, "width": 66 },
-    { "x": 24100, "y": 342, "width": 66 }
+    {
+      "x": 500,
+      "y": 346,
+      "width": 66
+    },
+    {
+      "x": 1000,
+      "y": 317,
+      "width": 66
+    },
+    {
+      "x": 2000,
+      "y": 344,
+      "width": 66
+    },
+    {
+      "x": 2800,
+      "y": 315,
+      "width": 150
+    },
+    {
+      "x": 4300,
+      "y": 315,
+      "width": 66
+    },
+    {
+      "x": 5400,
+      "y": 342,
+      "width": 240
+    },
+    {
+      "x": 7200,
+      "y": 342,
+      "width": 66
+    },
+    {
+      "x": 8400,
+      "y": 315,
+      "width": 66
+    },
+    {
+      "x": 10700,
+      "y": 315,
+      "width": 330
+    },
+    {
+      "x": 11900,
+      "y": 342,
+      "width": 66
+    },
+    {
+      "x": 13100,
+      "y": 315,
+      "width": 66
+    },
+    {
+      "x": 14800,
+      "y": 315,
+      "width": 66
+    },
+    {
+      "x": 16000,
+      "y": 342,
+      "width": 66
+    },
+    {
+      "x": 17200,
+      "y": 315,
+      "width": 66
+    },
+    {
+      "x": 19000,
+      "y": 315,
+      "width": 66
+    },
+    {
+      "x": 20200,
+      "y": 342,
+      "width": 66
+    },
+    {
+      "x": 21300,
+      "y": 315,
+      "width": 66
+    },
+    {
+      "x": 22900,
+      "y": 315,
+      "width": 66
+    },
+    {
+      "x": 24100,
+      "y": 342,
+      "width": 66
+    }
   ],
   "obstacles": [
-    { "type": "hay_bale",   "x": 700  }, { "type": "steel_steps","x": 1500,"y": 456,"speed": -310 },
-    { "type": "hawk",       "x": 2500, "y": 270, "speed": -125, "amp": 62 },
-    { "type": "rattlesnake","x": 3200 }, { "type": "crumbling_platform","x": 3039,"y": 398,"width": 66 },
-    { "type": "steel_steps","x": 4100, "y": 456, "speed": -315 },
-    { "type": "hay_bale",   "x": 5000 }, { "type": "hawk","x": 5800,"y": 270,"speed": -128,"amp": 64 },
-    { "type": "crumbling_platform","x": 5939,"y": 398,"width": 66 },
-    { "type": "rattlesnake","x": 6900 }, { "type": "steel_steps","x": 7800,"y": 456,"speed": -312 },
-    { "type": "hawk",       "x": 8800, "y": 268, "speed": -125, "amp": 60 },
-    { "type": "crumbling_platform","x": 9339,"y": 398,"width": 66 },
-    { "type": "rattlesnake","x": 10300}, { "type": "steel_steps","x": 11200,"y": 456,"speed": -318 },
-    { "type": "hay_bale",   "x": 12100}, { "type": "hawk","x": 13000,"y": 270,"speed": -130,"amp": 65 },
-    { "type": "crumbling_platform","x": 13439,"y": 398,"width": 66 },
-    { "type": "steel_steps","x": 14500,"y": 456,"speed": -315 },
-    { "type": "rattlesnake","x": 15400}, { "type": "hawk","x": 16300,"y": 268,"speed": -125,"amp": 62 },
-    { "type": "hay_bale",   "x": 17300}, { "type": "crumbling_platform","x": 17639,"y": 398,"width": 66 },
-    { "type": "steel_steps","x": 18700,"y": 456,"speed": -320 },
-    { "type": "rattlesnake","x": 19600}, { "type": "hawk","x": 20500,"y": 270,"speed": -128,"amp": 64 },
-    { "type": "crumbling_platform","x": 21539,"y": 398,"width": 66 },
-    { "type": "steel_steps","x": 22600,"y": 456,"speed": -315 },
-    { "type": "hay_bale",   "x": 23500}, { "type": "hawk","x": 24300,"y": 268,"speed": -125,"amp": 60 }
+    {
+      "type": "hay_bale",
+      "x": 700
+    },
+    {
+      "type": "steel_steps",
+      "x": 1500,
+      "y": 456,
+      "speed": -310
+    },
+    {
+      "type": "hawk",
+      "x": 2500,
+      "y": 270,
+      "speed": -125,
+      "amp": 62
+    },
+    {
+      "type": "rattlesnake",
+      "x": 2690
+    },
+    {
+      "type": "crumbling_platform",
+      "x": 3130,
+      "y": 400,
+      "width": 140
+    },
+    {
+      "type": "steel_steps",
+      "x": 4100,
+      "y": 456,
+      "speed": -315
+    },
+    {
+      "type": "hay_bale",
+      "x": 5000
+    },
+    {
+      "type": "hawk",
+      "x": 5800,
+      "y": 270,
+      "speed": -128,
+      "amp": 64
+    },
+    {
+      "type": "crumbling_platform",
+      "x": 5939,
+      "y": 398,
+      "width": 66
+    },
+    {
+      "type": "rattlesnake",
+      "x": 6900
+    },
+    {
+      "type": "steel_steps",
+      "x": 7800,
+      "y": 456,
+      "speed": -312
+    },
+    {
+      "type": "hawk",
+      "x": 8800,
+      "y": 268,
+      "speed": -125,
+      "amp": 60
+    },
+    {
+      "type": "crumbling_platform",
+      "x": 9339,
+      "y": 398,
+      "width": 130
+    },
+    {
+      "type": "rattlesnake",
+      "x": 10300
+    },
+    {
+      "type": "steel_steps",
+      "x": 11200,
+      "y": 456,
+      "speed": -318
+    },
+    {
+      "type": "hay_bale",
+      "x": 12100
+    },
+    {
+      "type": "hawk",
+      "x": 13000,
+      "y": 270,
+      "speed": -130,
+      "amp": 65
+    },
+    {
+      "type": "crumbling_platform",
+      "x": 13520,
+      "y": 380,
+      "width": 80
+    },
+    {
+      "type": "steel_steps",
+      "x": 14500,
+      "y": 456,
+      "speed": -315
+    },
+    {
+      "type": "rattlesnake",
+      "x": 15400
+    },
+    {
+      "type": "hawk",
+      "x": 16300,
+      "y": 268,
+      "speed": -125,
+      "amp": 62
+    },
+    {
+      "type": "hay_bale",
+      "x": 17300
+    },
+    {
+      "type": "crumbling_platform",
+      "x": 17639,
+      "y": 398,
+      "width": 66
+    },
+    {
+      "type": "steel_steps",
+      "x": 18700,
+      "y": 456,
+      "speed": -320
+    },
+    {
+      "type": "rattlesnake",
+      "x": 19600
+    },
+    {
+      "type": "hawk",
+      "x": 20500,
+      "y": 270,
+      "speed": -128,
+      "amp": 64
+    },
+    {
+      "type": "crumbling_platform",
+      "x": 21539,
+      "y": 398,
+      "width": 66
+    },
+    {
+      "type": "steel_steps",
+      "x": 22600,
+      "y": 456,
+      "speed": -315
+    },
+    {
+      "type": "hay_bale",
+      "x": 23500
+    },
+    {
+      "type": "hawk",
+      "x": 24300,
+      "y": 268,
+      "speed": -125,
+      "amp": 60
+    }
   ],
-  "checkpoints": [{ "x": 8500 }, { "x": 17000 }]
+  "checkpoints": [
+    {
+      "x": 8500
+    },
+    {
+      "x": 16840
+    }
+  ]
 }
