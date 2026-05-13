@@ -803,11 +803,11 @@ export default class GameScene extends Phaser.Scene {
       // New territory — accumulate and advance the frontier
       this._runningScore += (px - this._scoreMaxX) * DIST_RATE;
       this._scoreMaxX = px;
-    } else if (px <= prevX && px >= this._scoreMaxX - 1) {
-      // At the frontier but standing still — drain
+    } else if (px <= prevX) {
+      // Not advancing (standing still or moving back) anywhere — drain
       this._runningScore = Math.max(0, this._runningScore - DRAIN_RATE * (delta / 1000));
     }
-    // Behind frontier (catching up after respawn) — hold score, do nothing
+    // Behind frontier but moving forward (catching up) — hold score
 
     const newScore = Math.round(this._hearts * 1000 + this._runningScore + this._bonusScore);
     if (newScore !== this._score) {
