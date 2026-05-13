@@ -69,7 +69,7 @@ export default class LevelSelectScene extends Phaser.Scene {
   _buildHeader(W) {
     this.add.rectangle(W / 2, HEADER_H / 2, W, HEADER_H, 0x061a06);
     this.add.text(W / 2 - 60, HEADER_H / 2, 'SELECT LEVEL', {
-      fontSize: '10px', fontFamily: PS2P,
+      fontSize: '14px', fontFamily: PS2P,
       color: '#ffd700',
     }).setOrigin(0.5);
 
@@ -81,7 +81,7 @@ export default class LevelSelectScene extends Phaser.Scene {
         img.setScale(s);
       }
       this.add.text(W - 44, HEADER_H / 2, char.name.toUpperCase(), {
-        fontSize: '6px', fontFamily: PS2P, color: '#aaddaa',
+        fontSize: '8px', fontFamily: PS2P, color: '#aaddaa',
       }).setOrigin(0, 0.5);
     }
   }
@@ -96,7 +96,7 @@ export default class LevelSelectScene extends Phaser.Scene {
       this.add.rectangle(W / 2, y + ZONE_HEADER_H / 2, W - 24, ZONE_HEADER_H, 0x0a1a0a)
         .setStrokeStyle(1, color, 0.5);
       this.add.text(CONTENT_LEFT + 4, y + ZONE_HEADER_H / 2, `ZONE ${zone}: ${name}`, {
-        fontSize: '6px', fontFamily: PS2P,
+        fontSize: '8px', fontFamily: PS2P,
         color: '#' + color.toString(16).padStart(6, '0'),
       }).setOrigin(0, 0.5);
       y += ZONE_HEADER_H + 2;
@@ -132,7 +132,7 @@ export default class LevelSelectScene extends Phaser.Scene {
     } else {
       // Level number
       const numText = this.add.text(0, -14, String(level), {
-        fontSize: '10px', fontFamily: PS2P,
+        fontSize: '13px', fontFamily: PS2P,
         color: '#ffffff', stroke: '#000000', strokeThickness: 3,
       }).setOrigin(0.5);
       container.add(numText);
@@ -143,14 +143,14 @@ export default class LevelSelectScene extends Phaser.Scene {
         : '☆☆☆';
       const starColor = stars > 0 ? '#ffd700' : '#444444';
       const starText = this.add.text(0, 4, starStr, {
-        fontSize: '10px', color: starColor,
+        fontSize: '13px', color: starColor,
       }).setOrigin(0.5);
       container.add(starText);
 
       // Top score
       if (topScore > 0) {
         const scText = this.add.text(0, 20, topScore.toLocaleString(), {
-          fontSize: '6px', fontFamily: PS2P, color: '#aaffaa',
+          fontSize: '8px', fontFamily: PS2P, color: '#aaffaa',
         }).setOrigin(0.5);
         container.add(scText);
       }
@@ -208,7 +208,7 @@ export default class LevelSelectScene extends Phaser.Scene {
     const backBtn = this.add.container(64, footerY + FOOTER_H / 2).setSize(100, 30).setInteractive();
     const backBg = this.add.rectangle(0, 0, 100, 30, 0x334466).setStrokeStyle(1, 0x556688);
     const backTxt = this.add.text(0, 0, '◀ BACK', {
-      fontSize: '7px', fontFamily: PS2P, color: '#aaccff',
+      fontSize: '10px', fontFamily: PS2P, color: '#aaccff',
     }).setOrigin(0.5);
     backBtn.add([backBg, backTxt]);
     backBtn.on('pointerover', () => backBg.setFillStyle(0x445577));
@@ -217,7 +217,7 @@ export default class LevelSelectScene extends Phaser.Scene {
 
     // Level name display
     this._footerText = this.add.text(130, footerY + FOOTER_H / 2, '', {
-      fontSize: '7px', fontFamily: PS2P, color: '#ffffff',
+      fontSize: '10px', fontFamily: PS2P, color: '#ffffff',
     }).setOrigin(0, 0.5);
 
     // Continue button
@@ -225,7 +225,7 @@ export default class LevelSelectScene extends Phaser.Scene {
       .setSize(140, 34).setInteractive().setAlpha(this._selectedLevel ? 1 : 0.3);
     const btnBg = this.add.rectangle(0, 0, 140, 34, 0xff6600).setStrokeStyle(2, 0xaa3300);
     const btnTxt = this.add.text(0, 0, 'CONTINUE ▶', {
-      fontSize: '7px', fontFamily: PS2P, color: '#fff',
+      fontSize: '10px', fontFamily: PS2P, color: '#fff',
     }).setOrigin(0.5);
     this._continueBtn.add([btnBg, btnTxt]);
     this._continueBtn.on('pointerdown', () => { if (this._selectedLevel) this._launch(); });

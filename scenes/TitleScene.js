@@ -80,7 +80,7 @@ export default class TitleScene extends Phaser.Scene {
 
     // Title text (fallback or always shown beneath logo)
     this.add.text(W / 2, H * 0.38, 'CHAMPIONSHIP RUN', {
-      fontSize: '9px', fontFamily: '"Press Start 2P", monospace',
+      fontSize: '13px', fontFamily: '"Press Start 2P", monospace',
       color: '#ffffff',
       stroke: '#2a5a10', strokeThickness: 3,
     }).setOrigin(0.5).setDepth(6);
@@ -100,7 +100,7 @@ export default class TitleScene extends Phaser.Scene {
     const btn = this.add.container(x, y).setDepth(7).setSize(220, 44).setInteractive();
     const bg = this.add.rectangle(0, 0, 220, 44, fillColor).setStrokeStyle(2, strokeColor);
     const txt = this.add.text(0, 0, label, {
-      fontSize: '9px', fontFamily: '"Press Start 2P", monospace', color: '#ffffff',
+      fontSize: '13px', fontFamily: '"Press Start 2P", monospace', color: '#ffffff',
     }).setOrigin(0.5);
     btn.add([bg, txt]);
     btn.on('pointerover', () => bg.setScale(1.05));
@@ -123,7 +123,7 @@ export default class TitleScene extends Phaser.Scene {
       'Tap / click anywhere to close',
     ];
     const txt = this.add.text(W / 2, H / 2, lines.join('\n'), {
-      fontSize: '7px', fontFamily: '"Press Start 2P", monospace', color: '#ffd700',
+      fontSize: '10px', fontFamily: '"Press Start 2P", monospace', color: '#ffd700',
       align: 'center', lineSpacing: 6,
     }).setOrigin(0.5).setDepth(11);
     overlay.on('pointerdown', () => { overlay.destroy(); txt.destroy(); this._creditsVisible = false; });

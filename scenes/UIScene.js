@@ -30,38 +30,38 @@ export default class UIScene extends Phaser.Scene {
 
     this._heartIcons = [];
     for (let i = 0; i < 3; i++) {
-      const h = this.add.text(58 + i * 18, 24, '♥', {
-        fontSize: '16px', color: '#ff4444',
+      const h = this.add.text(58 + i * 22, 24, '♥', {
+        fontSize: '20px', color: '#ff4444',
       }).setOrigin(0.5).setDepth(20);
       this._heartIcons.push(h);
     }
 
     // CENTER: level name
-    this.add.text(W / 2, 14, `LEVEL ${this._levelNum}`, {
-      fontSize: '7px', fontFamily: PS2P,
+    this.add.text(W / 2, 13, `LEVEL ${this._levelNum}`, {
+      fontSize: '10px', fontFamily: PS2P,
       color: '#ffd700',
     }).setOrigin(0.5).setDepth(20);
-    this.add.text(W / 2, 29, this._levelName.toUpperCase(), {
-      fontSize: '6px', fontFamily: PS2P, color: '#cccccc',
+    this.add.text(W / 2, 31, this._levelName.toUpperCase(), {
+      fontSize: '8px', fontFamily: PS2P, color: '#cccccc',
     }).setOrigin(0.5).setDepth(20);
 
     // RIGHT: stars + score row (arrow left of score)
-    this._starText = this.add.text(W - 80, 14, '☆ ☆ ☆', {
-      fontSize: '10px', color: '#888888',
+    this._starText = this.add.text(W - 80, 13, '☆ ☆ ☆', {
+      fontSize: '14px', color: '#888888',
     }).setOrigin(0.5).setDepth(20);
 
-    this._arrowText = this.add.text(W - 116, 30, '▲', {
-      fontSize: '8px', fontFamily: PS2P, color: '#00ff88',
+    this._arrowText = this.add.text(W - 122, 32, '▲', {
+      fontSize: '11px', fontFamily: PS2P, color: '#00ff88',
     }).setOrigin(0.5).setDepth(20);
 
-    this._scoreText = this.add.text(W - 68, 30, '0', {
-      fontSize: '8px', fontFamily: PS2P, color: '#ffffff',
+    this._scoreText = this.add.text(W - 62, 32, '0', {
+      fontSize: '11px', fontFamily: PS2P, color: '#ffffff',
     }).setOrigin(0.5).setDepth(20);
 
     // Checkpoint toast (hidden)
-    this._toastBg = this.add.rectangle(W / 2, 70, 260, 24, 0x000000, 0.7).setAlpha(0).setDepth(21);
+    this._toastBg = this.add.rectangle(W / 2, 70, 300, 28, 0x000000, 0.7).setAlpha(0).setDepth(21);
     this._toastText = this.add.text(W / 2, 70, '', {
-      fontSize: '7px', fontFamily: PS2P, color: '#ffd700',
+      fontSize: '10px', fontFamily: PS2P, color: '#ffd700',
     }).setOrigin(0.5).setAlpha(0).setDepth(22);
 
     // Hook into GameScene events

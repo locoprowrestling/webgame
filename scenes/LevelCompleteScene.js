@@ -29,12 +29,12 @@ export default class LevelCompleteScene extends Phaser.Scene {
 
     // Title
     this.add.text(W / 2, H / 2 - 175, isLastLevel ? 'YOU WIN!' : 'LEVEL COMPLETE', {
-      fontSize: '10px', fontFamily: PS2P,
+      fontSize: '14px', fontFamily: PS2P,
       color: '#ffd700', stroke: '#aa6600', strokeThickness: 3,
     }).setOrigin(0.5);
 
     this.add.text(W / 2, H / 2 - 154, `Level ${this._level}`, {
-      fontSize: '7px', fontFamily: PS2P, color: '#cccccc',
+      fontSize: '10px', fontFamily: PS2P, color: '#cccccc',
     }).setOrigin(0.5);
 
     // Stars (animate in)
@@ -69,10 +69,10 @@ export default class LevelCompleteScene extends Phaser.Scene {
 
     rows.forEach(([label, value], i) => {
       this.add.text(labelX, startY + i * lineH, label, {
-        fontSize: '7px', fontFamily: PS2P, color: '#cccccc',
+        fontSize: '10px', fontFamily: PS2P, color: '#cccccc',
       }).setOrigin(0, 0.5);
       this.add.text(valueX, startY + i * lineH, value.toLocaleString(), {
-        fontSize: '7px', fontFamily: PS2P, color: '#ffffff',
+        fontSize: '10px', fontFamily: PS2P, color: '#ffffff',
       }).setOrigin(1, 0.5);
     });
 
@@ -82,16 +82,16 @@ export default class LevelCompleteScene extends Phaser.Scene {
 
     // Total
     this.add.text(labelX, divY + 15, 'TOTAL', {
-      fontSize: '8px', fontFamily: PS2P, color: '#ffd700',
+      fontSize: '11px', fontFamily: PS2P, color: '#ffd700',
     }).setOrigin(0, 0.5);
     this.add.text(valueX, divY + 15, this._finalScore.toLocaleString(), {
-      fontSize: '8px', fontFamily: PS2P, color: '#ffd700',
+      fontSize: '11px', fontFamily: PS2P, color: '#ffd700',
     }).setOrigin(1, 0.5);
 
     // New record badge
     if (this._isNewRecord) {
       const badge = this.add.text(W / 2, divY + 40, '★ NEW RECORD!', {
-        fontSize: '8px', fontFamily: PS2P,
+        fontSize: '11px', fontFamily: PS2P,
         color: '#ffd700', stroke: '#aa6600', strokeThickness: 3,
       }).setOrigin(0.5);
       this.tweens.add({
@@ -121,7 +121,7 @@ export default class LevelCompleteScene extends Phaser.Scene {
     const btn = this.add.container(x, y).setSize(120, 30).setInteractive();
     const bg = this.add.rectangle(0, 0, 120, 30, color).setStrokeStyle(2, 0x000000, 0.5);
     const txt = this.add.text(0, 0, label, {
-      fontSize: '7px', fontFamily: PS2P, color: '#ffffff',
+      fontSize: '10px', fontFamily: PS2P, color: '#ffffff',
     }).setOrigin(0.5);
     btn.add([bg, txt]);
     btn.on('pointerover', () => bg.setScale(1.05));
