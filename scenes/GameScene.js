@@ -212,6 +212,9 @@ export default class GameScene extends Phaser.Scene {
     } else if (zone === 2 && this.textures.exists('bg_dt_2')) {
       this._bgWater = this.add.tileSprite(0, CANVAS_H - 88, CANVAS_W, 44, 'bg_dt_2')
         .setOrigin(0, 0).setScrollFactor(0).setDepth(3.5);
+    } else if (zone === 4 && this.textures.exists('bg_fg_mid_1')) {
+      this._bgWater = this.add.tileSprite(0, CANVAS_H - 92, CANVAS_W, 48, 'bg_fg_mid_1')
+        .setOrigin(0, 0).setScrollFactor(0).setDepth(3.5);
     }
 
     // Ground visual — tiled texture per zone with solid-color fallback
