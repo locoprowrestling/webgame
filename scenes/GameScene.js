@@ -187,7 +187,7 @@ export default class GameScene extends Phaser.Scene {
       this._bgHill = this.add.tileSprite(0, 0, CANVAS_W, CANVAS_H, 'bg_lp_2')
         .setOrigin(0, 0).setScrollFactor(0).setDepth(2);
     } else if (zone === 2 && this.textures.exists('bg_dt_1')) {
-      this._bgMtn = this.add.tileSprite(0, 0, CANVAS_W, CANVAS_H, 'bg_dt_1')
+      this._bgMtn = this.add.tileSprite(0, -28, CANVAS_W, CANVAS_H + 38, 'bg_dt_1')
         .setOrigin(0, 0).setScrollFactor(0).setDepth(1);
     } else {
       const mtxKey = ['bg_mtn_z1','bg_bld_z2','bg_mtn_z3','bg_tent_z4','bg_crowd_z5'][zone - 1];
