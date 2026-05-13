@@ -11,23 +11,25 @@ export default class TitleScene extends Phaser.Scene {
   }
 
   _buildBackground(W, H) {
-    // Sky gradient
-    const sky = this.add.graphics();
-    sky.fillGradientStyle(0x4a90d9, 0x4a90d9, 0x87ceeb, 0x87ceeb, 1);
-    sky.fillRect(0, 0, W, H);
+    this.add.rectangle(W / 2, H / 2, W, H, 0x6a9dcc).setDepth(0);
 
-    // Sun
-    this.add.circle(W - 60, 60, 28, 0xffd700).setDepth(1);
-    const glow = this.add.circle(W - 60, 60, 38, 0xffd700, 0.2).setDepth(0);
-    this.tweens.add({ targets: glow, scaleX: 1.3, scaleY: 1.3, alpha: 0, yoyo: true, repeat: -1, duration: 1800 });
-
-    // Parallax mountains (tileSprite updated in update)
-    this._mtnSprite = this.add.tileSprite(0, H - 200, W, 120, 'bg_mtn_z1').setOrigin(0, 0).setDepth(2);
-    this._hillSprite = this.add.tileSprite(0, H - 100, W, 60, 'bg_hill_z1').setOrigin(0, 0).setDepth(3);
+    if (this.textures.exists('bg_dt_1')) {
+      this._mtnSprite = this.add.tileSprite(0, -28, W, H + 28, 'bg_dt_1')
+        .setOrigin(0, 0).setDepth(1);
+    }
+    if (this.textures.exists('bg_dt_2')) {
+      this._hillSprite = this.add.tileSprite(0, H - 88, W, 44, 'bg_dt_2')
+        .setOrigin(0, 0).setDepth(3);
+    }
 
     // Ground strip
-    this.add.rectangle(W / 2, H - 22, W, 44, 0x4a8c2a).setDepth(4);
-    this.add.rectangle(W / 2, H - 44, W, 4, 0x2d5a1b).setDepth(4);
+    if (this.textures.exists('tile_asphalt_road_01')) {
+      this._groundSprite = this.add.tileSprite(0, H - 44, W, 44, 'tile_asphalt_road_01')
+        .setOrigin(0, 0).setDepth(4);
+    } else {
+      this.add.rectangle(W / 2, H - 22, W, 44, 0x34373b).setDepth(4);
+    }
+    this.add.rectangle(W / 2, H - 44, W, 4, 0x202020).setDepth(4);
   }
 
   _buildRunner(W, H) {
@@ -133,8 +135,9 @@ export default class TitleScene extends Phaser.Scene {
   }
 
   update() {
-    this._mtnSprite.tilePositionX += 0.3;
-    this._hillSprite.tilePositionX += 0.7;
+    if (this._mtnSprite) this._mtnSprite.tilePositionX += 0.25;
+    if (this._hillSprite) this._hillSprite.tilePositionX += 0.55;
+    if (this._groundSprite) this._groundSprite.tilePositionX += 0.9;
   }
 
   _startGame() {
