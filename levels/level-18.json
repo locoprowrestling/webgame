@@ -69,7 +69,7 @@
     {
       "x": 8600,
       "y": 318,
-      "width": 68
+      "width": 540
     },
     {
       "x": 11000,
@@ -141,7 +141,7 @@
     },
     {
       "type": "hay_bale",
-      "x": 3400
+      "x": 3910
     },
     {
       "type": "crumbling_platform",
