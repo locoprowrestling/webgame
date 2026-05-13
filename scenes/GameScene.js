@@ -5,6 +5,7 @@ import { saveResult, saveTopScore, getTopScore } from '../src/saveSystem.js';
 
 const GROUND_Y = 456;   // top of ground strip
 const DIST_RATE = 0.2;  // score points per pixel of forward progress
+const DRAIN_RATE = 40;  // score points drained per second when not advancing
 const CANVAS_W = 888;
 const CANVAS_H = 500;
 const PLAYER_START_X = CANVAS_W / 2;
@@ -35,7 +36,8 @@ export default class GameScene extends Phaser.Scene {
     this._score = 0;
     this._bonusScore = 0;
     this._gemsCollected = 0;
-    this._scoreMaxX = PLAYER_START_X;
+    this._runningScore = 0;
+    this._lastPlayerX = PLAYER_START_X;
     this._scoreDirection = 1;
     this._collectibles = [];
     this._checkpointIndex = -1;
@@ -522,7 +524,7 @@ export default class GameScene extends Phaser.Scene {
 
     const stars = this._hearts;
     this._bonusScore += 500; // championship title
-    const distScore = Math.round(this._player.x * DIST_RATE);
+    const distScore = Math.round(this._runningScore);
     const finalScore = Math.round(this._hearts * 1000 + distScore + this._bonusScore);
 
     const prevTop = getTopScore(this._levelNum);
@@ -625,7 +627,7 @@ export default class GameScene extends Phaser.Scene {
     this._updatePlayer(time, delta);
     this._updateObstacles(time, delta);
     this._updateParallax();
-    this._updateScore();
+    this._updateScore(delta);
     this._cleanupOffscreen();
   }
 
@@ -791,10 +793,18 @@ export default class GameScene extends Phaser.Scene {
     this._player.anims.timeScale = 100 / strideMs;
   }
 
-  _updateScore() {
+  _updateScore(delta) {
     const px = this._player.x;
-    this._scoreMaxX = Math.max(this._scoreMaxX, px);
-    const newScore = Math.round(this._hearts * 1000 + px * DIST_RATE + this._bonusScore);
+    const prevX = this._lastPlayerX;
+    this._lastPlayerX = px;
+
+    if (px > prevX) {
+      this._runningScore += (px - prevX) * DIST_RATE;
+    } else {
+      this._runningScore = Math.max(0, this._runningScore - DRAIN_RATE * (delta / 1000));
+    }
+
+    const newScore = Math.round(this._hearts * 1000 + this._runningScore + this._bonusScore);
     if (newScore !== this._score) {
       const dir = newScore >= this._score ? 1 : -1;
       this._scoreDirection = dir;
