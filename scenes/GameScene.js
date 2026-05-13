@@ -1,9 +1,10 @@
 import { getCharacter, getTraitPhysics } from '../src/characters.js';
 import { loadLevel, buildGround, buildPlatforms, getCheckpoints } from '../src/levelLoader.js';
 import { spawnObstacle, updateObstacle, isGroundBehavior } from '../src/obstacles.js';
-import { saveResult } from '../src/saveSystem.js';
+import { saveResult, saveTopScore, getTopScore } from '../src/saveSystem.js';
 
 const GROUND_Y = 456;   // top of ground strip
+const DIST_RATE = 0.2;  // score points per pixel of forward progress
 const CANVAS_W = 888;
 const CANVAS_H = 500;
 const PLAYER_START_X = CANVAS_W / 2;
@@ -32,6 +33,11 @@ export default class GameScene extends Phaser.Scene {
     this._physics = getTraitPhysics(this._char.trait);
     this._hearts = 3;
     this._score = 0;
+    this._bonusScore = 0;
+    this._gemsCollected = 0;
+    this._scoreMaxX = PLAYER_START_X;
+    this._scoreDirection = 1;
+    this._collectibles = [];
     this._checkpointIndex = -1;
     this._dead = false;
     this._levelComplete = false;
@@ -69,6 +75,8 @@ export default class GameScene extends Phaser.Scene {
       this._buildObstacles();
       this._createStage = 'checkpoints';
       this._buildCheckpoints();
+      this._createStage = 'collectibles';
+      this._buildCollectibles();
       this._createStage = 'finishFlag';
       this._buildFinishFlag();
       this._createStage = 'camera';
@@ -150,6 +158,7 @@ export default class GameScene extends Phaser.Scene {
     this._jumpKey = null;
     this._player = null;
     this._obstacles = [];
+    this._collectibles = [];
     this._currentPlayerState = null;
   }
 
@@ -375,6 +384,25 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.overlap(this._player, this._cpOverlapGroup, this._onCheckpoint, null, this);
   }
 
+  _buildCollectibles() {
+    this._collectiblesGroup = this.physics.add.staticGroup();
+    (this._levelData.collectibles || []).forEach(item => {
+      const baseY = item.y ?? (GROUND_Y - 80);
+      const sprite = this.add.image(item.x, baseY, 'collectible').setDepth(7).setOrigin(0.5);
+      this.tweens.add({
+        targets: sprite, y: baseY - 7,
+        yoyo: true, repeat: -1, duration: 800, ease: 'Sine.InOut',
+      });
+      const hitbox = this.add.rectangle(item.x, baseY, 22, 22, 0x000000, 0);
+      this.physics.add.existing(hitbox, true);
+      this._collectiblesGroup.add(hitbox);
+      hitbox._visual = sprite;
+      hitbox._collected = false;
+      this._collectibles.push(hitbox);
+    });
+    this.physics.add.overlap(this._player, this._collectiblesGroup, this._onCollect, null, this);
+  }
+
   _buildFinishFlag() {
     if (!this.textures.exists('flag')) {
       throw new Error('Missing finish flag texture');
@@ -456,6 +484,30 @@ export default class GameScene extends Phaser.Scene {
     this.events.emit('checkpointReached', i + 1, this._checkpointData.length);
   }
 
+  _onCollect(player, hitbox) {
+    if (hitbox._collected) return;
+    hitbox._collected = true;
+    this._bonusScore += 100;
+    this._gemsCollected += 1;
+    const sprite = hitbox._visual;
+    const sx = sprite?.active ? sprite.x : hitbox.x;
+    const sy = sprite?.active ? sprite.y : hitbox.y;
+    if (sprite?.active) {
+      this.tweens.killTweensOf(sprite);
+      sprite.destroy();
+    }
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2;
+      const sp = this.add.circle(sx, sy, 4, 0xffd700).setDepth(15);
+      this.tweens.add({
+        targets: sp,
+        x: sx + Math.cos(a) * 44, y: sy + Math.sin(a) * 44,
+        alpha: 0, scaleX: 0, scaleY: 0, duration: 340, ease: 'Power2',
+        onComplete: () => sp.destroy(),
+      });
+    }
+  }
+
   _onHitObstacle(player, obstacle) {
     if (this._invincible || this._dead || this._levelComplete) return;
     this._takeDamage();
@@ -469,7 +521,16 @@ export default class GameScene extends Phaser.Scene {
     this._setPlayerState('idle', 0);
 
     const stars = this._hearts;
+    this._bonusScore += 500; // championship title
+    const distScore = Math.round(this._player.x * DIST_RATE);
+    const finalScore = Math.round(this._hearts * 1000 + distScore + this._bonusScore);
+
+    const prevTop = getTopScore(this._levelNum);
+    const isNewRecord = finalScore > prevTop;
+
     saveResult(this._characterId, this._levelNum, stars);
+    saveTopScore(this._levelNum, finalScore);
+
     this.scene.stop('UIScene');
     this.cameras.main.fadeOut(500, 255, 255, 255);
     this.cameras.main.once('camerafadeoutcomplete', () => {
@@ -477,7 +538,11 @@ export default class GameScene extends Phaser.Scene {
         characterId: this._characterId,
         level: this._levelNum,
         stars,
-        score: this._score,
+        finalScore,
+        distScore,
+        gemCount: this._gemsCollected,
+        hearts: this._hearts,
+        isNewRecord,
       });
     });
   }
@@ -727,10 +792,14 @@ export default class GameScene extends Phaser.Scene {
   }
 
   _updateScore() {
-    const newScore = Math.floor(this._player.x / 10) * 10;
+    const px = this._player.x;
+    this._scoreMaxX = Math.max(this._scoreMaxX, px);
+    const newScore = Math.round(this._hearts * 1000 + px * DIST_RATE + this._bonusScore);
     if (newScore !== this._score) {
+      const dir = newScore >= this._score ? 1 : -1;
+      this._scoreDirection = dir;
       this._score = newScore;
-      this.events.emit('scoreUpdate', this._score);
+      this.events.emit('scoreUpdate', this._score, dir);
     }
   }
 

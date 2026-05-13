@@ -115,18 +115,18 @@ export default class BootScene extends Phaser.Scene {
     const { width, height } = this.scale;
     this.add.rectangle(width / 2, height / 2, width, height, 0x0a1a0a);
     this.add.text(width / 2, height / 2 - 40, 'LOCOPRO', {
-      fontSize: '36px', fontFamily: 'Impact, sans-serif',
+      fontSize: '28px', fontFamily: '"Press Start 2P", monospace',
       color: '#ffd700', stroke: '#aa6600', strokeThickness: 4,
     }).setOrigin(0.5);
     this.add.text(width / 2, height / 2 - 10, 'CHAMPIONSHIP RUN', {
-      fontSize: '14px', fontFamily: 'Impact, sans-serif',
-      color: '#ffffff', letterSpacing: 4,
+      fontSize: '8px', fontFamily: '"Press Start 2P", monospace',
+      color: '#ffffff',
     }).setOrigin(0.5);
 
     this._barBg = this.add.rectangle(width / 2, height / 2 + 40, 400, 12, 0x333333).setOrigin(0.5);
     this._bar = this.add.rectangle(width / 2 - 200, height / 2 + 40, 0, 12, 0xffd700).setOrigin(0, 0.5);
     this._loadText = this.add.text(width / 2, height / 2 + 62, 'Loading...', {
-      fontSize: '12px', color: '#aaaaaa', fontFamily: 'monospace',
+      fontSize: '7px', color: '#aaaaaa', fontFamily: '"Press Start 2P", monospace',
     }).setOrigin(0.5);
   }
 
@@ -277,6 +277,21 @@ export default class BootScene extends Phaser.Scene {
     cl.lineStyle(5, 0x44ff88, 1); drawCheck(cl);
     cl.generateTexture('checkpoint_lit', 44, 44);
     cl.destroy();
+
+    // Collectible gem — gold 5-point star
+    const cg = this.add.graphics();
+    const pts = [];
+    for (let i = 0; i < 10; i++) {
+      const r = i % 2 === 0 ? 10 : 4;
+      const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+      pts.push({ x: 12 + r * Math.cos(a), y: 12 + r * Math.sin(a) });
+    }
+    cg.fillStyle(0xffd700);
+    cg.fillPoints(pts, true);
+    cg.fillStyle(0xffee88, 0.6);
+    cg.fillCircle(12, 12, 4);
+    cg.generateTexture('collectible', 24, 24);
+    cg.destroy();
   }
 
   _buildObstacleFrameTextures() {

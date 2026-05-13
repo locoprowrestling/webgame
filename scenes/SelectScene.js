@@ -24,8 +24,8 @@ export default class SelectScene extends Phaser.Scene {
     this.add.rectangle(W / 2, H / 2, W, H, 0x0d2a0d);
     this.add.rectangle(W / 2, 24, W, 48, 0x061a06);
     this.add.text(W / 2, 24, 'SELECT YOUR WRESTLER', {
-      fontSize: '18px', fontFamily: 'Impact, sans-serif',
-      color: '#ffd700', letterSpacing: 4,
+      fontSize: '10px', fontFamily: '"Press Start 2P", monospace',
+      color: '#ffd700',
     }).setOrigin(0.5);
 
     this._buildGrid(W, H);
@@ -54,8 +54,8 @@ export default class SelectScene extends Phaser.Scene {
         logo.setScale(s);
       }
       this.add.text(W / 2, curY + SECTION_HEADER_H / 2, faction.label, {
-        fontSize: '12px', fontFamily: 'Impact, sans-serif',
-        color: '#aaddaa', letterSpacing: 3,
+        fontSize: '8px', fontFamily: '"Press Start 2P", monospace',
+        color: '#aaddaa',
       }).setOrigin(0.5);
       curY += SECTION_HEADER_H + 4;
 
@@ -88,8 +88,8 @@ export default class SelectScene extends Phaser.Scene {
 
     // Name label
     const nameText = this.add.text(0, ch / 2 - 11, char.name.toUpperCase(), {
-      fontSize: '10px', fontFamily: 'Impact, sans-serif', color: '#ffd700',
-      stroke: '#000', strokeThickness: 3,
+      fontSize: '6px', fontFamily: '"Press Start 2P", monospace', color: '#ffd700',
+      stroke: '#000', strokeThickness: 2,
       wordWrap: { width: cw - 4 },
       align: 'center',
     }).setOrigin(0.5, 0.5);
@@ -140,19 +140,19 @@ export default class SelectScene extends Phaser.Scene {
     this._infoBar.add(this._infoLogo);
 
     this._infoName = this.add.text(70, 10, 'Choose a wrestler', {
-      fontSize: '14px', fontFamily: 'Impact, sans-serif', color: '#ffd700',
+      fontSize: '8px', fontFamily: '"Press Start 2P", monospace', color: '#ffd700',
     });
     this._infoBar.add(this._infoName);
 
     this._infoTrait = this.add.text(70, 28, '', {
-      fontSize: '10px', fontFamily: 'monospace', color: '#aaaaaa',
+      fontSize: '6px', fontFamily: '"Press Start 2P", monospace', color: '#aaaaaa',
     });
     this._infoBar.add(this._infoTrait);
 
     this._confirmBtn = this.add.container(W - 90, 23).setSize(140, 34).setInteractive().setAlpha(0.3);
     const btnBg = this.add.rectangle(0, 0, 140, 34, 0xff6600).setStrokeStyle(2, 0xaa3300);
     const btnTxt = this.add.text(0, 0, 'CONFIRM ▶', {
-      fontSize: '14px', fontFamily: 'Impact, sans-serif', color: '#fff',
+      fontSize: '8px', fontFamily: '"Press Start 2P", monospace', color: '#fff',
     }).setOrigin(0.5);
     this._confirmBtn.add([btnBg, btnTxt]);
     this._infoBar.add(this._confirmBtn);

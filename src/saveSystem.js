@@ -40,6 +40,17 @@ export function getTotalStars(characterId) {
   return getCharacterStars(characterId).reduce((a, b) => a + b, 0);
 }
 
+export function getTopScore(level) {
+  return load().topScores?.[level] || 0;
+}
+
+export function saveTopScore(level, score) {
+  const data = load();
+  if (!data.topScores) data.topScores = {};
+  data.topScores[level] = Math.max(data.topScores[level] || 0, score);
+  save(data);
+}
+
 export function clearAll() {
   localStorage.removeItem(KEY);
 }

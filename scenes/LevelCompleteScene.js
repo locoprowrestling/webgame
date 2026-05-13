@@ -1,3 +1,5 @@
+const PS2P = '"Press Start 2P", monospace';
+
 export default class LevelCompleteScene extends Phaser.Scene {
   constructor() { super('LevelCompleteScene'); }
 
@@ -5,7 +7,11 @@ export default class LevelCompleteScene extends Phaser.Scene {
     this._characterId = data.characterId;
     this._level = data.level;
     this._stars = data.stars || 0;
-    this._score = data.score || 0;
+    this._finalScore = data.finalScore || data.score || 0;
+    this._distScore = data.distScore || 0;
+    this._gemCount = data.gemCount || 0;
+    this._hearts = data.hearts ?? 0;
+    this._isNewRecord = data.isNewRecord || false;
   }
 
   create() {
@@ -17,27 +23,26 @@ export default class LevelCompleteScene extends Phaser.Scene {
     bg.fillGradientStyle(0x4a90d9, 0x4a90d9, 0x87ceeb, 0x87ceeb, 1);
     bg.fillRect(0, 0, W, H);
 
-    // Panel
-    const panel = this.add.rectangle(W / 2, H / 2, 480, 300, 0x000000, 0.75)
+    // Panel — taller to fit breakdown
+    this.add.rectangle(W / 2, H / 2, 480, 380, 0x000000, 0.82)
       .setStrokeStyle(2, 0xffd700);
 
     // Title
-    this.add.text(W / 2, H / 2 - 120, isLastLevel ? 'YOU WIN!' : 'LEVEL COMPLETE', {
-      fontSize: '28px', fontFamily: 'Impact, sans-serif',
-      color: '#ffd700', stroke: '#aa6600', strokeThickness: 4,
+    this.add.text(W / 2, H / 2 - 175, isLastLevel ? 'YOU WIN!' : 'LEVEL COMPLETE', {
+      fontSize: '10px', fontFamily: PS2P,
+      color: '#ffd700', stroke: '#aa6600', strokeThickness: 3,
     }).setOrigin(0.5);
 
-    const levelName = `Level ${this._level}`;
-    this.add.text(W / 2, H / 2 - 88, levelName, {
-      fontSize: '14px', fontFamily: 'monospace', color: '#cccccc',
+    this.add.text(W / 2, H / 2 - 154, `Level ${this._level}`, {
+      fontSize: '7px', fontFamily: PS2P, color: '#cccccc',
     }).setOrigin(0.5);
 
     // Stars (animate in)
     const starTexts = [];
     for (let i = 0; i < 3; i++) {
       const filled = i < this._stars;
-      const s = this.add.text(W / 2 - 48 + i * 48, H / 2 - 50, filled ? '★' : '☆', {
-        fontSize: '40px', color: filled ? '#ffd700' : '#555555',
+      const s = this.add.text(W / 2 - 40 + i * 40, H / 2 - 118, filled ? '★' : '☆', {
+        fontSize: '32px', color: filled ? '#ffd700' : '#555555',
       }).setOrigin(0.5).setScale(0);
       starTexts.push({ obj: s, filled });
     }
@@ -49,15 +54,56 @@ export default class LevelCompleteScene extends Phaser.Scene {
       });
     });
 
-    // Score
-    this.add.text(W / 2, H / 2 + 10, `SCORE  ${this._score.toLocaleString()}`, {
-      fontSize: '16px', fontFamily: 'Impact, sans-serif', color: '#ffffff', letterSpacing: 2,
-    }).setOrigin(0.5);
+    // Score breakdown
+    const labelX = W / 2 - 185;
+    const valueX = W / 2 + 185;
+    const startY = H / 2 - 62;
+    const lineH = 18;
 
-    // Buttons — 3 buttons evenly spaced inside 480px panel (centers at -150, 0, +150)
-    const btnY = H / 2 + 80;
+    const rows = [
+      ['DISTANCE', this._distScore],
+      [`GEMS x${this._gemCount}`, this._gemCount * 100],
+      [`HEARTS x${this._hearts}`, this._hearts * 1000],
+      ['TITLE', 500],
+    ];
+
+    rows.forEach(([label, value], i) => {
+      this.add.text(labelX, startY + i * lineH, label, {
+        fontSize: '7px', fontFamily: PS2P, color: '#cccccc',
+      }).setOrigin(0, 0.5);
+      this.add.text(valueX, startY + i * lineH, value.toLocaleString(), {
+        fontSize: '7px', fontFamily: PS2P, color: '#ffffff',
+      }).setOrigin(1, 0.5);
+    });
+
+    // Divider
+    const divY = startY + rows.length * lineH + 4;
+    this.add.rectangle(W / 2, divY, 370, 1, 0x888888);
+
+    // Total
+    this.add.text(labelX, divY + 15, 'TOTAL', {
+      fontSize: '8px', fontFamily: PS2P, color: '#ffd700',
+    }).setOrigin(0, 0.5);
+    this.add.text(valueX, divY + 15, this._finalScore.toLocaleString(), {
+      fontSize: '8px', fontFamily: PS2P, color: '#ffd700',
+    }).setOrigin(1, 0.5);
+
+    // New record badge
+    if (this._isNewRecord) {
+      const badge = this.add.text(W / 2, divY + 40, '★ NEW RECORD!', {
+        fontSize: '8px', fontFamily: PS2P,
+        color: '#ffd700', stroke: '#aa6600', strokeThickness: 3,
+      }).setOrigin(0.5);
+      this.tweens.add({
+        targets: badge, scaleX: 1.08, scaleY: 1.08,
+        yoyo: true, repeat: -1, duration: 600, ease: 'Sine.InOut',
+      });
+    }
+
+    // Buttons
+    const btnY = H / 2 + 148;
     if (!isLastLevel) {
-      this._makeBtn(W / 2 - 150, btnY, 'NEXT LEVEL ▶', 0xff6600, () => {
+      this._makeBtn(W / 2 - 150, btnY, 'NEXT ▶', 0xff6600, () => {
         this.scene.start('GameScene', { characterId: this._characterId, level: this._level + 1 });
       });
     }
@@ -75,7 +121,7 @@ export default class LevelCompleteScene extends Phaser.Scene {
     const btn = this.add.container(x, y).setSize(120, 30).setInteractive();
     const bg = this.add.rectangle(0, 0, 120, 30, color).setStrokeStyle(2, 0x000000, 0.5);
     const txt = this.add.text(0, 0, label, {
-      fontSize: '11px', fontFamily: 'Impact, sans-serif', color: '#ffffff',
+      fontSize: '7px', fontFamily: PS2P, color: '#ffffff',
     }).setOrigin(0.5);
     btn.add([bg, txt]);
     btn.on('pointerover', () => bg.setScale(1.05));
