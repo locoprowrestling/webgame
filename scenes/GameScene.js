@@ -38,6 +38,7 @@ export default class GameScene extends Phaser.Scene {
     this._gemsCollected = 0;
     this._runningScore = 0;
     this._lastPlayerX = PLAYER_START_X;
+    this._scoreMaxX = PLAYER_START_X;
     this._scoreDirection = 1;
     this._collectibles = [];
     this._checkpointIndex = -1;
@@ -798,11 +799,15 @@ export default class GameScene extends Phaser.Scene {
     const prevX = this._lastPlayerX;
     this._lastPlayerX = px;
 
-    if (px > prevX) {
-      this._runningScore += (px - prevX) * DIST_RATE;
-    } else {
+    if (px > this._scoreMaxX) {
+      // New territory — accumulate and advance the frontier
+      this._runningScore += (px - this._scoreMaxX) * DIST_RATE;
+      this._scoreMaxX = px;
+    } else if (px <= prevX && px >= this._scoreMaxX - 1) {
+      // At the frontier but standing still — drain
       this._runningScore = Math.max(0, this._runningScore - DRAIN_RATE * (delta / 1000));
     }
+    // Behind frontier (catching up after respawn) — hold score, do nothing
 
     const newScore = Math.round(this._hearts * 1000 + this._runningScore + this._bonusScore);
     if (newScore !== this._score) {
