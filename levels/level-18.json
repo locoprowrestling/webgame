@@ -137,7 +137,8 @@
     {
       "type": "steel_steps",
       "x": 2480,
-      "speed": -305
+      "speed": -305,
+      "y": 456
     },
     {
       "type": "hay_bale",
@@ -163,7 +164,8 @@
     {
       "type": "steel_steps",
       "x": 6040,
-      "speed": -308
+      "speed": -308,
+      "y": 456
     },
     {
       "type": "crumbling_platform",
@@ -189,7 +191,8 @@
     {
       "type": "steel_steps",
       "x": 10640,
-      "speed": -310
+      "speed": -310,
+      "y": 456
     },
     {
       "type": "crumbling_platform",
@@ -211,7 +214,8 @@
     {
       "type": "steel_steps",
       "x": 13120,
-      "speed": -305
+      "speed": -305,
+      "y": 456
     },
     {
       "type": "hay_bale",
@@ -237,7 +241,8 @@
     {
       "type": "steel_steps",
       "x": 17090,
-      "speed": -308
+      "speed": -308,
+      "y": 456
     },
     {
       "type": "hay_bale",
@@ -263,7 +268,8 @@
     {
       "type": "steel_steps",
       "x": 23760,
-      "speed": -312
+      "speed": -312,
+      "y": 456
     },
     {
       "type": "crumbling_platform",
