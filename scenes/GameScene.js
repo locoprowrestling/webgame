@@ -378,7 +378,7 @@ export default class GameScene extends Phaser.Scene {
 
     const fx = this._levelData.endX - 100;
     this._finishX = fx;
-    const flag = this.add.sprite(fx, GROUND_Y - 4, 'flag').setOrigin(0.5, 1).setDepth(9);
+    const flag = this.add.sprite(fx, GROUND_Y, 'flag').setOrigin(0.5, 1).setDepth(9);
     if (this.anims.exists('flag_wave')) flag.play('flag_wave');
 
     // Treat the flag as a finish line, not a tiny target at ground height.
