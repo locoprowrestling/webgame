@@ -51,28 +51,32 @@ export function buildPlatforms(scene, levelData) {
     const cx = p.x + p.width / 2;
     const spriteY = p.y + SPRITE_H / 2;
     const centerW = p.width - CAP_W * 2;
+    const isCrumbling = p.type === 'crumbling_platform' || p.crumbling || false;
+    const capKey = isCrumbling ? 'platform_crumbling_cap' : 'platform_cap';
+    const midKey = isCrumbling ? 'platform_crumbling_mid' : 'platform_mid';
+    const fullKey = isCrumbling ? 'platform_crumbling_full' : 'platform_full';
     const visuals = [];
 
     if (centerW > 0) {
       // Left cap
       visuals.push(
-        scene.add.image(p.x + CAP_W / 2, spriteY, 'platform_cap')
+        scene.add.image(p.x + CAP_W / 2, spriteY, capKey)
           .setDepth(6),
       );
       // Tiled center
       visuals.push(
-        scene.add.tileSprite(p.x + CAP_W + centerW / 2, spriteY, centerW, SPRITE_H, 'platform_mid')
+        scene.add.tileSprite(p.x + CAP_W + centerW / 2, spriteY, centerW, SPRITE_H, midKey)
           .setDepth(6),
       );
       // Right cap (mirrored)
       visuals.push(
-        scene.add.image(p.x + p.width - CAP_W / 2, spriteY, 'platform_cap')
+        scene.add.image(p.x + p.width - CAP_W / 2, spriteY, capKey)
           .setFlipX(true).setDepth(6),
       );
     } else {
       // Platform too narrow for caps — use the full-design sprite stretched to fit
       visuals.push(
-        scene.add.image(cx, spriteY, 'platform_full')
+        scene.add.image(cx, spriteY, fullKey)
           .setDisplaySize(p.width, SPRITE_H).setDepth(6),
       );
     }
@@ -86,7 +90,7 @@ export function buildPlatforms(scene, levelData) {
     const body = scene.add.rectangle(cx, p.y + PLAT_H / 2, p.width, PLAT_H)
       .setVisible(false);
     scene.physics.add.existing(body, true);
-    body.isCrumbling = p.crumbling || false;
+    body.isCrumbling = isCrumbling;
     body._visuals = visuals;
     group.add(body);
   });

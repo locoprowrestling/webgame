@@ -67,6 +67,10 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('platform_cap', 'Assets/bg_tiles/platform-cap.png');
     this.load.image('platform_mid', 'Assets/bg_tiles/platform-mid.png');
     this.load.image('platform_full', 'Assets/bg_tiles/platform-full.png');
+    this.load.image('platform_crumbling_cap', 'Assets/bg_tiles/platform-crumbling-cap.png');
+    this.load.image('platform_crumbling_mid', 'Assets/bg_tiles/platform-crumbling-mid.png');
+    this.load.image('platform_crumbling_full', 'Assets/bg_tiles/platform-crumbling-full.png');
+    this.load.spritesheet('flag', 'Assets/sprites/finish-flag.png', { frameWidth: 144, frameHeight: 224 });
 
     this.load.on('progress', v => this._updateBar(v));
   }
@@ -79,6 +83,12 @@ export default class BootScene extends Phaser.Scene {
         frameRate: 10,
         repeat: -1,
       });
+    });
+    this.anims.create({
+      key: 'flag_wave',
+      frames: this.anims.generateFrameNumbers('flag', { start: 0, end: 2 }),
+      frameRate: 6,
+      repeat: -1,
     });
 
     this._buildBackgroundTextures();
@@ -225,14 +235,16 @@ export default class BootScene extends Phaser.Scene {
   }
 
   _buildObstacleTextures() {
-    // Pre-generate a finish flag texture
-    const g = this.add.graphics();
-    g.fillStyle(0xffd700, 1); g.fillRect(0, 0, 24, 16);
-    g.fillStyle(0x000000, 1);
-    g.fillRect(4, 4, 6, 4); g.fillRect(10, 0, 6, 4); g.fillRect(16, 4, 6, 4);
-    g.lineStyle(3, 0x888888, 1); g.beginPath(); g.moveTo(0, 0); g.lineTo(0, 48); g.strokePath();
-    g.generateTexture('flag', 24, 48);
-    g.destroy();
+    // Fallback finish flag if the sprite asset fails to load.
+    if (!this.textures.exists('flag')) {
+      const g = this.add.graphics();
+      g.fillStyle(0xffd700, 1); g.fillRect(0, 0, 24, 16);
+      g.fillStyle(0x000000, 1);
+      g.fillRect(4, 4, 6, 4); g.fillRect(10, 0, 6, 4); g.fillRect(16, 4, 6, 4);
+      g.lineStyle(3, 0x888888, 1); g.beginPath(); g.moveTo(0, 0); g.lineTo(0, 48); g.strokePath();
+      g.generateTexture('flag', 24, 48);
+      g.destroy();
+    }
 
     // Checkpoint checkmarks — unlit (transparent) and lit (solid glow)
     const drawCheck = (g) => {
