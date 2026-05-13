@@ -179,7 +179,7 @@ const DEFS = {
     behavior: 'static',
   },
   spotlight: {
-    w: 30, h: 16, flipX: true,
+    w: 54, h: 46, flipX: true,
     draw(g) {
       g.fillStyle(0x222222, 1); g.fillRect(8, 0, 14, 10);
       g.fillStyle(0xffffaa, 0.9); g.fillCircle(15, 10, 7);

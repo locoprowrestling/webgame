@@ -12,7 +12,13 @@ const OBSTACLE_FRAME_W = 192;
 const OBSTACLE_FRAME_H = 256;
 const OBSTACLE_SCAN_TOP = 84;
 const OBSTACLE_ALPHA_THRESHOLD = 24;
-const STATIC_OBSTACLE_TYPES = ['turnbuckle', 'steel_steps', 'folding_chair'];
+const STATIC_OBSTACLE_TYPES = [
+  'turnbuckle',
+  'steel_steps',
+  'folding_chair',
+  'crowd_barrier',
+  'spotlight',
+];
 
 export default class BootScene extends Phaser.Scene {
   constructor() { super('BootScene'); }
@@ -46,9 +52,14 @@ export default class BootScene extends Phaser.Scene {
     );
 
     // Static single-frame obstacles
-    ['turnbuckle', 'steel_steps', 'folding_chair'].forEach(type =>
+    STATIC_OBSTACLE_TYPES.forEach(type =>
       this.load.image(`obs_${type}`, `Assets/obstacles-web/${type}.png`),
     );
+
+    this.load.image('collectible_belt', 'Assets/collectibles/championship_belt.png');
+    this.load.image('collectible_shirt', 'Assets/collectibles/loco_pro_shirt.png');
+    this.load.image('collectible_star', 'Assets/collectibles/star.png');
+    this.load.image('collectible_heart', 'Assets/collectibles/heart.png');
 
     // Ground / floor tiles and water background tiles
     ['asphalt_road', 'dry_grass_tile', 'floor_boards', 'grass_tile'].forEach(name => {
@@ -296,11 +307,82 @@ export default class BootScene extends Phaser.Scene {
     STATIC_OBSTACLE_TYPES.forEach(type => {
       const def = getObstacleDef(type);
       const key = getObstacleFrameTextureKey(type, 0);
+      const sourceKey = `obs_${type}`;
+
+      if (this.textures.exists(sourceKey)) {
+        const source = this.textures.get(sourceKey).getSourceImage();
+        const bounds = this._findStaticArtBounds(source);
+        this._createStaticObstacleFrameTexture(key, source, bounds, def);
+        return;
+      }
+
       const graphics = this.add.graphics();
       def.draw(graphics);
       graphics.generateTexture(key, def.w, def.h);
       graphics.destroy();
     });
+  }
+
+  _findStaticArtBounds(source) {
+    const scratch = document.createElement('canvas');
+    scratch.width = source.width;
+    scratch.height = source.height;
+    const context = scratch.getContext('2d', { willReadFrequently: true });
+    context.clearRect(0, 0, source.width, source.height);
+    context.drawImage(source, 0, 0);
+
+    const pixels = context.getImageData(0, 0, source.width, source.height).data;
+    let minX = source.width;
+    let minY = source.height;
+    let maxX = -1;
+    let maxY = -1;
+
+    for (let y = 0; y < source.height; y++) {
+      for (let x = 0; x < source.width; x++) {
+        const alpha = pixels[((y * source.width + x) * 4) + 3];
+        if (alpha <= OBSTACLE_ALPHA_THRESHOLD) continue;
+        minX = Math.min(minX, x);
+        minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x);
+        maxY = Math.max(maxY, y);
+      }
+    }
+
+    if (maxX < minX || maxY < minY) {
+      return { x: 0, y: 0, w: source.width, h: source.height };
+    }
+
+    return {
+      x: Math.max(0, minX - 2),
+      y: Math.max(0, minY - 2),
+      w: Math.min(source.width - 1, maxX + 2) - Math.max(0, minX - 2) + 1,
+      h: Math.min(source.height - 1, maxY + 2) - Math.max(0, minY - 2) + 1,
+    };
+  }
+
+  _createStaticObstacleFrameTexture(key, source, bounds, def) {
+    const texture = this.textures.createCanvas(key, def.w, def.h);
+    const context = texture.getContext();
+    const scale = Math.min(def.w / bounds.w, def.h / bounds.h);
+    const drawW = Math.max(1, Math.round(bounds.w * scale));
+    const drawH = Math.max(1, Math.round(bounds.h * scale));
+    const drawX = Math.round((def.w - drawW) / 2);
+    const drawY = Math.round(def.h - drawH);
+
+    context.imageSmoothingEnabled = false;
+    context.clearRect(0, 0, def.w, def.h);
+    context.drawImage(
+      source,
+      bounds.x,
+      bounds.y,
+      bounds.w,
+      bounds.h,
+      drawX,
+      drawY,
+      drawW,
+      drawH,
+    );
+    texture.refresh();
   }
 
   _findObstacleArtBounds(source, frameX, frameY, scratchContext) {
