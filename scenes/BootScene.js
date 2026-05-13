@@ -61,6 +61,9 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('bg_lp_2', 'Assets/bg_tiles/bg-lp-2.png');
     this.load.image('bg_dt_1', 'Assets/bg_tiles/bg-dt-1.png?v=2');
     this.load.image('bg_dt_2', 'Assets/bg_tiles/bg-dt-2.png');
+    this.load.image('bg_fh_1', 'Assets/bg_tiles/bg-fh-1.png');
+    this.load.image('bg_fg_1', 'Assets/bg_tiles/bg-fg-1.png');
+    this.load.image('bg_arena_1', 'Assets/bg_tiles/bg-arena-1.png');
     this.load.image('platform_cap', 'Assets/bg_tiles/platform-cap.png');
     this.load.image('platform_mid', 'Assets/bg_tiles/platform-mid.png');
     this.load.image('platform_full', 'Assets/bg_tiles/platform-full.png');

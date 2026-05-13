@@ -169,7 +169,17 @@ export default class GameScene extends Phaser.Scene {
       sg.fillTriangle(666, 0, 600, CANVAS_H, 732, CANVAS_H);
     }
 
-    if ([1, 3].includes(zone) && this.textures.exists('bg_lp_1')) {
+    const fullBackdropKeys = {
+      3: 'bg_fh_1',
+      4: 'bg_fg_1',
+      5: 'bg_arena_1',
+    };
+    const fullBackdropKey = fullBackdropKeys[zone];
+
+    if (fullBackdropKey && this.textures.exists(fullBackdropKey)) {
+      this._bgMtn = this.add.tileSprite(0, 0, CANVAS_W, CANVAS_H, fullBackdropKey)
+        .setOrigin(0, 0).setScrollFactor(0).setDepth(1);
+    } else if (zone === 1 && this.textures.exists('bg_lp_1')) {
       // Far layer — scrolls slowest
       this._bgMtn = this.add.tileSprite(0, 0, CANVAS_W, CANVAS_H, 'bg_lp_1')
         .setOrigin(0, 0).setScrollFactor(0).setDepth(1);
@@ -194,8 +204,8 @@ export default class GameScene extends Phaser.Scene {
       }
     }
 
-    // Water/strip background layer (outdoor zones)
-    if ([1, 3].includes(zone) && this.textures.exists('tile_water_flow_01')) {
+    // Water/strip background layer
+    if (zone === 1 && this.textures.exists('tile_water_flow_01')) {
       this._bgWater = this.add.tileSprite(0, CANVAS_H - 88, CANVAS_W, 40, 'tile_water_flow_01')
         .setOrigin(0, 0).setScrollFactor(0).setDepth(3.5);
     } else if (zone === 2 && this.textures.exists('bg_dt_2')) {
@@ -219,7 +229,14 @@ export default class GameScene extends Phaser.Scene {
       this.add.rectangle(CANVAS_W / 2, CANVAS_H - 22, CANVAS_W, 44, 0x4a8c2a)
         .setScrollFactor(0).setDepth(4);
     }
-    this.add.rectangle(CANVAS_W / 2, CANVAS_H - 44, CANVAS_W, 4, 0x2d5a1b)
+    const groundEdgeColors = {
+      1: 0x2d5a1b,
+      2: 0x202020,
+      3: 0x8a6a2e,
+      4: 0x9a6b2d,
+      5: 0x3a1d10,
+    };
+    this.add.rectangle(CANVAS_W / 2, CANVAS_H - 44, CANVAS_W, 4, groundEdgeColors[zone] || 0x2d5a1b)
       .setScrollFactor(0).setDepth(4);
 
     // Draw gap/pit visuals in the world
