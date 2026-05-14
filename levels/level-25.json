@@ -203,7 +203,7 @@
       "width": 54
     },
     {
-      "type": "turnbuckle",
+      "type": "barbed_wire_bat",
       "x": 3200,
       "y": 412
     },
@@ -235,7 +235,7 @@
       "speed": -370
     },
     {
-      "type": "turnbuckle",
+      "type": "barbed_wire_bat",
       "x": 6700,
       "y": 412
     },
@@ -284,7 +284,7 @@
       "amp": 78
     },
     {
-      "type": "turnbuckle",
+      "type": "barbed_wire_bat",
       "x": 13100,
       "y": 412
     },
@@ -332,7 +332,7 @@
       "width": 54
     },
     {
-      "type": "turnbuckle",
+      "type": "barbed_wire_bat",
       "x": 21200,
       "y": 412
     },
@@ -371,7 +371,7 @@
       "amp": 76
     },
     {
-      "type": "turnbuckle",
+      "type": "barbed_wire_bat",
       "x": 27600,
       "y": 412
     },

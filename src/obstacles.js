@@ -157,12 +157,16 @@ const DEFS = {
     },
     behavior: 'static',
   },
-  turnbuckle: {
-    w: 28, h: 80, flipX: true, displayScale: 2,
+  barbed_wire_bat: {
+    w: 86, h: 86, bodyW: 54, bodyH: 54, flipX: true,
     draw(g) {
-      g.fillStyle(0xcc0000, 1); g.fillRect(0, 0, 20, 60);
-      g.fillStyle(0xaaaaaa, 1); g.fillRect(4, 0, 12, 8); g.fillRect(4, 52, 12, 8);
-      g.fillStyle(0xffffff, 0.3); g.fillRect(14, 0, 4, 60);
+      g.lineStyle(8, 0x6b3515, 1);
+      g.beginPath(); g.moveTo(10, 72); g.lineTo(70, 12); g.strokePath();
+      g.lineStyle(2, 0xb8c0c8, 1);
+      for (let i = 0; i < 5; i++) {
+        const x = 24 + i * 9;
+        g.beginPath(); g.moveTo(x - 10, 58 - i * 9); g.lineTo(x + 10, 38 - i * 9); g.strokePath();
+      }
     },
     behavior: 'static',
   },

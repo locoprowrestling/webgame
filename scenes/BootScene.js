@@ -14,7 +14,7 @@ const OBSTACLE_FRAME_H = 256;
 const OBSTACLE_SCAN_TOP = 84;
 const OBSTACLE_ALPHA_THRESHOLD = 24;
 const STATIC_OBSTACLE_TYPES = [
-  'turnbuckle',
+  'barbed_wire_bat',
   'steel_steps',
   'folding_chair',
   'crowd_barrier',
