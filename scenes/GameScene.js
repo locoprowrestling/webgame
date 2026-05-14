@@ -18,7 +18,7 @@ const COLLECTIBLE_DEFS = {
   belt: { texture: 'collectible_belt', hitbox: [44, 24], burst: 0xffd700, scale: 1.5 },
   heart: { texture: 'collectible_heart', hitbox: [28, 26], burst: 0xff4444 },
   shirt: { texture: 'collectible_shirt', hitbox: [30, 28], burst: 0xffffff },
-  star: { texture: 'collectible_star', hitbox: [28, 24], burst: 0xffd700 },
+  star: { texture: 'collectible_star', hitbox: [28, 24], burst: 0xffd700, originY: 0.62 },
 };
 
 export default class GameScene extends Phaser.Scene {
@@ -408,7 +408,7 @@ export default class GameScene extends Phaser.Scene {
       const glow = this.add.circle(item.x, baseY, glowR, def.burst, 0.38).setDepth(6);
       this.tweens.add({ targets: glow, alpha: 0.12, yoyo: true, repeat: -1, duration: 900, ease: 'Sine.InOut' });
 
-      const sprite = this.add.image(item.x, baseY, texture).setDepth(7).setOrigin(0.5).setScale(def.scale || 1);
+      const sprite = this.add.image(item.x, baseY, texture).setDepth(7).setOrigin(0.5, def.originY || 0.5).setScale(def.scale || 1);
       this.tweens.add({
         targets: [sprite, glow], y: baseY - 7,
         yoyo: true, repeat: -1, duration: 800, ease: 'Sine.InOut',
