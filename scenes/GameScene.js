@@ -579,7 +579,8 @@ export default class GameScene extends Phaser.Scene {
     this.scene.stop('UIScene');
     this.cameras.main.fadeOut(500, 255, 255, 255);
     this.cameras.main.once('camerafadeoutcomplete', () => {
-      this.scene.start('LevelCompleteScene', {
+      const isLastLevel = this._levelNum >= 25;
+      this.scene.start(isLastLevel ? 'EndingScene' : 'LevelCompleteScene', {
         characterId: this._characterId,
         level: this._levelNum,
         stars,
