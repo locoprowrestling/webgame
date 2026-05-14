@@ -404,9 +404,13 @@ export default class GameScene extends Phaser.Scene {
       const type = item.type || 'star';
       const def = COLLECTIBLE_DEFS[type] || COLLECTIBLE_DEFS.star;
       const texture = this.textures.exists(def.texture) ? def.texture : 'collectible';
+      const glowR = Math.max(def.hitbox[0], def.hitbox[1]) * 0.85 * (def.scale || 1);
+      const glow = this.add.circle(item.x, baseY, glowR, def.burst, 0.38).setDepth(6);
+      this.tweens.add({ targets: glow, alpha: 0.12, yoyo: true, repeat: -1, duration: 900, ease: 'Sine.InOut' });
+
       const sprite = this.add.image(item.x, baseY, texture).setDepth(7).setOrigin(0.5).setScale(def.scale || 1);
       this.tweens.add({
-        targets: sprite, y: baseY - 7,
+        targets: [sprite, glow], y: baseY - 7,
         yoyo: true, repeat: -1, duration: 800, ease: 'Sine.InOut',
       });
       const [hitboxW, hitboxH] = def.hitbox;
@@ -416,6 +420,7 @@ export default class GameScene extends Phaser.Scene {
       hitbox._collectibleType = type;
       hitbox._collectibleBurstColor = def.burst;
       hitbox._visual = sprite;
+      hitbox._glow = glow;
       hitbox._collected = false;
       this._collectibles.push(hitbox);
     });
@@ -520,6 +525,11 @@ export default class GameScene extends Phaser.Scene {
     if (sprite?.active) {
       this.tweens.killTweensOf(sprite);
       sprite.destroy();
+    }
+    const glow = hitbox._glow;
+    if (glow?.active) {
+      this.tweens.killTweensOf(glow);
+      glow.destroy();
     }
     for (let i = 0; i < 5; i++) {
       const a = (i / 5) * Math.PI * 2;
