@@ -158,7 +158,7 @@ const DEFS = {
     behavior: 'static',
   },
   turnbuckle: {
-    w: 28, h: 80, flipX: true,
+    w: 28, h: 80, flipX: true, displayScale: 2,
     draw(g) {
       g.fillStyle(0xcc0000, 1); g.fillRect(0, 0, 20, 60);
       g.fillStyle(0xaaaaaa, 1); g.fillRect(4, 0, 12, 8); g.fillRect(4, 52, 12, 8);
@@ -207,12 +207,13 @@ export function getObstacleFrameTextureKey(type, frame = 0) {
 function applyObstacleBody(obj, def) {
   if (!obj.body) return;
 
-  const bodyW = def.bodyW || Math.max(12, Math.round(def.w * 0.72));
-  const bodyH = def.bodyH || Math.max(12, Math.round(def.h * 0.78));
+  const ds = def.displayScale || 1;
+  const bodyW = def.bodyW || Math.max(12, Math.round(def.w * ds * 0.72));
+  const bodyH = def.bodyH || Math.max(12, Math.round(def.h * ds * 0.78));
   obj.body.setSize(bodyW, bodyH);
   obj.body.setOffset(
-    Math.round((def.w - bodyW) / 2),
-    Math.round(def.h - bodyH),
+    Math.round((def.w * ds - bodyW) / 2),
+    Math.round(def.h * ds - bodyH),
   );
   if (obj._falling) return;
   obj.body.setAllowGravity(false);
@@ -270,7 +271,8 @@ export function spawnObstacle(scene, type, x, y, config = {}) {
   }
 
   const obj = scene.physics.add.sprite(x, y, key).setOrigin(0.5, 1);
-  obj.setDisplaySize(def.w, def.h);
+  const ds = def.displayScale || 1;
+  obj.setDisplaySize(def.w * ds, def.h * ds);
   if (def.flipX) obj.setFlipX(true);
   obj.obstacleType = type;
   obj.obstacleDef = def;
