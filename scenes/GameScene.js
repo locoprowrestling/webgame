@@ -11,7 +11,14 @@ const CANVAS_H = 500;
 const PLAYER_START_X = CANVAS_W / 2;
 const WORLD_GRAVITY = 1200;
 const FINISH_FLAG_Y_OFFSET = 6;
+const MAX_HEARTS = 3;
 const BASE_SCROLL = { 1:220, 2:260, 3:300, 4:340, 5:380 };
+const COLLECTIBLE_DEFS = {
+  belt: { texture: 'collectible_belt', hitbox: [44, 24], burst: 0xffd700 },
+  heart: { texture: 'collectible_heart', hitbox: [28, 26], burst: 0xff4444 },
+  shirt: { texture: 'collectible_shirt', hitbox: [30, 28], burst: 0xffffff },
+  star: { texture: 'collectible_star', hitbox: [28, 24], burst: 0xffd700 },
+};
 
 export default class GameScene extends Phaser.Scene {
   constructor() { super('GameScene'); }
@@ -32,7 +39,7 @@ export default class GameScene extends Phaser.Scene {
     const myGen = this._createGen;
     this._char = getCharacter(this._characterId);
     this._physics = getTraitPhysics(this._char.trait);
-    this._hearts = 3;
+    this._hearts = MAX_HEARTS;
     this._score = 0;
     this._bonusScore = 0;
     this._gemsCollected = 0;
@@ -391,14 +398,20 @@ export default class GameScene extends Phaser.Scene {
     this._collectiblesGroup = this.physics.add.staticGroup();
     (this._levelData.collectibles || []).forEach(item => {
       const baseY = item.y ?? (GROUND_Y - 80);
-      const sprite = this.add.image(item.x, baseY, 'collectible').setDepth(7).setOrigin(0.5);
+      const type = item.type || 'star';
+      const def = COLLECTIBLE_DEFS[type] || COLLECTIBLE_DEFS.star;
+      const texture = this.textures.exists(def.texture) ? def.texture : 'collectible';
+      const sprite = this.add.image(item.x, baseY, texture).setDepth(7).setOrigin(0.5);
       this.tweens.add({
         targets: sprite, y: baseY - 7,
         yoyo: true, repeat: -1, duration: 800, ease: 'Sine.InOut',
       });
-      const hitbox = this.add.rectangle(item.x, baseY, 22, 22, 0x000000, 0);
+      const [hitboxW, hitboxH] = def.hitbox;
+      const hitbox = this.add.rectangle(item.x, baseY, hitboxW, hitboxH, 0x000000, 0);
       this.physics.add.existing(hitbox, true);
       this._collectiblesGroup.add(hitbox);
+      hitbox._collectibleType = type;
+      hitbox._collectibleBurstColor = def.burst;
       hitbox._visual = sprite;
       hitbox._collected = false;
       this._collectibles.push(hitbox);
@@ -490,18 +503,24 @@ export default class GameScene extends Phaser.Scene {
   _onCollect(player, hitbox) {
     if (hitbox._collected) return;
     hitbox._collected = true;
-    this._bonusScore += 100;
-    this._gemsCollected += 1;
     const sprite = hitbox._visual;
     const sx = sprite?.active ? sprite.x : hitbox.x;
     const sy = sprite?.active ? sprite.y : hitbox.y;
+
+    if (hitbox._collectibleType === 'heart') {
+      this._gainHeart();
+    } else {
+      this._bonusScore += 100;
+      this._gemsCollected += 1;
+    }
+
     if (sprite?.active) {
       this.tweens.killTweensOf(sprite);
       sprite.destroy();
     }
     for (let i = 0; i < 5; i++) {
       const a = (i / 5) * Math.PI * 2;
-      const sp = this.add.circle(sx, sy, 4, 0xffd700).setDepth(15);
+      const sp = this.add.circle(sx, sy, 4, hitbox._collectibleBurstColor || 0xffd700).setDepth(15);
       this.tweens.add({
         targets: sp,
         x: sx + Math.cos(a) * 44, y: sy + Math.sin(a) * 44,
@@ -509,6 +528,13 @@ export default class GameScene extends Phaser.Scene {
         onComplete: () => sp.destroy(),
       });
     }
+  }
+
+  _gainHeart() {
+    const nextHearts = Math.min(MAX_HEARTS, this._hearts + 1);
+    if (nextHearts === this._hearts) return;
+    this._hearts = nextHearts;
+    this.events.emit('heartsChanged', this._hearts, 1);
   }
 
   _onHitObstacle(player, obstacle) {
@@ -557,7 +583,7 @@ export default class GameScene extends Phaser.Scene {
   // ── Damage / death ────────────────────────────────────────────────────────
   _takeDamage() {
     this._hearts = Math.max(0, this._hearts - 1);
-    this.events.emit('heartLost', this._hearts);
+    this.events.emit('heartsChanged', this._hearts, -1);
     this.cameras.main.shake(220, 0.012);
 
     if (this._hearts <= 0) {
