@@ -1,3 +1,5 @@
+import { playMusic, applyMuteState } from '../src/audioManager.js';
+
 const PS2P = '"Press Start 2P", monospace';
 
 export default class GameOverScene extends Phaser.Scene {
@@ -31,6 +33,8 @@ export default class GameOverScene extends Phaser.Scene {
       this.scene.start('SelectScene', { level: this._level });
     });
 
+    applyMuteState(this.game);
+    playMusic(this, 'menu');
     this.cameras.main.fadeIn(300, 0, 0, 0);
     this.input.keyboard.once('keydown-SPACE', () => {
       this.scene.start('GameScene', { characterId: this._characterId, level: this._level });

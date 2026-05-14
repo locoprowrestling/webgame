@@ -1,13 +1,29 @@
+import { playMusic, applyMuteState, toggleMute, isMuted } from '../src/audioManager.js';
+
 export default class TitleScene extends Phaser.Scene {
   constructor() { super('TitleScene'); }
 
   create() {
     const W = this.scale.width, H = this.scale.height;
 
+    applyMuteState(this.game);
+    playMusic(this, 'menu');
+
     this._buildBackground(W, H);
     this._buildRunner(W, H);
     this._buildUI(W, H);
     this._addInput();
+    this._addMuteButton(W);
+  }
+
+  _addMuteButton(W) {
+    const btn = this.add.text(W - 14, 10, '♪', {
+      fontSize: '16px', color: '#ffd700',
+    }).setOrigin(1, 0).setDepth(20).setInteractive({ useHandCursor: true });
+    btn.setAlpha(isMuted() ? 0.3 : 1);
+    btn.on('pointerdown', () => {
+      btn.setAlpha(toggleMute(this.game) ? 0.3 : 1);
+    });
   }
 
   _buildBackground(W, H) {

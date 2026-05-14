@@ -1,3 +1,5 @@
+import { playMusic, applyMuteState } from '../src/audioManager.js';
+
 const PS2P = '"Press Start 2P", monospace';
 
 export default class LevelCompleteScene extends Phaser.Scene {
@@ -118,6 +120,8 @@ export default class LevelCompleteScene extends Phaser.Scene {
       this.scene.start('GameScene', { characterId: this._characterId, level: this._level });
     });
 
+    applyMuteState(this.game);
+    playMusic(this, isLastLevel ? 'final' : 'fanfare');
     this.cameras.main.fadeIn(400, 0, 0, 0);
   }
 

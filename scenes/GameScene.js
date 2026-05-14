@@ -2,6 +2,7 @@ import { getCharacter, getTraitPhysics } from '../src/characters.js';
 import { loadLevel, buildGround, buildPlatforms, getCheckpoints } from '../src/levelLoader.js';
 import { spawnObstacle, updateObstacle, isGroundBehavior } from '../src/obstacles.js';
 import { saveResult, saveTopScore, getTopScore } from '../src/saveSystem.js';
+import { playMusic, applyMuteState } from '../src/audioManager.js';
 
 const GROUND_Y = 456;   // top of ground strip
 const DIST_RATE = 0.2;  // score points per pixel of forward progress
@@ -64,6 +65,8 @@ export default class GameScene extends Phaser.Scene {
       if (!this._canContinueSceneSetup(myGen)) return;
 
       const zone = this._levelData.zone || 1;
+      applyMuteState(this.game);
+      playMusic(this, `zone${zone}`);
       const baseSpeed = this._levelData.scrollSpeed || BASE_SCROLL[zone] || 220;
       this._baseScrollSpeed = baseSpeed * this._physics.scrollSpeedMult;
       this._scrollSpeed = this._baseScrollSpeed;

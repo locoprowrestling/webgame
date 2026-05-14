@@ -1,3 +1,5 @@
+import { toggleMute, isMuted } from '../src/audioManager.js';
+
 const PS2P = '"Press Start 2P", monospace';
 
 export default class UIScene extends Phaser.Scene {
@@ -63,6 +65,15 @@ export default class UIScene extends Phaser.Scene {
     this._toastText = this.add.text(W / 2, 70, '', {
       fontSize: '10px', fontFamily: PS2P, color: '#ffd700',
     }).setOrigin(0.5).setAlpha(0).setDepth(22);
+
+    // Mute button
+    const muteBtn = this.add.text(W - 14, 10, '♪', {
+      fontSize: '16px', color: '#ffd700',
+    }).setOrigin(1, 0).setDepth(25).setInteractive({ useHandCursor: true });
+    muteBtn.setAlpha(isMuted() ? 0.3 : 1);
+    muteBtn.on('pointerdown', () => {
+      muteBtn.setAlpha(toggleMute(this.game) ? 0.3 : 1);
+    });
 
     // Hook into GameScene events
     this._gameScene = this.scene.get('GameScene');

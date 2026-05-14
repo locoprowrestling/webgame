@@ -1,5 +1,6 @@
 import { CHARACTERS } from '../src/characters.js';
 import { getTotalStars, getStarsForLevel } from '../src/saveSystem.js';
+import { playMusic, applyMuteState, toggleMute, isMuted } from '../src/audioManager.js';
 
 const FACTIONS = [
   { key: 'rising', label: 'THE RISING', logoKey: 'logo_rising' },
@@ -16,6 +17,9 @@ export default class SelectScene extends Phaser.Scene {
 
   create() {
     const W = this.scale.width, H = this.scale.height;
+
+    applyMuteState(this.game);
+    playMusic(this, 'menu');
 
     this._selectedId = null;
     this._cards = [];

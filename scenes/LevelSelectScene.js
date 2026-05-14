@@ -1,5 +1,6 @@
 import { getUnlockedLevels, getStarsForLevel, getTopScore } from '../src/saveSystem.js';
 import { CHARACTERS } from '../src/characters.js';
+import { playMusic, applyMuteState } from '../src/audioManager.js';
 
 const PS2P = '"Press Start 2P", monospace';
 
@@ -48,6 +49,9 @@ export default class LevelSelectScene extends Phaser.Scene {
 
   create() {
     const W = this.scale.width;
+
+    applyMuteState(this.game);
+    playMusic(this, 'menu');
 
     this._tiles = [];
 
