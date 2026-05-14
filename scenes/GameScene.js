@@ -18,7 +18,7 @@ const COLLECTIBLE_DEFS = {
   belt: { texture: 'collectible_belt', hitbox: [44, 24], burst: 0xffd700, scale: 1.5 },
   heart: { texture: 'collectible_heart', hitbox: [28, 26], burst: 0xff4444 },
   shirt: { texture: 'collectible_shirt', hitbox: [30, 28], burst: 0xffffff },
-  star: { texture: 'collectible_star', hitbox: [28, 24], burst: 0xffd700, originY: 0.62 },
+  star: { texture: 'collectible_star', hitbox: [28, 24], burst: 0xffd700 },
 };
 
 export default class GameScene extends Phaser.Scene {

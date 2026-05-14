@@ -158,14 +158,14 @@ const DEFS = {
     behavior: 'static',
   },
   barbed_wire_bat: {
-    w: 86, h: 86, bodyW: 54, bodyH: 54, flipX: true,
+    w: 56, h: 56, bodyW: 36, bodyH: 36, flipX: true,
     draw(g) {
-      g.lineStyle(8, 0x6b3515, 1);
-      g.beginPath(); g.moveTo(10, 72); g.lineTo(70, 12); g.strokePath();
+      g.lineStyle(6, 0x6b3515, 1);
+      g.beginPath(); g.moveTo(7, 47); g.lineTo(47, 7); g.strokePath();
       g.lineStyle(2, 0xb8c0c8, 1);
       for (let i = 0; i < 5; i++) {
-        const x = 24 + i * 9;
-        g.beginPath(); g.moveTo(x - 10, 58 - i * 9); g.lineTo(x + 10, 38 - i * 9); g.strokePath();
+        const x = 16 + i * 6;
+        g.beginPath(); g.moveTo(x - 7, 38 - i * 6); g.lineTo(x + 7, 24 - i * 6); g.strokePath();
       }
     },
     behavior: 'static',
