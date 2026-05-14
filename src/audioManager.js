@@ -1,12 +1,12 @@
 const MUSIC_DEFS = {
-  menu:    { intro: 'music_menu_intro',  loop: 'music_menu_loop'  },
-  final:   { intro: 'music_final',       loop: null               },
-  fanfare: { intro: 'music_fanfare',     loop: null               },
-  zone1:   { intro: 'music_z1_intro',    loop: 'music_z1_loop'    },
-  zone2:   { intro: 'music_z2_intro',    loop: 'music_z2_loop'    },
-  zone3:   { intro: 'music_z3_intro',    loop: 'music_z3_loop'    },
-  zone4:   { intro: 'music_z4_intro',    loop: 'music_z4_loop'    },
-  zone5:   { intro: 'music_z5_intro',    loop: 'music_z5_loop'    },
+  menu:    { key: 'music_menu_intro', loop: true  },
+  final:   { key: 'music_final',      loop: false },
+  fanfare: { key: 'music_fanfare',    loop: false },
+  zone1:   { key: 'music_z1_intro',   loop: true  },
+  zone2:   { key: 'music_z2_intro',   loop: true  },
+  zone3:   { key: 'music_z3_intro',   loop: true  },
+  zone4:   { key: 'music_z4_intro',   loop: true  },
+  zone5:   { key: 'music_z5_intro',   loop: true  },
 };
 
 const MUTE_KEY = 'locopro_muted';
@@ -22,20 +22,10 @@ export function playMusic(scene, key) {
   if (!def) return;
 
   const mgr = scene.game.sound;
-  const intro = mgr.add(def.intro, { volume: 0.65 });
-  reg.set('bgMusicIntro', intro);
-
-  if (def.loop) {
-    const loopSound = mgr.add(def.loop, { volume: 0.65, loop: true });
-    reg.set('bgMusicLoop', loopSound);
-    intro.once('complete', () => {
-      if (reg.get('bgMusicKey') === key) loopSound.play();
-    });
-  } else {
-    reg.set('bgMusicLoop', null);
-  }
-
-  intro.play();
+  const sound = mgr.add(def.key, { volume: 0.65, loop: def.loop });
+  reg.set('bgMusicIntro', sound);
+  reg.set('bgMusicLoop', null);
+  sound.play();
 }
 
 export function stopMusic(scene) {

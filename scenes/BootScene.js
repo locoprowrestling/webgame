@@ -87,19 +87,13 @@ export default class BootScene extends Phaser.Scene {
 
     const A = 'Assets/audio/';
     this.load.audio('music_menu_intro', A + 'BG-00-MENU-Pause%20Menu%20Drift.mp3');
-    this.load.audio('music_menu_loop',  A + 'BG-00-MENU-Pause%20Menu%20Drift-2.mp3');
     this.load.audio('music_final',      A + 'BG-00-FINAL-Final%20Menu.mp3');
     this.load.audio('music_fanfare',    A + 'BG-00-FANFARE-Winner.mp3');
     this.load.audio('music_z1_intro',   A + 'BG-01-Mountain%20Walk%20L1-5.mp3');
-    this.load.audio('music_z1_loop',    A + 'BG-01-Mountain%20Walk%20L1-5-2.mp3');
     this.load.audio('music_z2_intro',   A + 'BG-02-Downtown%20Footsteps%20L6-10.mp3');
-    this.load.audio('music_z2_loop',    A + 'BG-02-Downtown%20Footsteps%20L6-10-2.mp3');
     this.load.audio('music_z3_intro',   A + 'BG-03-Trail%20Level%20Three-L11-15.mp3');
-    this.load.audio('music_z3_loop',    A + 'BG-03-Trail%20Level%20Three-L11-15-2.mp3');
     this.load.audio('music_z4_intro',   A + 'BG-04-Fairgrounds%20Loop%20Four-L16-20.mp3');
-    this.load.audio('music_z4_loop',    A + 'BG-04-Fairgrounds%20Loop%20Four-L16-20-2.mp3');
     this.load.audio('music_z5_intro',   A + 'BG-05-Opera%20House%20Level%205-L21-25.mp3');
-    this.load.audio('music_z5_loop',    A + 'BG-05-Opera%20House%20Level%205-L21-25-2.mp3');
 
     this.load.on('progress', v => this._updateBar(v));
   }
