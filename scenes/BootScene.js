@@ -129,20 +129,20 @@ export default class BootScene extends Phaser.Scene {
 
     // Full-screen tap prompt — satisfies browser autoplay policy before TitleScene
     const { width: W, height: H } = this.scale;
-    const overlay = this.add.rectangle(W / 2, H / 2, W, H, 0x000000, 0.88).setInteractive();
-    const tapTitle = this.add.text(W / 2, H / 2 - 40, 'LOCOPRO', {
-      fontSize: '32px', fontFamily: '"Press Start 2P", monospace',
-      color: '#ffd700', stroke: '#aa6600', strokeThickness: 4,
-    }).setOrigin(0.5);
-    const tapSub = this.add.text(W / 2, H / 2 + 10, 'CHAMPIONSHIP RUN', {
-      fontSize: '10px', fontFamily: '"Press Start 2P", monospace', color: '#ffffff',
-    }).setOrigin(0.5);
-    const tapPrompt = this.add.text(W / 2, H / 2 + 70, 'TAP TO BEGIN', {
-      fontSize: '20px', fontFamily: '"Press Start 2P", monospace',
+    this.add.rectangle(W / 2, H / 2, W, H, 0x000000).setDepth(50);
+    this.add.text(W / 2, H / 2 - 50, 'LOCOPRO', {
+      fontSize: '36px', fontFamily: '"Press Start 2P", monospace',
+      color: '#ffd700', stroke: '#aa6600', strokeThickness: 5,
+    }).setOrigin(0.5).setDepth(51);
+    this.add.text(W / 2, H / 2 + 8, 'CHAMPIONSHIP RUN', {
+      fontSize: '11px', fontFamily: '"Press Start 2P", monospace', color: '#ffffff',
+    }).setOrigin(0.5).setDepth(51);
+    const tapPrompt = this.add.text(W / 2, H / 2 + 80, 'TAP TO BEGIN', {
+      fontSize: '22px', fontFamily: '"Press Start 2P", monospace',
       color: '#ffd700', stroke: '#000000', strokeThickness: 4,
-    }).setOrigin(0.5);
+    }).setOrigin(0.5).setDepth(51);
     this.tweens.add({
-      targets: tapPrompt, alpha: 0.1, yoyo: true, repeat: -1,
+      targets: tapPrompt, alpha: 0.15, yoyo: true, repeat: -1,
       duration: 700, ease: 'Sine.InOut',
     });
 
@@ -151,7 +151,7 @@ export default class BootScene extends Phaser.Scene {
       playMusic(this, 'menu');
       this.scene.start('TitleScene');
     };
-    overlay.once('pointerdown', startGame);
+    this.input.once('pointerdown', startGame);
     this.input.keyboard.once('keydown', startGame);
   }
 
