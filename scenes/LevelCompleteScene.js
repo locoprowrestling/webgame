@@ -7,6 +7,7 @@ export default class LevelCompleteScene extends Phaser.Scene {
     this._characterId = data.characterId;
     this._level = data.level;
     this._stars = data.stars || 0;
+    this._totalCollectibles = data.totalCollectibles || 0;
     this._finalScore = data.finalScore || data.score || 0;
     this._distScore = data.distScore || 0;
     this._gemCount = data.gemCount || 0;
@@ -37,11 +38,14 @@ export default class LevelCompleteScene extends Phaser.Scene {
       fontSize: '10px', fontFamily: PS2P, color: '#cccccc',
     }).setOrigin(0.5);
 
-    // Stars (animate in)
+    // Stars (animate in) — 4 slots for levels with collectibles, 3 otherwise
+    const maxStars = this._totalCollectibles > 0 ? 4 : 3;
+    const starSpacing = 38;
+    const starStartX = W / 2 - ((maxStars - 1) * starSpacing) / 2;
     const starTexts = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < maxStars; i++) {
       const filled = i < this._stars;
-      const s = this.add.text(W / 2 - 40 + i * 40, H / 2 - 118, filled ? '★' : '☆', {
+      const s = this.add.text(starStartX + i * starSpacing, H / 2 - 118, filled ? '★' : '☆', {
         fontSize: '32px', color: filled ? '#ffd700' : '#555555',
       }).setOrigin(0.5).setScale(0);
       starTexts.push({ obj: s, filled });

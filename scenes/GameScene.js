@@ -549,7 +549,10 @@ export default class GameScene extends Phaser.Scene {
     this._player.body.allowGravity = false;
     this._setPlayerState('idle', 0);
 
-    const stars = this._hearts;
+    const totalCollectibles = this._collectibles.length;
+    const collectedAll = totalCollectibles > 0 && this._gemsCollected >= totalCollectibles;
+    const stars = this._hearts + (collectedAll ? 1 : 0);
+
     this._bonusScore += 500; // championship title
     const distScore = Math.round(this._runningScore);
     const finalScore = Math.round(this._hearts * 1000 + distScore + this._bonusScore);
@@ -567,6 +570,7 @@ export default class GameScene extends Phaser.Scene {
         characterId: this._characterId,
         level: this._levelNum,
         stars,
+        totalCollectibles,
         finalScore,
         distScore,
         gemCount: this._gemsCollected,

@@ -108,6 +108,7 @@ export default class BootScene extends Phaser.Scene {
     this._buildObstacleFrameTextures();
     this._buildStaticObstacleTextures();
     this._buildObstacleAnims();
+    this._buildCollectibleTextures();
     this.scene.start('TitleScene');
   }
 
@@ -506,5 +507,68 @@ export default class BootScene extends Phaser.Scene {
       drawH,
     );
     texture.refresh();
+  }
+
+  _buildCollectibleTextures() {
+    // Fallback orb — used when a specific type texture is missing
+    const orb = this.add.graphics();
+    orb.fillStyle(0xffd700, 1);
+    orb.fillCircle(14, 14, 12);
+    orb.fillStyle(0xffffff, 0.4);
+    orb.fillCircle(10, 10, 5);
+    orb.generateTexture('collectible', 28, 28);
+    orb.destroy();
+
+    // Star
+    const star = this.add.graphics();
+    star.fillStyle(0xffd700, 1);
+    star.lineStyle(1, 0xffa500, 1);
+    star.beginPath();
+    for (let i = 0; i < 10; i++) {
+      const r = i % 2 === 0 ? 12 : 5;
+      const angle = (i * Math.PI / 5) - Math.PI / 2;
+      const x = 14 + r * Math.cos(angle);
+      const y = 14 + r * Math.sin(angle);
+      if (i === 0) star.moveTo(x, y); else star.lineTo(x, y);
+    }
+    star.closePath();
+    star.fillPath();
+    star.strokePath();
+    star.generateTexture('collectible_star', 28, 28);
+    star.destroy();
+
+    // Championship belt
+    const belt = this.add.graphics();
+    belt.fillStyle(0xffd700, 1);
+    belt.fillRect(0, 4, 44, 16);
+    belt.fillStyle(0xcc8800, 1);
+    belt.fillRect(3, 6, 6, 12);
+    belt.fillRect(35, 6, 6, 12);
+    belt.fillStyle(0xffa500, 1);
+    belt.fillEllipse(22, 12, 18, 14);
+    belt.fillStyle(0xffffff, 0.85);
+    belt.fillCircle(22, 12, 4);
+    belt.generateTexture('collectible_belt', 44, 24);
+    belt.destroy();
+
+    // Heart
+    const heart = this.add.graphics();
+    heart.fillStyle(0xff4444, 1);
+    heart.fillCircle(9, 10, 8);
+    heart.fillCircle(19, 10, 8);
+    heart.fillTriangle(1, 13, 27, 13, 14, 26);
+    heart.generateTexture('collectible_heart', 28, 26);
+    heart.destroy();
+
+    // Shirt
+    const shirt = this.add.graphics();
+    shirt.fillStyle(0xffffff, 0.9);
+    shirt.fillRect(5, 10, 20, 18);
+    shirt.fillRect(0, 8, 8, 10);
+    shirt.fillRect(22, 8, 8, 10);
+    shirt.fillStyle(0xdddddd, 1);
+    shirt.fillEllipse(15, 10, 10, 8);
+    shirt.generateTexture('collectible_shirt', 30, 28);
+    shirt.destroy();
   }
 }

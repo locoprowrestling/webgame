@@ -66,26 +66,30 @@ export default class UIScene extends Phaser.Scene {
 
     // Hook into GameScene events
     this._gameScene = this.scene.get('GameScene');
-    this._gameScene.events.on('heartLost', this._onHeartLost, this);
+    this._gameScene.events.on('heartsChanged', this._onHeartsChanged, this);
     this._gameScene.events.on('checkpointReached', this._onCheckpoint, this);
     this._gameScene.events.on('scoreUpdate', this._onScore, this);
   }
 
   shutdown() {
     if (this._gameScene) {
-      this._gameScene.events.off('heartLost', this._onHeartLost, this);
+      this._gameScene.events.off('heartsChanged', this._onHeartsChanged, this);
       this._gameScene.events.off('checkpointReached', this._onCheckpoint, this);
       this._gameScene.events.off('scoreUpdate', this._onScore, this);
       this._gameScene = null;
     }
   }
 
-  _onHeartLost(hearts) {
+  _onHeartsChanged(hearts, delta) {
     this._hearts = hearts;
     this._heartIcons.forEach((h, i) => {
       h.setColor(i < hearts ? '#ff4444' : '#444444');
     });
-    if (hearts === 1) {
+    if (delta > 0) {
+      // Heart gained — pulse the newly lit icon
+      const idx = Math.min(hearts - 1, this._heartIcons.length - 1);
+      this.tweens.add({ targets: this._heartIcons[idx], scaleX: 1.5, scaleY: 1.5, yoyo: true, duration: 180, repeat: 2 });
+    } else if (hearts === 1) {
       this.tweens.add({ targets: this._heartIcons[0], scaleX: 1.4, scaleY: 1.4, yoyo: true, duration: 200, repeat: 2 });
     }
   }

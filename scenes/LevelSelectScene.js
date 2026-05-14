@@ -137,9 +137,10 @@ export default class LevelSelectScene extends Phaser.Scene {
       }).setOrigin(0.5);
       container.add(numText);
 
-      // Stars
+      // Stars — clamp empty slots so stars > 3 never causes a negative repeat count
+      const maxStars = Math.max(3, stars);
       const starStr = stars > 0
-        ? '★'.repeat(stars) + '☆'.repeat(3 - stars)
+        ? '★'.repeat(stars) + '☆'.repeat(maxStars - stars)
         : '☆☆☆';
       const starColor = stars > 0 ? '#ffd700' : '#444444';
       const starText = this.add.text(0, 4, starStr, {
