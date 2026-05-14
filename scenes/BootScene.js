@@ -1,4 +1,5 @@
 import { CHARACTERS } from '../src/characters.js';
+import { playMusic, applyMuteState } from '../src/audioManager.js';
 import {
   ANIMATED_OBSTACLE_TYPES,
   getObstacleAnimConfig,
@@ -125,7 +126,21 @@ export default class BootScene extends Phaser.Scene {
     this._buildStaticObstacleTextures();
     this._buildObstacleAnims();
     this._buildCollectibleTextures();
-    this.scene.start('TitleScene');
+
+    // Wait for first interaction to satisfy browser autoplay policy, then start music + title
+    this._loadText.setText('— TAP TO BEGIN —').setColor('#ffd700');
+    this.tweens.add({
+      targets: this._loadText, alpha: 0.3, yoyo: true, repeat: -1,
+      duration: 600, ease: 'Sine.InOut',
+    });
+
+    const startGame = () => {
+      applyMuteState(this.game);
+      playMusic(this, 'menu');
+      this.scene.start('TitleScene');
+    };
+    this.input.once('pointerdown', startGame);
+    this.input.keyboard.once('keydown', startGame);
   }
 
   _createLoadingUI() {
