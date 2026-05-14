@@ -92,7 +92,7 @@ export default class EndingScene extends Phaser.Scene {
 
     backChars.forEach((char, i) => {
       const x = (i + 0.5) * (W / backChars.length);
-      this._spawnDancer(char, x, FLOOR_Y - 20, 0.70, 4, i % 2 === 0);
+      this._spawnDancer(char, x, FLOOR_Y - 72, 0.70, 4, i % 2 === 0);
     });
 
     frontChars.forEach((char, i) => {
