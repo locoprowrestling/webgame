@@ -175,7 +175,7 @@
     },
     {
       "type": "crowd_barrier",
-      "x": 2700
+      "x": 3020
     },
     {
       "type": "crumbling_platform",
@@ -197,7 +197,7 @@
     },
     {
       "type": "crowd_barrier",
-      "x": 5300
+      "x": 5100
     },
     {
       "type": "crumbling_platform",
@@ -222,7 +222,7 @@
     },
     {
       "type": "crowd_barrier",
-      "x": 8400
+      "x": 8180
     },
     {
       "type": "crumbling_platform",
@@ -309,7 +309,7 @@
     },
     {
       "type": "crowd_barrier",
-      "x": 21300
+      "x": 21610
     },
     {
       "type": "crumbling_platform",

@@ -161,7 +161,7 @@
     },
     {
       "type": "crowd_barrier",
-      "x": 2900
+      "x": 3230
     },
     {
       "type": "crumbling_platform",
@@ -187,7 +187,7 @@
     },
     {
       "type": "crowd_barrier",
-      "x": 5700
+      "x": 6030
     },
     {
       "type": "crumbling_platform",
@@ -208,7 +208,7 @@
     },
     {
       "type": "crowd_barrier",
-      "x": 8800
+      "x": 8620
     },
     {
       "type": "crumbling_platform",
@@ -267,7 +267,7 @@
     },
     {
       "type": "crowd_barrier",
-      "x": 17100
+      "x": 17030
     },
     {
       "type": "crumbling_platform",
@@ -299,7 +299,7 @@
     },
     {
       "type": "crowd_barrier",
-      "x": 21600
+      "x": 22000
     },
     {
       "type": "crumbling_platform",

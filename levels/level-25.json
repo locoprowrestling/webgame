@@ -194,7 +194,7 @@
     },
     {
       "type": "crowd_barrier",
-      "x": 2400
+      "x": 2710
     },
     {
       "type": "crumbling_platform",
@@ -220,7 +220,7 @@
     },
     {
       "type": "crowd_barrier",
-      "x": 4900
+      "x": 5240
     },
     {
       "type": "crumbling_platform",
@@ -241,7 +241,7 @@
     },
     {
       "type": "crowd_barrier",
-      "x": 7500
+      "x": 7310
     },
     {
       "type": "crumbling_platform",
@@ -268,7 +268,7 @@
     },
     {
       "type": "crowd_barrier",
-      "x": 11200
+      "x": 10960
     },
     {
       "type": "crumbling_platform",
@@ -323,7 +323,7 @@
     },
     {
       "type": "crowd_barrier",
-      "x": 20300
+      "x": 20630
     },
     {
       "type": "crumbling_platform",
@@ -406,7 +406,7 @@
     },
     {
       "type": "folding_chair",
-      "x": 33200
+      "x": 33380
     }
   ],
   "checkpoints": [
