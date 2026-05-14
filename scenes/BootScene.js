@@ -127,11 +127,23 @@ export default class BootScene extends Phaser.Scene {
     this._buildObstacleAnims();
     this._buildCollectibleTextures();
 
-    // Wait for first interaction to satisfy browser autoplay policy, then start music + title
-    this._loadText.setText('— TAP TO BEGIN —').setColor('#ffd700');
+    // Full-screen tap prompt — satisfies browser autoplay policy before TitleScene
+    const { width: W, height: H } = this.scale;
+    const overlay = this.add.rectangle(W / 2, H / 2, W, H, 0x000000, 0.88).setInteractive();
+    const tapTitle = this.add.text(W / 2, H / 2 - 40, 'LOCOPRO', {
+      fontSize: '32px', fontFamily: '"Press Start 2P", monospace',
+      color: '#ffd700', stroke: '#aa6600', strokeThickness: 4,
+    }).setOrigin(0.5);
+    const tapSub = this.add.text(W / 2, H / 2 + 10, 'CHAMPIONSHIP RUN', {
+      fontSize: '10px', fontFamily: '"Press Start 2P", monospace', color: '#ffffff',
+    }).setOrigin(0.5);
+    const tapPrompt = this.add.text(W / 2, H / 2 + 70, 'TAP TO BEGIN', {
+      fontSize: '20px', fontFamily: '"Press Start 2P", monospace',
+      color: '#ffd700', stroke: '#000000', strokeThickness: 4,
+    }).setOrigin(0.5);
     this.tweens.add({
-      targets: this._loadText, alpha: 0.3, yoyo: true, repeat: -1,
-      duration: 600, ease: 'Sine.InOut',
+      targets: tapPrompt, alpha: 0.1, yoyo: true, repeat: -1,
+      duration: 700, ease: 'Sine.InOut',
     });
 
     const startGame = () => {
@@ -139,7 +151,7 @@ export default class BootScene extends Phaser.Scene {
       playMusic(this, 'menu');
       this.scene.start('TitleScene');
     };
-    this.input.once('pointerdown', startGame);
+    overlay.once('pointerdown', startGame);
     this.input.keyboard.once('keydown', startGame);
   }
 
