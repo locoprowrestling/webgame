@@ -7,7 +7,7 @@
   "endX": 26500,
   "gaps": [
     {
-      "x": 800,
+      "x": 910,
       "width": 210
     },
     {
@@ -139,7 +139,7 @@
   "obstacles": [
     {
       "type": "hay_bale",
-      "x": 600
+      "x": 680
     },
     {
       "type": "hawk",
@@ -156,7 +156,7 @@
     },
     {
       "type": "rattlesnake",
-      "x": 3000
+      "x": 3680
     },
     {
       "type": "crumbling_platform",
@@ -179,7 +179,7 @@
     },
     {
       "type": "rattlesnake",
-      "x": 5700
+      "x": 5420
     },
     {
       "type": "crumbling_platform",
