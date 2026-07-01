@@ -23,6 +23,9 @@ Deploy = push to `main`. GitHub Pages serves from the repo root automatically.
 BootScene → TitleScene → SelectScene → GameScene (+ UIScene parallel) → LevelCompleteScene or GameOverScene
 ```
 
+Also registered: `LevelSelectScene` (level picker) and `EndingScene` (final-level
+payoff). Scene source lives in `scenes/`; gameplay data modules in `src/`.
+
 - `game.js` — Phaser config only; registers all scenes
 - `BootScene` — preloads ALL assets and generates ALL programmatic textures (character sprites, zone backgrounds, obstacle sprites, flag/checkpoint). Nothing is loaded after boot.
 - `UIScene` — launched in parallel with `GameScene` via `scene.launch()`. Communicates via GameScene's event emitter (`heartLost`, `checkpointReached`, `scoreUpdate`). Must be explicitly stopped before `GameScene` transitions away (`this.scene.stop('UIScene')`).
@@ -37,7 +40,7 @@ BootScene → TitleScene → SelectScene → GameScene (+ UIScene parallel) → 
 
 ### Asset pipeline
 
-Original artwork lives in `Assets/players/` and `Assets/logos/` (not committed — too large). Web-optimized copies are in `Assets/players-web/` and `Assets/logos-web/` with **lowercase filenames** (required for GitHub Pages / Linux). To regenerate after adding new artwork:
+Original artwork lives in `Assets/players/` and `Assets/logos/` (not committed — too large). Web-optimized copies are in `Assets/players-web/` and `Assets/logos-web/` with **lowercase filenames** (required for GitHub Pages / Linux). The `Assets/logos/LOGO-*` files are also a source the sibling `../newfightgame` (OpenBOR) project reads when building wrestler logos — keep their names stable. To regenerate after adding new artwork:
 
 ```bash
 # Portraits → players-web (max 400px)
