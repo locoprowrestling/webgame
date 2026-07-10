@@ -277,7 +277,8 @@ export function spawnObstacle(scene, type, x, y, config = {}) {
   const obj = scene.physics.add.sprite(x, y, key).setOrigin(0.5, 1);
   const ds = def.displayScale || 1;
   obj.setDisplaySize(def.w * ds, def.h * ds);
-  if (def.flipX) obj.setFlipX(true);
+  const flipX = config.flipX !== undefined ? Boolean(config.flipX) : Boolean(def.flipX);
+  obj.setFlipX(flipX);
   obj.obstacleType = type;
   obj.obstacleDef = def;
   obj.resetObstacleBody = () => {

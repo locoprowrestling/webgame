@@ -25,7 +25,7 @@ Original prompt: read CLAUDE.md and then address this
 - Reduced Carter Cash's title-screen sprite scale by 40%, from `1.4` to `0.84`.
 - Added Anuka Gutierrez and Codah to the title screen alongside Carter Cash, using the existing character spritesheets and staggered bob timing so the lineup feels less static.
 - Verification: `node --check scenes/TitleScene.js` passed, and local HTTP checks returned `200 image/png` for the Anuka, Carter, and Codah spritesheets.
-- Flipped Anuka's title-screen orientation back horizontally by disabling `flipX` for her lineup sprite.
+- Flipped Anuka's title-screen orientation back horizontally by disabling `flipX` for his lineup sprite.
 - Troubleshot platform visibility: normal platform physics bodies were present but intentionally invisible, while visible sprites were separate display objects and easy to miss against the water/ground.
 - Updated platform construction so each invisible collider owns its visible sprite pieces, added a subtle shadow/top highlight for readability, and exposed platform state through `window.render_game_to_text()`.
 - Updated crumbling-platform cleanup so attached visible pieces fade/destroy with the hidden collider.

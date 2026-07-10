@@ -225,6 +225,7 @@
     <button id="addBtn">Add At View</button>
     <button id="undoBtn" disabled>Undo</button>
     <button id="deleteBtn" class="danger" disabled>Delete</button>
+    <button id="flipBtn" class="primary" disabled>Flip X</button>
   </div>
 
   <div class="workspace">
@@ -314,6 +315,7 @@ const dom = {
   propFields: document.querySelector('#propFields'),
   jsonOutput: document.querySelector('#jsonOutput'),
   copyBtn: document.querySelector('#copyBtn'),
+  flipBtn: document.querySelector('#flipBtn'),
 };
 
 const ctx = dom.stage.getContext('2d');
@@ -355,6 +357,9 @@ dom.addType.addEventListener('change', () => {
 dom.addBtn.addEventListener('click', addAtView);
 dom.undoBtn.addEventListener('click', undo);
 dom.deleteBtn.addEventListener('click', deleteSelection);
+dom.flipBtn.addEventListener('click', () => {
+  flipSelectedObstacle();
+});
 dom.copyBtn.addEventListener('click', async () => {
   dom.jsonOutput.select();
   await navigator.clipboard?.writeText(dom.jsonOutput.value).catch(() => document.execCommand('copy'));
@@ -365,6 +370,8 @@ dom.stage.addEventListener('pointermove', onPointerMove);
 dom.stage.addEventListener('pointerup', onPointerUp);
 dom.stage.addEventListener('pointerleave', onPointerUp);
 window.addEventListener('keydown', event => {
+  const tag = event.target?.tagName || '';
+  if (['INPUT', 'SELECT', 'TEXTAREA'].includes(tag)) return;
   if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
     event.preventDefault();
     undo();
@@ -373,6 +380,11 @@ window.addEventListener('keydown', event => {
   if ((event.key === 'Delete' || event.key === 'Backspace') && state.selected) {
     event.preventDefault();
     deleteSelection();
+    return;
+  }
+  if (event.key.toLowerCase() === 'f' && state.selected?.kind === 'obstacle') {
+    event.preventDefault();
+    flipSelectedObstacle();
   }
 });
 
@@ -507,7 +519,7 @@ function drawObstacles(level) {
     ctx.fill();
     ctx.fillStyle = 'rgba(0,0,0,0.2)';
     ctx.fillRect(rect.x, rect.y + rect.h - 5, rect.w, 5);
-    drawLabel(obstacle.type, rect.x, rect.y - 5);
+    drawLabel(obstacleLabel(obstacle), rect.x, rect.y - 5);
     drawSelection('obstacle', index, rect);
   });
 }
@@ -774,6 +786,25 @@ function deleteSelection() {
   draw();
 }
 
+function flipSelectedObstacle() {
+  if (!state.selected || state.selected.kind !== 'obstacle') return;
+  const item = getSelectedItem();
+  if (!item) return;
+  pushHistory();
+  const defaultFlipX = getObstacleDef(item.type).flipX ?? false;
+  const current = (item.flipX !== undefined) ? item.flipX : defaultFlipX;
+  const next = !current;
+  if (next === defaultFlipX) {
+    delete item.flipX;
+  } else {
+    item.flipX = next;
+  }
+  cleanupNumbers(item);
+  renderProps();
+  updateOutput();
+  draw();
+}
+
 function renderProps() {
   const item = getSelectedItem();
   dom.deleteBtn.disabled = !item;
@@ -782,10 +813,12 @@ function renderProps() {
   dom.propFields.replaceChildren();
   if (!item) {
     dom.selectionMeta.textContent = 'No selection';
+    dom.flipBtn.disabled = true;
     return;
   }
 
   const kind = state.selected.kind;
+  dom.flipBtn.disabled = kind !== 'obstacle';
   dom.selectionMeta.textContent = `${kind} ${state.selected.index + 1}`;
   if (kind === 'obstacle') addField('type', item.type, 'select', OBSTACLE_TYPES);
   addField('x', item.x, 'number');
@@ -793,6 +826,8 @@ function renderProps() {
   if (kind === 'platform' || kind === 'gap' || item.width !== undefined) addField('width', item.width, 'number');
   if (kind === 'platform') addField('crumbling', item.crumbling ? 'true' : 'false', 'select', ['false', 'true']);
   if (kind === 'obstacle') {
+    const flipValue = item.flipX === undefined ? 'default' : (item.flipX ? 'true' : 'false');
+    addField('flipX', flipValue, 'select', ['default', 'true', 'false']);
     ['speed', 'vy', 'amp', 'sineSpeed', 'offset', 'paceMin', 'paceMax'].forEach(key => {
       if (item[key] !== undefined) addField(key, item[key], 'number');
     });
@@ -828,6 +863,9 @@ function updateSelectedField(key, rawValue) {
   else if (key === 'crumbling') {
     if (rawValue === 'true') item.crumbling = true;
     else delete item.crumbling;
+  } else if (key === 'flipX') {
+    if (rawValue === 'default') delete item.flipX;
+    else item.flipX = rawValue === 'true';
   } else {
     const value = Number(rawValue);
     if (Number.isFinite(value)) item[key] = value;
@@ -908,6 +946,11 @@ function cleanupNumbers(item) {
   Object.keys(item).forEach(key => {
     if (typeof item[key] === 'number') item[key] = Math.round(item[key]);
   });
+}
+
+function obstacleLabel(item) {
+  if (item.flipX === undefined) return item.type;
+  return `${item.type} [flipX ${item.flipX ? 'on' : 'off'}]`;
 }
 
 function obstacleColor(type) {
